@@ -1,31 +1,24 @@
 <template>
-  <div class="flex flex-col gap-1.5 w-full">
+  <div class="flex flex-col gap-2 w-full">
     <label
       v-if="label"
-      :for="id"
       class="text-sm font-semibold text-surface-700 dark:text-surface-300 ml-1"
     >
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
 
-    <Select
-      :id="id"
-      v-model="model"
-      v-bind="$attrs"
-      class="w-full !rounded-xl !border-surface-200 dark:!border-surface-800 focus:!ring-primary/20"
-      :pt="{
-        root: {
-          class: error
-            ? '!border-red-500 focus:!ring-red-500/20'
-            : 'focus:!border-primary',
-        },
-      }"
+    <div
+      class="flex items-center gap-3 bg-surface-50 dark:bg-surface-900/50 p-3 rounded-2xl border border-surface-200/50 dark:border-surface-800/50 w-fit"
     >
-      <template v-for="slotName in Object.keys($slots)" #[slotName]="slotProps">
-        <slot :name="slotName" v-bind="slotProps" />
-      </template>
-    </Select>
+      <Rating v-model="model" v-bind="$attrs" :cancel="false" class="gap-1" />
+      <span
+        v-if="model"
+        class="text-xs font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-full"
+      >
+        {{ model }}/5
+      </span>
+    </div>
 
     <Transition
       enter-active-class="transition duration-200 ease-out"
@@ -40,11 +33,10 @@
 </template>
 
 <script setup lang="ts">
-import Select from "primevue/select";
-const model = defineModel<any>();
+import Rating from "primevue/rating";
+const model = defineModel<number>();
 
 interface Props {
-  id?: string;
   label?: string;
   error?: string;
   required?: boolean;

@@ -9,23 +9,23 @@
       <span v-if="required" class="text-red-500">*</span>
     </label>
 
-    <Select
+    <InputMask
       :id="id"
       v-model="model"
       v-bind="$attrs"
-      class="w-full !rounded-xl !border-surface-200 dark:!border-surface-800 focus:!ring-primary/20"
+      :fluid="true"
+      class="w-full !rounded-xl"
       :pt="{
         root: {
-          class: error
-            ? '!border-red-500 focus:!ring-red-500/20'
-            : 'focus:!border-primary',
+          class: [
+            'w-full !rounded-xl !border-surface-200 dark:!border-surface-800 focus:!ring-primary/20',
+            error
+              ? '!border-red-500 focus:!ring-red-500/20'
+              : 'focus:!border-primary',
+          ],
         },
       }"
-    >
-      <template v-for="slotName in Object.keys($slots)" #[slotName]="slotProps">
-        <slot :name="slotName" v-bind="slotProps" />
-      </template>
-    </Select>
+    />
 
     <Transition
       enter-active-class="transition duration-200 ease-out"
@@ -40,8 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import Select from "primevue/select";
-const model = defineModel<any>();
+import InputMask from "primevue/inputmask";
+const model = defineModel<string>();
 
 interface Props {
   id?: string;

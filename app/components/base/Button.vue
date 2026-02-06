@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+import Button from "primevue/button";
 // Base Button wrapper for PrimeVue Button
 defineOptions({
   inheritAttrs: false,

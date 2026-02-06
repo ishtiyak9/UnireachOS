@@ -9,23 +9,26 @@
       <span v-if="required" class="text-red-500">*</span>
     </label>
 
-    <Select
+    <DatePicker
       :id="id"
       v-model="model"
       v-bind="$attrs"
-      class="w-full !rounded-xl !border-surface-200 dark:!border-surface-800 focus:!ring-primary/20"
+      :show-icon="true"
+      icon-display="input"
+      class="w-full !rounded-xl"
       :pt="{
-        root: {
-          class: error
-            ? '!border-red-500 focus:!ring-red-500/20'
-            : 'focus:!border-primary',
+        pcInput: {
+          root: {
+            class: [
+              'w-full !rounded-xl !border-surface-200 dark:!border-surface-800 focus:!ring-primary/20',
+              error
+                ? '!border-red-500 focus:!ring-red-500/20'
+                : 'focus:!border-primary',
+            ],
+          },
         },
       }"
-    >
-      <template v-for="slotName in Object.keys($slots)" #[slotName]="slotProps">
-        <slot :name="slotName" v-bind="slotProps" />
-      </template>
-    </Select>
+    />
 
     <Transition
       enter-active-class="transition duration-200 ease-out"
@@ -40,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import Select from "primevue/select";
+import DatePicker from "primevue/datepicker";
 const model = defineModel<any>();
 
 interface Props {

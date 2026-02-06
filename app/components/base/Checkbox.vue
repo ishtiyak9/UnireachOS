@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import Checkbox from "primevue/checkbox";
 // Base Checkbox wrapper for PrimeVue Checkbox
 const model = defineModel<any>();
 

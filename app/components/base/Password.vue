@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import Password from "primevue/password";
 const model = defineModel<string>();
 
 interface Props {

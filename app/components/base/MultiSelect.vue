@@ -9,7 +9,7 @@
       <span v-if="required" class="text-red-500">*</span>
     </label>
 
-    <Select
+    <MultiSelect
       :id="id"
       v-model="model"
       v-bind="$attrs"
@@ -25,7 +25,7 @@
       <template v-for="slotName in Object.keys($slots)" #[slotName]="slotProps">
         <slot :name="slotName" v-bind="slotProps" />
       </template>
-    </Select>
+    </MultiSelect>
 
     <Transition
       enter-active-class="transition duration-200 ease-out"
@@ -40,8 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import Select from "primevue/select";
-const model = defineModel<any>();
+import MultiSelect from "primevue/multiselect";
+const model = defineModel<any[]>();
 
 interface Props {
   id?: string;

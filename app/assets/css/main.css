@@ -28,3 +28,22 @@
   --color-surface-900: var(--p-surface-900);
   --color-surface-950: var(--p-surface-950);
 }
+
+/* UniReach Toast Global Component Overrides */
+.unireach-toast.p-toast {
+  opacity: 1 !important;
+}
+
+.unireach-toast .p-toast-message-content {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.unireach-toast .p-toast-message {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 1rem !important;
+}
