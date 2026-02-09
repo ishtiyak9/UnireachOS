@@ -139,14 +139,15 @@ onUnmounted(() => {
 
       <!-- Premium Action Buttons -->
       <div class="hidden md:flex items-center gap-3">
-        <button
+        <NuxtLink
+          to="/login"
           class="relative px-5 py-2 text-[9px] font-black uppercase tracking-[0.2em] text-surface-400 hover:text-white transition-all group overflow-hidden"
         >
           <span class="relative z-10">Sign In</span>
           <div
             class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity"
           />
-        </button>
+        </NuxtLink>
         <NuxtLink
           to="/apply"
           class="relative px-6 py-2.5 text-[9px] font-black uppercase tracking-[0.2em] text-black bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105 group overflow-hidden"
@@ -204,7 +205,7 @@ onUnmounted(() => {
               <div
                 class="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
               >
-                <i :class="[child.icon, 'text-primary-500 text-sm']"/>
+                <i :class="[child.icon, 'text-primary-500 text-sm']" />
               </div>
               <span
                 class="text-sm font-black text-white uppercase tracking-wider group-hover:text-primary-500 transition-colors"
@@ -222,13 +223,15 @@ onUnmounted(() => {
             {{ item.label }}
           </NuxtLink>
         </template>
-        <hr class="border-white/10" >
+        <hr class="border-white/10" />
         <div class="flex flex-col gap-3">
-          <button
-            class="w-full h-12 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/5 transition-all"
+          <NuxtLink
+            to="/login"
+            class="w-full h-12 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/5 transition-all flex items-center justify-center"
+            @click="mobileMenuOpen = false"
           >
             Sign In
-          </button>
+          </NuxtLink>
           <NuxtLink
             to="/apply"
             class="w-full h-12 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-[10px] font-black uppercase tracking-widest text-black hover:shadow-xl hover:shadow-primary-500/30 transition-all flex items-center justify-center"
