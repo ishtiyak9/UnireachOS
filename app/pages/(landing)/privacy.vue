@@ -292,10 +292,10 @@ const policyVersion = "v2.0";
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-[size:80px_80px] opacity-20"
-        ></div>
+        />
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary-500/5 blur-[150px] rounded-full"
-        ></div>
+        />
       </div>
 
       <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -304,7 +304,7 @@ const policyVersion = "v2.0";
           <NuxtLink to="/" class="hover:text-primary-500 transition-colors"
             >Home</NuxtLink
           >
-          <i class="pi pi-chevron-right text-xs"></i>
+          <i class="pi pi-chevron-right text-xs"/>
           <span class="text-surface-300">Privacy Policy</span>
         </div>
 
@@ -329,7 +329,7 @@ const policyVersion = "v2.0";
           <div
             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xl"
           >
-            <i class="pi pi-calendar text-primary-500 text-sm"></i>
+            <i class="pi pi-calendar text-primary-500 text-sm"/>
             <span class="text-xs text-surface-400 font-bold"
               >Last Updated: {{ lastUpdated }}</span
             >
@@ -337,7 +337,7 @@ const policyVersion = "v2.0";
           <div
             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500/10 border border-primary-500/30 backdrop-blur-xl"
           >
-            <i class="pi pi-shield text-primary-500 text-sm"></i>
+            <i class="pi pi-shield text-primary-500 text-sm"/>
             <span
               class="text-xs text-primary-400 font-black uppercase tracking-wider"
               >{{ policyVersion }} - GDPR & Bangladesh Compliant</span
@@ -410,7 +410,7 @@ const policyVersion = "v2.0";
           <h2
             class="text-2xl font-black text-white mb-4 flex items-center gap-3"
           >
-            <i class="pi pi-envelope text-primary-500"></i>
+            <i class="pi pi-envelope text-primary-500"/>
             Contact Us About Privacy
           </h2>
           <p class="text-surface-300 leading-relaxed mb-6">
@@ -426,7 +426,7 @@ const policyVersion = "v2.0";
               <div
                 class="w-10 h-10 rounded-lg bg-primary-500/20 border border-primary-500/30 flex items-center justify-center group-hover/contact:bg-primary-500/30 transition-colors"
               >
-                <i class="pi pi-envelope text-primary-500 text-sm"></i>
+                <i class="pi pi-envelope text-primary-500 text-sm"/>
               </div>
               <div>
                 <div
@@ -449,7 +449,7 @@ const policyVersion = "v2.0";
               <div
                 class="w-10 h-10 rounded-lg bg-primary-500/20 border border-primary-500/30 flex items-center justify-center group-hover/contact:bg-primary-500/30 transition-colors"
               >
-                <i class="pi pi-whatsapp text-primary-500 text-sm"></i>
+                <i class="pi pi-whatsapp text-primary-500 text-sm"/>
               </div>
               <div>
                 <div
@@ -471,7 +471,7 @@ const policyVersion = "v2.0";
             to="/"
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-bold hover:bg-white/10 hover:border-primary-500/30 transition-all duration-300"
           >
-            <i class="pi pi-arrow-left text-xs"></i>
+            <i class="pi pi-arrow-left text-xs"/>
             <span>Back to Home</span>
           </NuxtLink>
         </div>

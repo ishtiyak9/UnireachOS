@@ -60,14 +60,14 @@ const steps = ref([
     <div class="absolute inset-0 z-0 pointer-events-none opacity-20">
       <div
         class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/10 blur-[150px] rounded-full"
-      ></div>
+      />
       <div
         class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary-900/10 blur-[150px] rounded-full"
-      ></div>
+      />
       <!-- Grid Overlay -->
       <div
         class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-size-[60px_60px]"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -84,7 +84,7 @@ const steps = ref([
         <h2
           class="text-4xl md:text-6xl font-black text-white italic tracking-tighter leading-none"
         >
-          From Aspiration to <br />
+          From Aspiration to <br >
           <span class="text-primary-500 not-italic font-light"
             >Sovereign Arrival.</span
           >
@@ -115,7 +115,7 @@ const steps = ref([
           <!-- Continuous Success Pulse -->
           <div
             class="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-48 bg-linear-to-b from-transparent via-primary-500 to-transparent animate-success-flow"
-          ></div>
+          />
         </div>
 
         <div class="space-y-40 relative z-10">
@@ -133,14 +133,14 @@ const steps = ref([
                 <!-- Multi-layer Glow -->
                 <div
                   class="absolute inset-0 bg-primary-500/10 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
-                ></div>
+                />
                 <!-- Geometric Core -->
                 <div
                   class="relative w-12 h-12 rounded-2xl bg-surface-950 border border-primary-500/20 flex flex-col items-center justify-center transform group-hover:rotate-135 transition-all duration-1000 shadow-[0_0_30px_rgba(var(--p-primary-500-rgb),0.05)] overflow-hidden"
                 >
                   <div
                     class="absolute inset-0 bg-linear-to-br from-primary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-                  ></div>
+                  />
                   <span
                     class="text-[10px] font-black italic text-primary-500 group-hover:-rotate-135 transition-transform duration-1000 relative z-10"
                     >{{ step.order }}</span
@@ -160,12 +160,12 @@ const steps = ref([
                     class="flex items-center gap-3 opacity-60"
                     :class="index % 2 === 0 ? 'justify-end' : 'justify-start'"
                   >
-                    <span class="w-8 h-px bg-primary-500/40"></span>
+                    <span class="w-8 h-px bg-primary-500/40"/>
                     <span
                       class="text-[9px] font-black uppercase tracking-[0.4em] text-primary-500"
                       >{{ step.phase }}</span
                     >
-                    <span class="w-8 h-px bg-primary-500/40 md:hidden"></span>
+                    <span class="w-8 h-px bg-primary-500/40 md:hidden"/>
                   </div>
                   <h3
                     class="text-3xl md:text-4xl font-black text-white italic tracking-tighter leading-tight"
@@ -197,10 +197,10 @@ const steps = ref([
                 <!-- Interactive Corner Accents -->
                 <div
                   class="absolute top-0 right-0 w-8 h-8 border-t border-r border-primary-500/0 group-hover:border-primary-500/40 transition-all duration-700 rounded-tr-3xl"
-                ></div>
+                />
                 <div
                   class="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-primary-500/0 group-hover:border-primary-500/40 transition-all duration-700 rounded-bl-3xl"
-                ></div>
+                />
                 <div class="flex items-start gap-5 relative z-10">
                   <div
                     class="w-12 h-12 rounded-2xl bg-primary-500/5 dark:bg-primary-500/10 border border-primary-500/20 flex items-center justify-center shadow-inner group-hover:bg-primary-500 transition-colors duration-700 group-hover:shadow-[0_0_20px_rgba(var(--p-primary-500-rgb),0.4)]"
@@ -210,7 +210,7 @@ const steps = ref([
                         step.icon,
                         'text-primary-500 text-xl group-hover:text-white transition-colors duration-700',
                       ]"
-                    ></i>
+                    />
                   </div>
                   <div class="flex flex-col pt-1">
                     <div class="flex justify-between items-center mb-1">
@@ -237,7 +237,7 @@ const steps = ref([
                             ? 'bg-primary-500/60 group-hover:bg-primary-500'
                             : 'bg-surface-800'
                         "
-                      ></div>
+                      />
                     </div>
                   </div>
                 </div>

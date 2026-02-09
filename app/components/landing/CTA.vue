@@ -12,12 +12,12 @@
       <div class="absolute inset-0">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
       <!-- Animated Grid -->
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -26,7 +26,7 @@
         <!-- Animated Gradient Border -->
         <div
           class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-500 rounded-3xl blur opacity-20 animate-pulse"
-        ></div>
+        />
 
         <!-- Main Card -->
         <div
@@ -35,7 +35,7 @@
           <!-- Inner Glow -->
           <div
             class="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-600/5"
-          ></div>
+          />
 
           <!-- Content -->
           <div class="relative px-8 py-12 md:px-16 md:py-16">
@@ -50,7 +50,7 @@
                   >
                     <div
                       class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"
-                    ></div>
+                    />
                     <span
                       class="text-[9px] font-black uppercase tracking-[0.3em] text-primary-400"
                       >Limited Slots Available</span
@@ -85,7 +85,7 @@
                       <div
                         class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                       >
-                        <i class="pi pi-check text-primary-500 text-xs"></i>
+                        <i class="pi pi-check text-primary-500 text-xs"/>
                       </div>
                       <span class="text-xs text-surface-400 font-bold"
                         >83% Success Rate</span
@@ -95,7 +95,7 @@
                       <div
                         class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                       >
-                        <i class="pi pi-shield text-primary-500 text-xs"></i>
+                        <i class="pi pi-shield text-primary-500 text-xs"/>
                       </div>
                       <span class="text-xs text-surface-400 font-bold"
                         >Verified Reviews</span
@@ -116,12 +116,12 @@
                       <span>Get Started Now</span>
                       <i
                         class="pi pi-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"
-                      ></i>
+                      />
                     </span>
                     <!-- Animated Shine -->
                     <div
                       class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-                    ></div>
+                    />
                   </NuxtLink>
 
                   <button
@@ -135,7 +135,7 @@
                     <div class="flex items-center gap-2">
                       <i
                         class="pi pi-check-circle text-primary-500 text-xs"
-                      ></i>
+                      />
                       <span
                         class="text-[9px] text-surface-500 font-bold uppercase tracking-wider"
                         >No Hidden Fees</span
@@ -144,7 +144,7 @@
                     <div class="flex items-center gap-2">
                       <i
                         class="pi pi-check-circle text-primary-500 text-xs"
-                      ></i>
+                      />
                       <span
                         class="text-[9px] text-surface-500 font-bold uppercase tracking-wider"
                         >Free Initial Consultation</span

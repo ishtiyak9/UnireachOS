@@ -102,10 +102,10 @@ const services = ref([
       <div class="absolute inset-0 z-0">
         <div
           class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(circle_at_center,rgba(var(--p-primary-500-rgb),0.07)_0%,transparent:70%)] opacity-40"
-        ></div>
+        />
         <div
           class="absolute inset-0 bg-size-[60px_60px] bg-[radial-gradient(circle_at_center,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)]"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -118,7 +118,7 @@ const services = ref([
             >
               <span
                 class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-              ></span>
+              />
               <span
                 class="text-[8px] font-black uppercase tracking-[0.4em] text-primary-400"
                 >Institutional Mobility</span
@@ -127,7 +127,7 @@ const services = ref([
             <h1
               class="text-5xl md:text-7xl font-black text-white italic tracking-tighter leading-none animate-slide-up"
             >
-              The Sovereign <br />
+              The Sovereign <br >
               <span class="text-primary-500 not-italic font-light"
                 >Arrival Protocol.</span
               >
@@ -215,7 +215,7 @@ const services = ref([
                     path.icon,
                     'text-primary-500 group-hover:text-black text-xl transition-colors',
                   ]"
-                ></i>
+                />
               </div>
 
               <div class="space-y-2">
@@ -237,7 +237,7 @@ const services = ref([
                   :key="feature"
                   class="flex items-center gap-2"
                 >
-                  <div class="w-1 h-1 rounded-full bg-primary-500"></div>
+                  <div class="w-1 h-1 rounded-full bg-primary-500"/>
                   <span
                     class="text-[9px] font-bold text-surface-300 uppercase tracking-wider"
                     >{{ feature }}</span
@@ -263,7 +263,7 @@ const services = ref([
             <p
               class="text-4xl font-black text-white italic tracking-tighter leading-none"
             >
-              The Precision <br />
+              The Precision <br >
               Evaluation.
             </p>
             <p class="text-surface-400 text-xs font-medium leading-relaxed">
@@ -279,7 +279,7 @@ const services = ref([
               class="p-6 rounded-2xl bg-surface-900/20 border border-white/5 space-y-3 hover:border-primary-500/20 transition-all"
             >
               <div class="flex items-center gap-3">
-                <i :class="[engine.icon, 'text-primary-500 text-sm']"></i>
+                <i :class="[engine.icon, 'text-primary-500 text-sm']"/>
                 <span
                   class="text-[10px] font-black text-white uppercase tracking-widest"
                   >{{ engine.title }}</span
@@ -332,10 +332,10 @@ const services = ref([
               :src="hub.image"
               alt="Jurisdiction"
               class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-1000 grayscale group-hover:grayscale-0"
-            />
+            >
             <div
               class="absolute inset-0 bg-linear-to-t from-surface-950 via-surface-950/40 to-transparent"
-            ></div>
+            />
             <div class="absolute inset-0 p-6 flex flex-col justify-end">
               <span
                 class="text-[8px] font-black text-primary-500 uppercase tracking-widest mb-1"
@@ -360,7 +360,7 @@ const services = ref([
             class="text-[9px] font-black text-black uppercase tracking-[0.3em] flex items-center gap-4"
           >
             {{ service }}
-            <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+            <span class="w-1.5 h-1.5 bg-black rounded-full"/>
           </span>
         </div>
       </div>
@@ -379,7 +379,7 @@ const services = ref([
             <h2
               class="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-tight"
             >
-              Start Your <br />
+              Start Your <br >
               <span class="text-primary-500 not-italic font-light"
                 >Institutional Arrival.</span
               >
@@ -395,10 +395,10 @@ const services = ref([
           <div class="pt-4">
             <NuxtLink
               to="/contact"
-              class="inline-flex items-center gap-4 px-12 py-5 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary-500 transition-colors shadow-2xl"
+              class="inline-flex items-center gap-4 px-12 py-5 bg-primary-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary-400 transition-colors shadow-2xl"
             >
               Secure Clearance
-              <i class="pi pi-shield"></i>
+              <i class="pi pi-shield"/>
             </NuxtLink>
           </div>
         </div>

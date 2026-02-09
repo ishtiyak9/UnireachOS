@@ -9,7 +9,7 @@
     <!-- Ambient Background Glow -->
     <div
       class="absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-500/10 via-surface-950 to-surface-950 pointer-events-none"
-    ></div>
+    />
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
       <div class="grid lg:grid-cols-12 gap-6 items-start">
@@ -21,10 +21,10 @@
             <span class="relative flex h-2 w-2">
               <span
                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"
-              ></span>
+              />
               <span
                 class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"
-              ></span>
+              />
             </span>
             <span
               class="text-[9px] uppercase font-black tracking-[0.2em] text-surface-400"
@@ -35,7 +35,7 @@
           <h2
             class="text-4xl md:text-5xl font-black text-surface-900 dark:text-white leading-[0.9] tracking-tighter"
           >
-            Old World<br />
+            Old World<br >
             <span
               class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600"
               >Obsolete.</span
@@ -57,7 +57,7 @@
               <span>Explore the Architecture</span>
               <i
                 class="pi pi-arrow-right group-hover:translate-x-1 transition-transform"
-              ></i>
+              />
             </button>
           </div>
         </div>
@@ -70,7 +70,7 @@
           >
             <div
               class="absolute inset-0 bg-linear-to-br from-primary-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            ></div>
+            />
             <div
               class="relative p-8 flex flex-col md:flex-row items-center gap-8"
             >
@@ -78,7 +78,7 @@
                 <div
                   class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500"
                 >
-                  <i class="pi pi-bolt text-xl"></i>
+                  <i class="pi pi-bolt text-xl"/>
                 </div>
                 <h3 class="text-xl font-black text-surface-900 dark:text-white">
                   Velocity Architecture
@@ -97,7 +97,7 @@
               >
                 <div
                   class="absolute inset-0 bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:8px_8px] opacity-20"
-                ></div>
+                />
                 <div class="text-3xl font-black text-amber-500 tabular-nums">
                   4x
                   <span class="text-xs font-bold text-surface-500">Faster</span>
@@ -113,13 +113,13 @@
             <div
               class="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-40 transition-opacity"
             >
-              <i class="pi pi-eye text-6xl text-emerald-500"></i>
+              <i class="pi pi-eye text-6xl text-emerald-500"/>
             </div>
             <div>
               <div
                 class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-4"
               >
-                <i class="pi pi-verified text-xl"></i>
+                <i class="pi pi-verified text-xl"/>
               </div>
               <h3 class="text-lg font-black text-white mb-2">
                 Radical Transparency
@@ -155,12 +155,12 @@
           >
             <div
               class="absolute inset-0 bg-linear-to-b from-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity"
-            ></div>
+            />
             <div>
               <div
                 class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-4"
               >
-                <i class="pi pi-objects-column text-xl"></i>
+                <i class="pi pi-objects-column text-xl"/>
               </div>
               <h3 class="text-lg font-black text-white mb-2">
                 Surgical Matching
@@ -173,7 +173,7 @@
             <div class="w-full bg-surface-800 h-1 rounded-full overflow-hidden">
               <div
                 class="h-full bg-blue-500 w-[98%] shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-              ></div>
+              />
             </div>
           </div>
         </div>
@@ -189,9 +189,9 @@
           Unireach Systems v1.0
         </p>
         <div class="flex gap-4">
-          <i class="pi pi-apple text-surface-400 text-xs"></i>
-          <i class="pi pi-android text-surface-400 text-xs"></i>
-          <i class="pi pi-desktop text-surface-400 text-xs"></i>
+          <i class="pi pi-apple text-surface-400 text-xs"/>
+          <i class="pi pi-android text-surface-400 text-xs"/>
+          <i class="pi pi-desktop text-surface-400 text-xs"/>
         </div>
       </div>
     </div>

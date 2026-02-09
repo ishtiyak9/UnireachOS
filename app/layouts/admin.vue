@@ -1,1 +1,5 @@
-<h1>Admin Layout</h1>
+<template>
+  <div>
+    <slot />
+  </div>
+</template>

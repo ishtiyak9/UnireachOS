@@ -27,11 +27,11 @@ onUnmounted(() => {
   <Transition name="fade-up">
     <button
       v-if="isVisible"
-      @click="scrollToTop"
       class="fixed bottom-6 right-20 z-40 w-12 h-12 rounded-full bg-surface-0 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 shadow-lg flex items-center justify-center text-surface-500 hover:text-primary-500 hover:border-primary-500 hover:-translate-y-1 transition-all duration-300 group"
       aria-label="Scroll to top"
+      @click="scrollToTop"
     >
-      <i class="pi pi-arrow-up text-lg group-hover:animate-bounce"></i>
+      <i class="pi pi-arrow-up text-lg group-hover:animate-bounce"/>
     </button>
   </Transition>
 </template>

@@ -75,10 +75,10 @@ const careerHubs = ref([
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent:100%)] opacity-20"
-        ></div>
+        />
         <div
           class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary-500/10 blur-[120px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -95,7 +95,7 @@ const careerHubs = ref([
             <h1
               class="text-6xl md:text-8xl font-black text-white tracking-tighter leading-[0.9] animate-slide-up"
             >
-              Career <br />
+              Career <br >
               <span
                 class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 italic"
                 >Redefined.</span
@@ -127,7 +127,7 @@ const careerHubs = ref([
           <div class="relative hidden lg:block">
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-surface-500 rounded-3xl blur opacity-10"
-            ></div>
+            />
             <div
               class="relative bg-surface-900/40 backdrop-blur-3xl border border-white/5 rounded-3xl p-8 space-y-6"
             >
@@ -137,7 +137,7 @@ const careerHubs = ref([
                     v-for="i in 3"
                     :key="i"
                     class="w-2 h-2 rounded-full bg-primary-500/30"
-                  ></div>
+                  />
                 </div>
                 <span
                   class="text-[8px] font-black text-surface-500 uppercase tracking-widest"
@@ -165,7 +165,7 @@ const careerHubs = ref([
               >
                 <div
                   class="h-full w-2/3 bg-primary-500 animate-[loading_2s_ease-in-out_infinite]"
-                ></div>
+                />
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@ const careerHubs = ref([
                       arc.icon,
                       'text-primary-500 text-sm group-hover:text-black',
                     ]"
-                  ></i>
+                  />
                 </div>
               </div>
             </div>
@@ -260,7 +260,7 @@ const careerHubs = ref([
             >
               <div
                 class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"
-              ></div>
+              />
             </div>
             <div class="space-y-2">
               <h4
@@ -306,7 +306,7 @@ const careerHubs = ref([
               <!-- Animated Glow -->
               <div
                 class="absolute -top-16 -right-16 w-32 h-32 bg-primary-500/5 blur-[60px] group-hover:bg-primary-500/10 transition-colors duration-500"
-              ></div>
+              />
 
               <div class="flex flex-col gap-4 relative z-10">
                 <!-- Header -->
@@ -319,11 +319,11 @@ const careerHubs = ref([
                         hub.icon,
                         'text-lg text-primary-500/40 group-hover:text-primary-500 transition-colors duration-500',
                       ]"
-                    ></i>
+                    />
                   </div>
                   <div
                     class="w-1 h-1 rounded-full bg-primary-500 animate-pulse"
-                  ></div>
+                  />
                 </div>
 
                 <!-- Content -->
@@ -348,7 +348,7 @@ const careerHubs = ref([
                     Details
                     <i
                       class="pi pi-arrow-right text-[8px] transform group-hover:translate-x-0.5 transition-transform duration-500"
-                    ></i>
+                    />
                   </NuxtLink>
                 </div>
               </div>
@@ -375,7 +375,7 @@ const careerHubs = ref([
         <h2
           class="text-5xl md:text-7xl font-black text-white tracking-tighter italic leading-none"
         >
-          Inject Your Talent <br />
+          Inject Your Talent <br >
           <span class="text-primary-500 not-italic font-light"
             >Into the Future.</span
           >

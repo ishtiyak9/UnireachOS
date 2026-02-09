@@ -39,15 +39,15 @@ const quickLinks = [
       <!-- Gradient Mesh -->
       <div
         class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1400px] h-[600px] bg-gradient-to-t from-primary-500/10 via-primary-600/5 to-transparent blur-[120px] opacity-50"
-      ></div>
+      />
       <!-- Grid Pattern -->
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30"
-      ></div>
+      />
       <!-- Top Border Glow -->
       <div
         class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -57,7 +57,7 @@ const quickLinks = [
           <!-- Animated Gradient Border -->
           <div
             class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-500"
-          ></div>
+          />
 
           <!-- CTA Card -->
           <div
@@ -66,7 +66,7 @@ const quickLinks = [
             <!-- Inner Glow -->
             <div
               class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-600/5"
-            ></div>
+            />
 
             <!-- Content -->
             <div class="relative px-6 py-6 md:px-10 md:py-8">
@@ -98,12 +98,12 @@ const quickLinks = [
                       <span>Book Consultation</span>
                       <i
                         class="pi pi-arrow-right text-xs transform group-hover/btn:translate-x-1 transition-transform"
-                      ></i>
+                      />
                     </span>
                     <!-- Animated Shine -->
                     <div
                       class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700"
-                    ></div>
+                    />
                   </NuxtLink>
 
                   <a
@@ -112,7 +112,7 @@ const quickLinks = [
                     rel="noopener noreferrer"
                     class="px-6 py-3 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 hover:border-primary-500/30 transition-all duration-300 text-center flex items-center justify-center gap-2"
                   >
-                    <i class="pi pi-whatsapp text-primary-500 text-xs"></i>
+                    <i class="pi pi-whatsapp text-primary-500 text-xs"/>
                     <span>WhatsApp Us</span>
                   </a>
                 </div>
@@ -131,7 +131,7 @@ const quickLinks = [
             <div class="relative inline-block group">
               <div
                 class="absolute -inset-4 bg-primary-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-              ></div>
+              />
               <BaseLogo class="relative" />
             </div>
 
@@ -164,12 +164,12 @@ const quickLinks = [
                   <!-- Glow on Hover -->
                   <div
                     class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500"
-                  ></div>
+                  />
                   <!-- Icon Container -->
                   <div
                     class="relative w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl text-surface-400 group-hover:text-primary-400 group-hover:border-primary-500/30 transition-all duration-300"
                   >
-                    <i :class="[social.icon, 'text-lg']"></i>
+                    <i :class="[social.icon, 'text-lg']"/>
                   </div>
                 </a>
               </div>
@@ -180,11 +180,11 @@ const quickLinks = [
               <div class="group relative">
                 <div
                   class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                ></div>
+                />
                 <div
                   class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl"
                 >
-                  <i class="pi pi-verified text-primary-500 text-sm"></i>
+                  <i class="pi pi-verified text-primary-500 text-sm"/>
                   <span
                     class="text-xs text-surface-300 font-black uppercase tracking-wider"
                     >Verified</span
@@ -194,7 +194,7 @@ const quickLinks = [
               <div class="group relative">
                 <div
                   class="absolute -inset-0.5 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                ></div>
+                />
                 <div
                   class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl"
                 >
@@ -203,7 +203,7 @@ const quickLinks = [
                       v-for="i in 5"
                       :key="i"
                       class="pi pi-star-fill text-yellow-400 text-[10px]"
-                    ></i>
+                    />
                   </div>
                   <span class="text-xs text-surface-300 font-black">5.0</span>
                 </div>
@@ -220,7 +220,7 @@ const quickLinks = [
               >
                 <div
                   class="w-1 h-4 bg-gradient-to-b from-primary-500 to-primary-600 rounded-full"
-                ></div>
+                />
                 Quick Links
               </h4>
               <ul class="space-y-3">
@@ -237,12 +237,12 @@ const quickLinks = [
                           link.icon,
                           'text-xs text-surface-500 group-hover:text-primary-500',
                         ]"
-                      ></i>
+                      />
                     </div>
                     <span class="font-bold">{{ link.label }}</span>
                     <i
                       class="pi pi-arrow-right text-[8px] text-primary-500 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all duration-300"
-                    ></i>
+                    />
                   </NuxtLink>
                 </li>
               </ul>
@@ -255,7 +255,7 @@ const quickLinks = [
               >
                 <div
                   class="w-1 h-4 bg-gradient-to-b from-primary-500 to-primary-600 rounded-full"
-                ></div>
+                />
                 Get in Touch
               </h4>
               <div class="space-y-4">
@@ -268,11 +268,11 @@ const quickLinks = [
                   <div class="relative">
                     <div
                       class="absolute -inset-1 bg-primary-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    ></div>
+                    />
                     <div
                       class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:bg-primary-500/30 transition-all duration-300"
                     >
-                      <i class="pi pi-whatsapp text-primary-500 text-sm"></i>
+                      <i class="pi pi-whatsapp text-primary-500 text-sm"/>
                     </div>
                   </div>
                   <div>
@@ -294,11 +294,11 @@ const quickLinks = [
                   <div class="relative">
                     <div
                       class="absolute -inset-1 bg-primary-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    ></div>
+                    />
                     <div
                       class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:bg-primary-500/30 transition-all duration-300"
                     >
-                      <i class="pi pi-envelope text-primary-500 text-sm"></i>
+                      <i class="pi pi-envelope text-primary-500 text-sm"/>
                     </div>
                   </div>
                   <div>
@@ -315,7 +315,7 @@ const quickLinks = [
                   <div
                     class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center flex-shrink-0"
                   >
-                    <i class="pi pi-map-marker text-primary-500 text-sm"></i>
+                    <i class="pi pi-map-marker text-primary-500 text-sm"/>
                   </div>
                   <div>
                     <div
@@ -353,10 +353,10 @@ const quickLinks = [
               <span class="relative flex h-2 w-2">
                 <span
                   class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-500 opacity-75"
-                ></span>
+                />
                 <span
                   class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"
-                ></span>
+                />
               </span>
               <span
                 class="text-[9px] font-black text-surface-400 uppercase tracking-[0.2em]"
@@ -373,14 +373,14 @@ const quickLinks = [
             >
               FAQ
             </NuxtLink>
-            <div class="w-px h-3 bg-white/10"></div>
+            <div class="w-px h-3 bg-white/10"/>
             <NuxtLink
               to="/privacy"
               class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.2em] transition-colors duration-300"
             >
               Privacy Policy
             </NuxtLink>
-            <div class="w-px h-3 bg-white/10"></div>
+            <div class="w-px h-3 bg-white/10"/>
             <NuxtLink
               to="/terms"
               class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.2em] transition-colors duration-300"

@@ -129,13 +129,13 @@ const stats = ref([
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px)] bg-size-[60px_60px] opacity-30"
-        ></div>
+        />
         <div
           class="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
         <div
           class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary-600/5 blur-[120px] rounded-full"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -147,13 +147,13 @@ const stats = ref([
             <div class="flex gap-1">
               <div
                 class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-              ></div>
+              />
               <div
                 class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse delay-75"
-              ></div>
+              />
               <div
                 class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse delay-150"
-              ></div>
+              />
             </div>
             <span
               class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
@@ -193,7 +193,7 @@ const stats = ref([
               Start Your Journey
               <i
                 class="pi pi-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"
-              ></i>
+              />
             </NuxtLink>
             <a
               href="#services"
@@ -212,7 +212,7 @@ const stats = ref([
     >
       <div
         class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5"
-      ></div>
+      />
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div
@@ -223,7 +223,7 @@ const stats = ref([
             <!-- Glow Effect -->
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
-            ></div>
+            />
 
             <!-- Card -->
             <div
@@ -262,7 +262,7 @@ const stats = ref([
       <!-- Background Accent -->
       <div
         class="absolute top-1/4 right-0 w-[800px] h-[800px] bg-primary-500/5 blur-[200px] rounded-full"
-      ></div>
+      />
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <!-- Section Header -->
@@ -274,7 +274,7 @@ const stats = ref([
           <h2
             class="text-4xl md:text-6xl font-black text-white italic tracking-tight"
           >
-            Services Designed <br />
+            Services Designed <br >
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
               >For Your Success.</span
@@ -294,7 +294,7 @@ const stats = ref([
               <!-- Animated Glow -->
               <div
                 class="absolute -inset-2 bg-gradient-to-r from-primary-500/20 via-primary-600/20 to-primary-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-              ></div>
+              />
 
               <!-- Main Card -->
               <div
@@ -303,7 +303,7 @@ const stats = ref([
                 <!-- Floating Background Pattern -->
                 <div
                   class="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full blur-[100px] transform group-hover:scale-150 transition-transform duration-1000"
-                ></div>
+                />
 
                 <div class="relative z-10 flex flex-col lg:flex-row gap-8">
                   <!-- Left: Icon & Number -->
@@ -314,13 +314,13 @@ const stats = ref([
                     <div class="relative">
                       <div
                         class="absolute inset-0 bg-primary-500 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"
-                      ></div>
+                      />
                       <div
                         class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
                       >
                         <i
                           :class="[service.icon, 'text-primary-500 text-2xl']"
-                        ></i>
+                        />
                       </div>
                     </div>
 
@@ -343,7 +343,7 @@ const stats = ref([
                       <p
                         class="text-xs text-primary-400 font-bold uppercase tracking-[0.3em] flex items-center gap-2"
                       >
-                        <span class="w-8 h-px bg-primary-500"></span>
+                        <span class="w-8 h-px bg-primary-500"/>
                         {{ service.subtitle }}
                       </p>
                       <p
@@ -367,7 +367,7 @@ const stats = ref([
                           <div
                             class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0 group-hover/feature:bg-primary-500/20 transition-colors"
                           >
-                            <i class="pi pi-check text-primary-500 text-xs"></i>
+                            <i class="pi pi-check text-primary-500 text-xs"/>
                           </div>
                           <div class="flex-1">
                             <h4
@@ -395,7 +395,7 @@ const stats = ref([
                         <div class="relative flex-shrink-0">
                           <div
                             class="absolute inset-0 bg-primary-500 rounded-full blur opacity-0 group-hover/step:opacity-30 transition-opacity"
-                          ></div>
+                          />
                           <div
                             class="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center"
                           >
@@ -417,7 +417,7 @@ const stats = ref([
                 <div class="absolute bottom-0 right-0 w-32 h-32 opacity-5">
                   <div
                     class="absolute inset-0 bg-gradient-to-tl from-primary-500 to-transparent rounded-tl-full"
-                  ></div>
+                  />
                 </div>
               </div>
             </div>
@@ -434,7 +434,7 @@ const stats = ref([
       <div class="absolute inset-0">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
 
       <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -457,7 +457,7 @@ const stats = ref([
                     : 'pi-star',
                   'text-primary-500',
                 ]"
-              ></i>
+              />
             </div>
           </div>
 
@@ -489,7 +489,7 @@ const stats = ref([
               <span>Begin Your Journey</span>
               <i
                 class="pi pi-arrow-right transform group-hover:translate-x-2 transition-transform"
-              ></i>
+              />
             </NuxtLink>
           </div>
 
@@ -498,15 +498,15 @@ const stats = ref([
             class="pt-8 flex flex-wrap justify-center gap-6 text-xs text-surface-500"
           >
             <div class="flex items-center gap-2">
-              <i class="pi pi-shield text-primary-500"></i>
+              <i class="pi pi-shield text-primary-500"/>
               <span>Secure Process</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-check-circle text-primary-500"></i>
+              <i class="pi pi-check-circle text-primary-500"/>
               <span>98.5% Success Rate</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-users text-primary-500"></i>
+              <i class="pi pi-users text-primary-500"/>
               <span>17+ Years Experience</span>
             </div>
           </div>

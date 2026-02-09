@@ -95,13 +95,13 @@ const technicalAdvisors = [
       <div class="absolute inset-0 pointer-events-none">
         <div
           class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/10 blur-[120px] rounded-full"
-        ></div>
+        />
         <div
           class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full"
-        ></div>
+        />
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10 text-center">
@@ -110,7 +110,7 @@ const technicalAdvisors = [
         >
           <span
             class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-          ></span>
+          />
           <span
             class="text-[10px] uppercase font-black tracking-widest text-surface-500"
             >World-Class Guidance</span
@@ -124,7 +124,7 @@ const technicalAdvisors = [
             class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600"
             >Architects</span
           >
-          <br />
+          <br >
           of Your Future.
         </h1>
         <p
@@ -169,7 +169,7 @@ const technicalAdvisors = [
                 :src="leader.image"
                 :alt="leader.name"
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
+              >
             </div>
             <div class="flex-1 flex flex-col justify-center">
               <div class="mb-4">
@@ -233,7 +233,7 @@ const technicalAdvisors = [
                   :src="mentor.image"
                   :alt="mentor.name"
                   class="w-full h-full object-cover"
-                />
+                >
               </div>
               <div>
                 <h3
@@ -302,7 +302,7 @@ const technicalAdvisors = [
                   :src="mentor.image"
                   :alt="mentor.name"
                   class="w-full h-full object-cover"
-                />
+                >
               </div>
               <div>
                 <h3

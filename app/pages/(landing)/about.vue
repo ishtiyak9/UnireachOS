@@ -25,7 +25,7 @@ const journey = ref([
     year: "2025",
     title: "Global Impact",
     story:
-      "3,500+ dreams realized. Families reunited across continents. Businesses expanded globally. Each journey validated our approach.",
+      "150+ dreams realized. Families reunited across continents. Businesses expanded globally. Each journey validated our approach.",
     icon: "pi pi-globe",
     color: "from-primary-600 to-primary-700",
   },
@@ -86,7 +86,7 @@ const team = ref([
 ]);
 
 const impact = ref([
-  { metric: "3,500+", label: "Dreams Realized" },
+  { metric: "24/7", label: "Support" },
   { metric: "22+", label: "Countries Served" },
   { metric: "350+", label: "Partner Institutions" },
   { metric: "83%", label: "Success Rate" },
@@ -102,10 +102,10 @@ const impact = ref([
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px)] bg-size-[60px_60px] opacity-30"
-        ></div>
+        />
         <div
           class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -115,7 +115,7 @@ const impact = ref([
           >
             <span
               class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"
-            ></span>
+            />
             <span
               class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
               >Our Story</span
@@ -144,13 +144,98 @@ const impact = ref([
       </div>
     </section>
 
+    <!-- Brand Story - Visual Identity -->
+    <section class="py-16 md:py-24 bg-surface-900 border-b border-white/5">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <!-- Text Content -->
+          <div class="space-y-6">
+            <span
+              class="text-[10px] font-black text-primary-500 uppercase tracking-[0.5em]"
+              >Our Identity</span
+            >
+            <h2
+              class="text-3xl md:text-5xl font-black text-white italic tracking-tight leading-tight"
+            >
+              A Symbol of <br >
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+                >Unbroken Trust.</span
+              >
+            </h2>
+            <p class="text-base text-surface-300 leading-relaxed">
+              We redesigned our identity to reflect our deepest promise: to be
+              the vital link between your ambition and your future.
+            </p>
+            <div class="space-y-4 pt-4">
+              <div class="flex gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center shrink-0 border border-primary-500/20"
+                >
+                  <i class="pi pi-link text-primary-500 text-xl"/>
+                </div>
+                <div>
+                  <h3 class="text-white font-bold mb-1">The Unireach Link</h3>
+                  <p class="text-sm text-surface-400">
+                    Two distinct worlds—your home and your destination—unified
+                    seamlessly by our expertise. No gaps, no uncertainty.
+                  </p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0 border border-purple-500/20"
+                >
+                  <i class="pi pi-shield text-purple-400 text-xl"/>
+                </div>
+                <div>
+                  <h3 class="text-white font-bold mb-1">The Trusted Core</h3>
+                  <p class="text-sm text-surface-400">
+                    The purple heart represents the wisdom and strategy we apply
+                    to protect your journey, transforming a complex process into
+                    a golden opportunity.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual/Logo Presentation -->
+          <div
+            class="relative flex items-center justify-center h-full min-h-[400px]"
+          >
+            <!-- Background Glows -->
+            <div
+              class="absolute inset-0 bg-gradient-to-tr from-primary-500/20 via-purple-500/20 to-primary-500/20 blur-[100px] opacity-60 animate-pulse"
+            />
+
+            <!-- Logo Card -->
+            <div
+              class="relative p-12 rounded-3xl bg-surface-950/50 border border-white/10 backdrop-blur-xl shadow-2xl skew-y-3 hover:skew-y-0 transition-transform duration-700 group"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              />
+              <div class="w-48 h-48 md:w-64 md:h-64 relative">
+                <img
+                  src="/icon.png"
+                  alt="The Unireach Link"
+                  class="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(234,179,8,0.3)]"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- The Journey - Compact Premium Timeline -->
     <section
       class="py-16 md:py-20 bg-surface-950 border-t border-white/5 relative overflow-hidden"
     >
       <div
         class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-primary-500/5 blur-[200px] rounded-full"
-      ></div>
+      />
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="text-center mb-12 space-y-3">
@@ -161,7 +246,7 @@ const impact = ref([
           <h2
             class="text-3xl md:text-5xl font-black text-white italic tracking-tight"
           >
-            Our Story <br />
+            Our Story <br >
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
               >In Motion.</span
@@ -183,7 +268,7 @@ const impact = ref([
                 chapter.color,
                 'rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500',
               ]"
-            ></div>
+            />
 
             <!-- Card -->
             <div
@@ -214,7 +299,7 @@ const impact = ref([
                       chapter.color,
                       'rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity',
                     ]"
-                  ></div>
+                  />
                   <div
                     :class="[
                       'relative w-14 h-14 rounded-xl bg-gradient-to-br',
@@ -222,7 +307,7 @@ const impact = ref([
                       'border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-500',
                     ]"
                   >
-                    <i :class="[chapter.icon, 'text-white text-xl']"></i>
+                    <i :class="[chapter.icon, 'text-white text-xl']"/>
                   </div>
                 </div>
               </div>
@@ -252,7 +337,7 @@ const impact = ref([
                         'rounded-full',
                       ]"
                       :style="`width: ${(index + 1) * 25}%`"
-                    ></div>
+                    />
                   </div>
                   <span class="text-[8px] font-black text-surface-600"
                     >{{ index + 1 }}/4</span
@@ -269,7 +354,7 @@ const impact = ref([
         >
           <div
             class="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent"
-          ></div>
+          />
         </div>
       </div>
     </section>
@@ -285,7 +370,7 @@ const impact = ref([
           <h2
             class="text-4xl md:text-6xl font-black text-white italic tracking-tight"
           >
-            Our Core <br />
+            Our Core <br >
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
               >Values.</span
@@ -301,14 +386,14 @@ const impact = ref([
           >
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            ></div>
+            />
             <div
               class="relative h-full p-6 rounded-2xl bg-gradient-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/30 transition-all duration-500"
             >
               <div
                 class="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
               >
-                <i :class="[value.icon, 'text-primary-500 text-xl']"></i>
+                <i :class="[value.icon, 'text-primary-500 text-xl']"/>
               </div>
               <h3
                 class="text-xl font-black text-white mb-3 group-hover:text-primary-500 transition-colors"
@@ -335,7 +420,7 @@ const impact = ref([
           <h2
             class="text-4xl md:text-6xl font-black text-white italic tracking-tight"
           >
-            Meet The <br />
+            Meet The <br >
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
               >Dream Team.</span
@@ -351,7 +436,7 @@ const impact = ref([
           <div v-for="member in team" :key="member.role" class="group relative">
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
-            ></div>
+            />
             <div
               class="relative p-8 rounded-2xl bg-surface-900/30 border border-white/5 backdrop-blur-xl hover:border-primary-500/30 transition-all duration-500 text-center"
             >
@@ -378,13 +463,13 @@ const impact = ref([
     >
       <div
         class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5"
-      ></div>
+      />
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div v-for="stat in impact" :key="stat.label" class="group relative">
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
-            ></div>
+            />
             <div
               class="relative p-6 rounded-2xl bg-surface-900/30 border border-white/5 backdrop-blur-xl hover:border-primary-500/30 transition-all duration-500 text-center"
             >
@@ -409,7 +494,7 @@ const impact = ref([
       <div class="absolute inset-0">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
 
       <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -418,7 +503,7 @@ const impact = ref([
             <div
               class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20"
             >
-              <i class="pi pi-heart-fill text-primary-500 text-sm"></i>
+              <i class="pi pi-heart-fill text-primary-500 text-sm"/>
               <span
                 class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
                 >Our Promise</span
@@ -453,7 +538,7 @@ const impact = ref([
               <span>Start Your Journey</span>
               <i
                 class="pi pi-arrow-right transform group-hover:translate-x-2 transition-transform"
-              ></i>
+              />
             </NuxtLink>
           </div>
 
@@ -461,16 +546,16 @@ const impact = ref([
             class="pt-8 flex flex-wrap justify-center gap-6 text-xs text-surface-500"
           >
             <div class="flex items-center gap-2">
-              <i class="pi pi-shield text-primary-500"></i>
+              <i class="pi pi-shield text-primary-500"/>
               <span>Trusted Partner</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-check-circle text-primary-500"></i>
+              <i class="pi pi-check-circle text-primary-500"/>
               <span>83% Success Rate</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-heart text-primary-500"></i>
-              <span>3,500+ Dreams Realized</span>
+              <i class="pi pi-heart text-primary-500"/>
+              <span>24/7 Support</span>
             </div>
           </div>
         </div>

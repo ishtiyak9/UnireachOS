@@ -28,7 +28,7 @@ const services = [
     <!-- Background Accents -->
     <div
       class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-500/5 blur-[120px] rounded-full pointer-events-none"
-    ></div>
+    />
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -39,7 +39,7 @@ const services = [
           >
             <span
               class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-            ></span>
+            />
             <span
               class="text-[10px] uppercase font-black tracking-widest text-surface-500"
               >Service Architecture</span
@@ -49,7 +49,7 @@ const services = [
           <h2
             class="text-4xl md:text-5xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-tight"
           >
-            Precision <br />
+            Precision <br >
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-700"
               >Client Engagement.</span
@@ -67,8 +67,9 @@ const services = [
           <div class="pt-4">
             <NuxtLink to="/services">
               <BaseButton
+                severity="primary"
                 label="View Capabilities"
-                class="px-8 py-4 rounded-full bg-surface-900 dark:bg-surface-0 text-white dark:text-surface-900 font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform shadow-xl"
+                class="px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-transform shadow-xl"
                 trailing-icon="pi pi-arrow-right"
               />
             </NuxtLink>
@@ -97,7 +98,7 @@ const services = [
                       service.icon,
                       'text-xl text-surface-600 dark:text-surface-400 group-hover:text-primary-500 transition-colors',
                     ]"
-                  ></i>
+                  />
                 </div>
                 <div>
                   <h3
@@ -112,7 +113,7 @@ const services = [
                 <div
                   class="ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <i class="pi pi-arrow-right text-surface-400 text-xs"></i>
+                  <i class="pi pi-arrow-right text-surface-400 text-xs"/>
                 </div>
               </div>
             </div>

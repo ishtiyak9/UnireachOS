@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { contactInfo } from "@/config/contact";
+import { contactInfo } from "~/config/contact";
 definePageMeta({
   layout: false,
 });
@@ -89,7 +89,7 @@ const sections = [
               <h2
                 class="text-xl font-bold text-surface-900 dark:text-surface-0 mb-4 flex items-center gap-3"
               >
-                <span class="w-1.5 h-6 bg-primary-500 rounded-full"></span>
+                <span class="w-1.5 h-6 bg-primary-500 rounded-full"/>
                 {{ section.title }}
               </h2>
               <p
@@ -105,7 +105,7 @@ const sections = [
             >
               <p class="text-sm text-surface-500 italic">
                 If you have any questions about these Terms, please contact us
-                at: <br />
+                at: <br >
                 <a
                   :href="contactInfo.email.url"
                   class="text-primary-600 dark:text-primary-400 font-bold hover:underline not-italic"

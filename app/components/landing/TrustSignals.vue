@@ -4,13 +4,13 @@
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div
         class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
-      ></div>
+      />
       <div
         class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
-      ></div>
+      />
       <div
         class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(var(--p-primary-500-rgb),0.05)_0%,transparent_70%)]"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -56,7 +56,7 @@
                     :alt="uni.name"
                     class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
                     @error="uni.failed = true"
-                  />
+                  >
 
                   <!-- Fallback Styling -->
                   <div
@@ -108,7 +108,7 @@
               :key="badge.name"
               class="flex items-center gap-3 px-4 py-2 rounded-lg bg-surface-950/50 border border-white/10 hover:border-primary-500/30 transition-colors"
             >
-              <i :class="[badge.icon, 'text-primary-500']"></i>
+              <i :class="[badge.icon, 'text-primary-500']"/>
               <div>
                 <div
                   class="text-[10px] text-surface-500 uppercase tracking-wider font-bold"
@@ -127,7 +127,7 @@
             <div
               class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors"
             >
-              <i class="pi pi-shield-check text-3xl text-primary-400 mb-3"></i>
+              <i class="pi pi-shield-check text-3xl text-primary-400 mb-3"/>
               <h5 class="text-sm font-black text-white mb-1">
                 100% Transparency
               </h5>
@@ -139,7 +139,7 @@
             <div
               class="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors mt-8"
             >
-              <i class="pi pi-users text-3xl text-primary-400 mb-3"></i>
+              <i class="pi pi-users text-3xl text-primary-400 mb-3"/>
               <h5 class="text-sm font-black text-white mb-1">Expert Team</h5>
               <p class="text-xs text-surface-400">
                 Guided by certified professionals with years of industry

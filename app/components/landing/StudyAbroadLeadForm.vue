@@ -4,10 +4,10 @@
     <div class="absolute inset-0 z-0">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px)] bg-size-[60px_60px] opacity-30"
-      ></div>
+      />
       <div
         class="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary-500/10 blur-[150px] rounded-full animate-pulse-slow"
-      ></div>
+      />
     </div>
 
     <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -16,7 +16,7 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl mb-6"
         >
-          <i class="pi pi-graduation-cap text-primary-400 text-xs"></i>
+          <i class="pi pi-graduation-cap text-primary-400 text-xs"/>
           <span
             class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
             >Start Your Journey</span
@@ -48,7 +48,7 @@
           <div
             class="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
           >
-            <i class="pi pi-check text-primary-400 text-2xl"></i>
+            <i class="pi pi-check text-primary-400 text-2xl"/>
           </div>
           <h3 class="text-2xl font-black text-white mb-3">
             Application Received!
@@ -58,15 +58,15 @@
             WhatsApp within 24 hours.
           </p>
           <button
-            @click="resetForm"
             class="px-6 py-3 bg-primary-500 text-black text-xs font-black uppercase tracking-widest rounded-lg hover:bg-primary-400 transition-all"
+            @click="resetForm"
           >
             Submit Another Application
           </button>
         </div>
 
         <!-- Form Fields -->
-        <form v-else @submit.prevent="handleSubmit" class="space-y-6">
+        <form v-else class="space-y-6" @submit.prevent="handleSubmit">
           <!-- Full Name -->
           <div>
             <label
@@ -82,7 +82,7 @@
               required
               placeholder="Enter your full name"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            />
+            >
           </div>
 
           <!-- Email -->
@@ -100,7 +100,7 @@
               required
               placeholder="your.email@example.com"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            />
+            >
           </div>
 
           <!-- WhatsApp Number -->
@@ -115,7 +115,7 @@
               <div
                 class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-surface-400"
               >
-                <i class="pi pi-whatsapp text-green-400"></i>
+                <i class="pi pi-whatsapp text-green-400"/>
                 <span class="text-sm">+</span>
               </div>
               <input
@@ -125,7 +125,7 @@
                 required
                 placeholder="880 1XXX-XXXXXX"
                 class="w-full pl-16 pr-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-              />
+              >
             </div>
             <p class="text-xs text-surface-500 mt-1">
               Include country code (e.g., 880 for Bangladesh)
@@ -245,7 +245,7 @@
               type="text"
               placeholder="e.g., Computer Science, Business, Medicine"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            />
+            >
           </div>
 
           <!-- Academic Results & Passing Year (Side by Side) -->
@@ -265,7 +265,7 @@
                 required
                 placeholder="e.g., 3.5 GPA or 85%"
                 class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-              />
+              >
               <p class="text-xs text-surface-500 mt-1">
                 Enter your GPA (out of 4.0) or percentage
               </p>
@@ -354,7 +354,7 @@
               rows="4"
               placeholder="Tell us about your academic background, goals, or any questions you have..."
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all resize-none"
-            ></textarea>
+            />
           </div>
 
           <!-- Submit Button -->
@@ -369,7 +369,7 @@
               <i
                 v-if="!isSubmitting"
                 class="pi pi-arrow-right transform group-hover:translate-x-1 transition-transform"
-              ></i>
+              />
             </button>
           </div>
 

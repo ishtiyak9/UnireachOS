@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
+
+import { contactInfo } from "~/config/contact";
 definePageMeta({
   layout: false,
 });
@@ -28,8 +30,6 @@ const investmentRanges = [
   "€500K+",
   "Not Applicable",
 ];
-
-import { contactInfo } from "@/config/contact";
 
 // ... (existing imports)
 
@@ -78,10 +78,10 @@ const handleSubmit = async () => {
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-size-[40px_40px] opacity-20"
-        ></div>
+        />
         <div
           class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary-500/5 blur-[100px] rounded-full"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -91,7 +91,7 @@ const handleSubmit = async () => {
           >
             <span
               class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-            ></span>
+            />
             <span
               class="text-[8px] font-black uppercase tracking-[0.4em] text-primary-400"
               >Secure Channel</span
@@ -100,7 +100,7 @@ const handleSubmit = async () => {
           <h1
             class="text-4xl md:text-6xl font-black text-white italic tracking-tighter leading-none"
           >
-            Initiate <br />
+            Initiate <br >
             <span class="text-primary-500 not-italic font-light"
               >Contact Protocol.</span
             >
@@ -136,8 +136,8 @@ const handleSubmit = async () => {
               </div>
 
               <form
-                @submit.prevent="handleSubmit"
                 class="space-y-5 flex-1 flex flex-col"
+                @submit.prevent="handleSubmit"
               >
                 <!-- Full Name -->
                 <div class="space-y-2">
@@ -151,7 +151,7 @@ const handleSubmit = async () => {
                     required
                     class="w-full px-4 py-3 bg-surface-950/50 border border-white/5 rounded-xl text-sm text-white placeholder:text-surface-600 focus:border-primary-500/30 focus:outline-none transition-colors"
                     placeholder="John Doe"
-                  />
+                  >
                 </div>
 
                 <!-- Email & Phone -->
@@ -167,7 +167,7 @@ const handleSubmit = async () => {
                       required
                       class="w-full px-4 py-3 bg-surface-950/50 border border-white/5 rounded-xl text-sm text-white placeholder:text-surface-600 focus:border-primary-500/30 focus:outline-none transition-colors"
                       placeholder="john@example.com"
-                    />
+                    >
                   </div>
                   <div class="space-y-2">
                     <label
@@ -179,7 +179,7 @@ const handleSubmit = async () => {
                       type="tel"
                       class="w-full px-4 py-3 bg-surface-950/50 border border-white/5 rounded-xl text-sm text-white placeholder:text-surface-600 focus:border-primary-500/30 focus:outline-none transition-colors"
                       placeholder="+1 (555) 000-0000"
-                    />
+                    >
                   </div>
                 </div>
 
@@ -238,7 +238,7 @@ const handleSubmit = async () => {
                     required
                     class="flex-1 w-full px-4 py-3 bg-surface-950/50 border border-white/5 rounded-xl text-sm text-white placeholder:text-surface-600 focus:border-primary-500/30 focus:outline-none transition-colors resize-none"
                     placeholder="Describe your mobility objectives, timeline, and any specific requirements..."
-                  ></textarea>
+                  />
                 </div>
 
                 <!-- Submit Button -->
@@ -249,8 +249,8 @@ const handleSubmit = async () => {
                 >
                   <span v-if="!isSubmitting">Submit Secure Inquiry</span>
                   <span v-else>Processing...</span>
-                  <i v-if="!isSubmitting" class="pi pi-arrow-right"></i>
-                  <i v-else class="pi pi-spin pi-spinner"></i>
+                  <i v-if="!isSubmitting" class="pi pi-arrow-right"/>
+                  <i v-else class="pi pi-spin pi-spinner"/>
                 </button>
 
                 <!-- Privacy Notice -->
@@ -284,7 +284,7 @@ const handleSubmit = async () => {
                   <div
                     class="w-9 h-9 rounded-lg bg-primary-500/5 border border-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/10 transition-colors flex-shrink-0"
                   >
-                    <i :class="[method.icon, 'text-primary-500 text-xs']"></i>
+                    <i :class="[method.icon, 'text-primary-500 text-xs']"/>
                   </div>
                   <div class="flex-1 min-w-0">
                     <span
@@ -337,7 +337,7 @@ const handleSubmit = async () => {
                 <div class="flex items-center gap-2">
                   <div
                     class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
-                  ></div>
+                  />
                   <span
                     class="text-[9px] font-black text-green-500 uppercase tracking-widest"
                     >Response Time: 24h</span
@@ -360,7 +360,7 @@ const handleSubmit = async () => {
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
                   class="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-                ></iframe>
+                />
               </div>
             </div>
 
@@ -371,7 +371,7 @@ const handleSubmit = async () => {
               <div class="flex items-start gap-3">
                 <i
                   class="pi pi-shield text-primary-500 text-lg mt-0.5 flex-shrink-0"
-                ></i>
+                />
                 <div>
                   <h4 class="text-sm font-black text-white mb-2">
                     Secure & Confidential

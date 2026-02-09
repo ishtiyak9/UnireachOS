@@ -52,10 +52,10 @@ const stats = ref({
     <div class="absolute inset-0 z-0">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-[size:80px_80px] opacity-20"
-      ></div>
+      />
       <div
         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-primary-500/5 blur-[150px] rounded-full"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -66,7 +66,7 @@ const stats = ref({
           class="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl mb-6"
         >
           <div class="flex items-center gap-2">
-            <i class="pi pi-google text-primary-500 text-xl"></i>
+            <i class="pi pi-google text-primary-500 text-xl"/>
             <div class="flex flex-col items-start">
               <div class="flex items-center gap-1">
                 <span class="text-2xl font-black text-white italic">{{
@@ -77,7 +77,7 @@ const stats = ref({
                     v-for="i in 5"
                     :key="i"
                     class="pi pi-star-fill text-yellow-400 text-xs"
-                  ></i>
+                  />
                 </div>
               </div>
               <span
@@ -86,9 +86,9 @@ const stats = ref({
               >
             </div>
           </div>
-          <div class="h-8 w-px bg-white/10"></div>
+          <div class="h-8 w-px bg-white/10"/>
           <div class="flex items-center gap-1.5">
-            <i class="pi pi-verified text-primary-500 text-sm"></i>
+            <i class="pi pi-verified text-primary-500 text-sm"/>
             <span
               class="text-[9px] text-surface-400 font-black uppercase tracking-wider"
               >Verified</span
@@ -117,7 +117,7 @@ const stats = ref({
           <!-- Hover Glow -->
           <div
             class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          ></div>
+          />
 
           <!-- Card -->
           <div
@@ -145,7 +145,7 @@ const stats = ref({
                 </div>
               </div>
               <!-- Google Icon -->
-              <i class="pi pi-google text-primary-500 text-lg opacity-50"></i>
+              <i class="pi pi-google text-primary-500 text-lg opacity-50"/>
             </div>
 
             <!-- Stars -->
@@ -154,7 +154,7 @@ const stats = ref({
                 v-for="i in review.rating"
                 :key="i"
                 class="pi pi-star-fill text-yellow-400 text-sm"
-              ></i>
+              />
             </div>
 
             <!-- Review Text -->
@@ -166,7 +166,7 @@ const stats = ref({
             <div
               class="flex items-center gap-1.5 mt-4 pt-4 border-t border-white/5"
             >
-              <i class="pi pi-check-circle text-primary-500 text-xs"></i>
+              <i class="pi pi-check-circle text-primary-500 text-xs"/>
               <span
                 class="text-[9px] text-surface-500 font-bold uppercase tracking-wider"
                 >Verified Google Review</span
@@ -184,7 +184,7 @@ const stats = ref({
           rel="noopener noreferrer"
           class="group inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-primary-500/30 transition-all duration-300"
         >
-          <i class="pi pi-google text-primary-500 text-xl"></i>
+          <i class="pi pi-google text-primary-500 text-xl"/>
           <div class="text-left">
             <div class="text-sm font-black text-white uppercase tracking-wider">
               View All Reviews
@@ -195,7 +195,7 @@ const stats = ref({
           </div>
           <i
             class="pi pi-arrow-right text-primary-500 text-xs transform group-hover:translate-x-1 transition-transform"
-          ></i>
+          />
         </a>
       </div>
     </div>

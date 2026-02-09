@@ -8,7 +8,7 @@
     >
       <div
         class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_50%,var(--p-primary-500-rgb),transparent_50%)] opacity-5 blur-3xl"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -21,7 +21,7 @@
         <p
           class="text-2xl sm:text-3xl md:text-5xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-tight"
         >
-          Fueling growth for 500+ <br class="hidden md:block" />
+          Fueling growth for 500+ <br class="hidden md:block" >
           <span class="italic font-light text-primary-600 dark:text-primary-400"
             >Education Giants.</span
           >

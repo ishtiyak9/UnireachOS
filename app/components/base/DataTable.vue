@@ -43,7 +43,7 @@
       }"
     >
       <!-- Header with Global Search and Actions -->
-      <template #header v-if="showHeader">
+      <template v-if="showHeader" #header>
         <div
           class="flex flex-col md:flex-row md:items-center justify-between gap-4"
         >

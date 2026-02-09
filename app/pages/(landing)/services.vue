@@ -1,11 +1,12 @@
-import { contactInfo } from "@/config/contact";
+<script setup lang="ts">
+import { contactInfo } from "~/config/contact";
 
 definePageMeta({
   layout: false,
 });
 
 const openWhatsApp = (serviceName: string) => {
-  const phone = contactInfo.whatsapp.number.replace('+', '');
+  const phone = contactInfo.whatsapp.number.replace("+", "");
   const text = encodeURIComponent(
     `Greetings Unireach, I would like to discuss the '${serviceName}' strategic module.`
   );
@@ -166,10 +167,10 @@ const categories = [
       <div class="absolute inset-0 pointer-events-none opacity-40">
         <div
           class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-900/20 blur-[100px] rounded-full"
-        ></div>
+        />
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px]"
-        ></div>
+        />
       </div>
 
       <div
@@ -179,7 +180,7 @@ const categories = [
           <div class="inline-flex items-center gap-2 mb-4">
             <span
               class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-            ></span>
+            />
             <span
               class="text-[10px] uppercase font-bold tracking-[0.2em] text-primary-400"
               >Capability Ecosystem</span
@@ -199,10 +200,10 @@ const categories = [
         <!-- Quick CTA -->
         <div class="flex-shrink-0">
           <button
-            @click="openWhatsApp('General Inquiry')"
             class="group flex items-center gap-3 px-5 py-2.5 rounded-lg bg-surface-800/50 hover:bg-primary-600 text-surface-300 hover:text-white border border-surface-700 hover:border-primary-500 transition-all duration-300"
+            @click="openWhatsApp('General Inquiry')"
           >
-            <i class="pi pi-whatsapp"></i>
+            <i class="pi pi-whatsapp"/>
             <span class="text-xs font-bold uppercase tracking-wider"
               >Fast-Track Discussion</span
             >
@@ -230,7 +231,7 @@ const categories = [
             <h2 class="text-lg font-bold text-white tracking-wide">
               {{ category.title }}
             </h2>
-            <div class="h-px flex-1 bg-surface-800/50"></div>
+            <div class="h-px flex-1 bg-surface-800/50"/>
           </div>
 
           <!-- Ultra-Compact Cards -->
@@ -243,7 +244,7 @@ const categories = [
             >
               <div
                 class="absolute -inset-px bg-gradient-to-br from-primary-500/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              ></div>
+              />
               <div
                 class="relative h-full p-4 rounded-xl bg-surface-900 border border-surface-800 hover:border-primary-500/30 hover:bg-surface-800/50 transition-all duration-300 flex flex-col"
               >
@@ -256,11 +257,11 @@ const categories = [
                         mod.icon,
                         'text-sm text-surface-400 group-hover:text-white',
                       ]"
-                    ></i>
+                    />
                   </div>
                   <i
                     class="pi pi-arrow-up-right text-[10px] text-surface-600 group-hover:text-primary-400 transition-colors"
-                  ></i>
+                  />
                 </div>
 
                 <h3
@@ -288,11 +289,11 @@ const categories = [
         "We do not offer standard packages. We offer precision."
       </p>
       <button
-        @click="openWhatsApp('Custom Strategy')"
         class="text-xs font-bold text-primary-400 hover:text-white uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto"
+        @click="openWhatsApp('Custom Strategy')"
       >
         <span>Request Bespoke Solution</span>
-        <i class="pi pi-arrow-right text-[10px]"></i>
+        <i class="pi pi-arrow-right text-[10px]"/>
       </button>
     </section>
   </NuxtLayout>

@@ -4,10 +4,10 @@
     <div class="absolute inset-0 z-0">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-size-[80px_80px] opacity-20"
-      ></div>
+      />
       <div
         class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary-500/5 blur-[120px] rounded-full"
-      ></div>
+      />
     </div>
 
     <div class="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
@@ -16,7 +16,7 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl mb-6"
         >
-          <i class="pi pi-question-circle text-primary-400 text-xs"></i>
+          <i class="pi pi-question-circle text-primary-400 text-xs"/>
           <span
             class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
             >Got Questions?</span
@@ -44,15 +44,15 @@
         <button
           v-for="category in categories"
           :key="category.id"
-          @click="activeCategory = category.id"
           class="px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300"
           :class="
             activeCategory === category.id
               ? 'bg-primary-500 text-black shadow-xl shadow-primary-500/30'
               : 'bg-surface-900/50 text-surface-400 hover:bg-surface-800 border border-white/10'
           "
+          @click="activeCategory = category.id"
         >
-          <i :class="[category.icon, 'mr-2']"></i>
+          <i :class="[category.icon, 'mr-2']"/>
           {{ category.label }}
         </button>
       </div>
@@ -65,14 +65,14 @@
           class="group bg-surface-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-primary-500/30 transition-all duration-300"
         >
           <button
-            @click="toggleFAQ(index)"
             class="w-full px-6 py-5 flex items-center justify-between text-left transition-all duration-300"
+            @click="toggleFAQ(index)"
           >
             <div class="flex items-start gap-4 flex-1">
               <div
                 class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0 mt-1"
               >
-                <i class="pi pi-question text-primary-400 text-xs"></i>
+                <i class="pi pi-question text-primary-400 text-xs"/>
               </div>
               <h3
                 class="text-sm md:text-base font-bold text-white group-hover:text-primary-400 transition-colors pr-4"
@@ -86,7 +86,7 @@
                 openFAQ === index ? 'pi-minus' : 'pi-plus',
                 'text-primary-400 text-sm transition-transform duration-300 flex-shrink-0',
               ]"
-            ></i>
+            />
           </button>
 
           <Transition
@@ -101,7 +101,7 @@
               <div
                 class="pl-12 text-sm text-surface-300 leading-relaxed space-y-3"
               >
-                <p v-html="faq.answer"></p>
+                <p v-html="faq.answer"/>
                 <div
                   v-if="faq.tip"
                   class="mt-4 p-4 bg-primary-500/5 border border-primary-500/20 rounded-xl"
@@ -109,7 +109,7 @@
                   <div class="flex items-start gap-3">
                     <i
                       class="pi pi-lightbulb text-primary-400 text-sm mt-1"
-                    ></i>
+                    />
                     <div>
                       <p class="text-xs font-bold text-primary-400 mb-1">
                         Pro Tip
@@ -128,7 +128,7 @@
       <div
         class="mt-16 text-center p-8 bg-gradient-to-br from-primary-500/10 to-primary-600/5 border border-primary-500/20 rounded-2xl backdrop-blur-xl"
       >
-        <i class="pi pi-comments text-primary-400 text-3xl mb-4"></i>
+        <i class="pi pi-comments text-primary-400 text-3xl mb-4"/>
         <h3 class="text-xl font-black text-white mb-2">
           Still Have Questions?
         </h3>
@@ -136,21 +136,19 @@
           Our expert counselors are here to help you 24/7
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-          import { contactInfo } from "@/config/contact"; // ... (existing
-          script) // Update the template to use contactInfo.whatsapp.url
           <a
             :href="contactInfo.whatsapp.url"
             target="_blank"
-            class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-green-400 transition-all shadow-xl hover:shadow-green-500/30"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary-400 transition-all shadow-xl hover:shadow-primary-500/30"
           >
-            <i class="pi pi-whatsapp"></i>
+            <i class="pi pi-whatsapp"/>
             WhatsApp Us
           </a>
           <NuxtLink
             to="/apply"
             class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary-400 transition-all shadow-xl hover:shadow-primary-500/30"
           >
-            <i class="pi pi-send"></i>
+            <i class="pi pi-send"/>
             Book Consultation
           </NuxtLink>
         </div>
@@ -161,6 +159,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { contactInfo } from "~/config/contact";
 
 // Category state
 const activeCategory = ref("study");

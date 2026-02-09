@@ -60,7 +60,7 @@ const services = [
           <h2
             class="text-2xl sm:text-3xl md:text-4xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-[1.1]"
           >
-            Simplifying Your <br />
+            Simplifying Your <br >
             <span
               class="italic font-light text-primary-600 dark:text-primary-400"
               >Study Abroad Journey.</span
@@ -85,7 +85,7 @@ const services = [
           <!-- Premium Inner Glow -->
           <div
             class="absolute inset-0 bg-linear-to-br from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
-          ></div>
+          />
 
           <div class="relative z-10 flex gap-5 items-start">
             <div

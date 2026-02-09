@@ -230,7 +230,7 @@ const filteredDestinations = computed(() => {
           <h1
             class="text-3xl sm:text-5xl md:text-6xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-[1.05]"
           >
-            Mapped for Success: <br />
+            Mapped for Success: <br >
             <NuxtLink
               to="/destinations"
               class="italic font-light text-primary-600 dark:text-primary-400"
@@ -278,10 +278,10 @@ const filteredDestinations = computed(() => {
               :src="dest.image"
               :alt="dest.country"
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            >
             <div
               class="absolute inset-0 bg-linear-to-t from-surface-950 via-surface-950/20 to-transparent opacity-80"
-            ></div>
+            />
 
             <div
               class="absolute bottom-4 left-5 right-5 flex justify-between items-end"

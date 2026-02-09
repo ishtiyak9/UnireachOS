@@ -30,15 +30,15 @@ const europeanUnis = [
       <!-- High-End Mesh Gradient -->
       <div
         class="absolute top-[-5%] right-[-5%] w-160 h-160 bg-primary-500/10 dark:bg-primary-500/15 rounded-full blur-[140px] animate-pulse"
-      ></div>
+      />
       <div
         class="absolute bottom-[-5%] left-[-5%] w-160 h-160 bg-primary-600/5 dark:bg-primary-500/10 rounded-full blur-[140px]"
-      ></div>
+      />
 
       <!-- Architectural Grid -->
       <div
         class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(var(--p-primary-400-rgb),0.03)_1px,transparent_1px)] bg-size-[40px_40px]"
-      ></div>
+      />
     </div>
 
     <div
@@ -56,10 +56,10 @@ const europeanUnis = [
             <span class="relative flex h-1.5 w-1.5">
               <span
                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"
-              ></span>
+              />
               <span
                 class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary-500"
-              ></span>
+              />
             </span>
             <span
               class="text-[8px] font-black uppercase tracking-[0.25em] text-primary-700 dark:text-primary-400 leading-none"
@@ -95,19 +95,19 @@ const europeanUnis = [
         <div class="group relative max-w-lg lg:mx-0">
           <div
             class="absolute -inset-1 bg-linear-to-r from-primary-500 to-primary-700 rounded-2xl blur-lg opacity-0 group-hover:opacity-10 transition-opacity duration-1000"
-          ></div>
+          />
           <div
             class="relative flex flex-col sm:flex-row gap-1 p-1 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xl dark:shadow-none overflow-hidden"
           >
             <div class="flex-1 relative flex items-center h-12 px-4">
               <span
                 class="pi pi-search text-primary-500/70 mr-3 text-sm"
-              ></span>
+              />
               <input
                 type="text"
                 placeholder="Destination or Course..."
                 class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-surface-900 dark:text-surface-0 placeholder:text-surface-300 placeholder:font-medium uppercase tracking-widest"
-              />
+              >
             </div>
             <BaseButton
               label="Launch Journey"
@@ -198,7 +198,7 @@ const europeanUnis = [
                 <div
                   class="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/10 flex items-center justify-center"
                 >
-                  <i class="pi pi-clock text-primary-600 text-sm"></i>
+                  <i class="pi pi-clock text-primary-600 text-sm"/>
                 </div>
               </div>
 
@@ -241,7 +241,7 @@ const europeanUnis = [
                     v-for="i in 3"
                     :key="i"
                     class="w-7 h-7 rounded-full border-2 border-white dark:border-surface-900 bg-surface-200"
-                  ></div>
+                  />
                 </div>
                 <div
                   class="text-[8px] font-bold text-surface-400 uppercase tracking-widest"
@@ -259,7 +259,7 @@ const europeanUnis = [
             <div
               class="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30"
             >
-              <i class="pi pi-award text-white text-xl"></i>
+              <i class="pi pi-award text-white text-xl"/>
             </div>
             <div class="flex-1">
               <h5
@@ -275,7 +275,7 @@ const europeanUnis = [
             </div>
             <i
               class="pi pi-chevron-right text-surface-400 text-[10px] group-hover/scholar:translate-x-1 transition-transform"
-            ></i>
+            />
           </div>
 
           <!-- Live Success Feed (Micro-Notification) -->
@@ -289,10 +289,10 @@ const europeanUnis = [
                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
                 alt="Student"
                 class="w-full h-full object-cover"
-              />
+              >
               <div
                 class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-900 animate-pulse"
-              ></div>
+              />
             </div>
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-1">

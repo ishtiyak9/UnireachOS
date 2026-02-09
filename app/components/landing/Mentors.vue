@@ -44,7 +44,7 @@ const mentors = [
     <!-- Subtle Grid Background -->
     <div
       class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"
-    ></div>
+    />
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
       <!-- Section Header -->
@@ -54,7 +54,7 @@ const mentors = [
         >
           <span
             class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"
-          ></span>
+          />
           <span
             class="text-[10px] uppercase font-black tracking-widest text-surface-500"
             >Alumni-Led Guidance</span
@@ -89,7 +89,7 @@ const mentors = [
               :src="mentor.image"
               :alt="mentor.name"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            >
             <!-- Overlay Info -->
             <div
               class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform duration-500"

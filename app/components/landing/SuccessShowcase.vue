@@ -69,10 +69,10 @@ const stats = ref([
     <div class="absolute inset-0 z-0">
       <div
         class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-[size:60px_60px] opacity-20"
-      ></div>
+      />
       <div
         class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-500/5 blur-[150px] rounded-full"
-      ></div>
+      />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -86,7 +86,7 @@ const stats = ref([
           >
             <div
               class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"
-            ></div>
+            />
             <span
               class="text-[9px] font-black uppercase tracking-[0.3em] text-primary-400"
               >Real Success Stories</span
@@ -130,7 +130,7 @@ const stats = ref([
           <!-- Glow Effect -->
           <div
             class="absolute -inset-0.5 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          ></div>
+          />
 
           <!-- Card -->
           <div
@@ -142,11 +142,11 @@ const stats = ref([
                 :src="story.image"
                 :alt="`${story.name} - ${story.destination}`"
                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
+              >
               <!-- Gradient Overlay -->
               <div
                 class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/50 to-transparent"
-              ></div>
+              />
 
               <!-- Year Badge -->
               <div class="absolute top-3 right-3">
@@ -172,14 +172,14 @@ const stats = ref([
                         : 'pi pi-briefcase',
                       'text-primary-500 text-xs',
                     ]"
-                  ></i>
+                  />
                 </div>
               </div>
 
               <!-- Info Overlay -->
               <div class="absolute bottom-0 left-0 right-0 p-4">
                 <div class="flex items-center gap-2 mb-2">
-                  <i class="pi pi-map-marker text-primary-500 text-xs"></i>
+                  <i class="pi pi-map-marker text-primary-500 text-xs"/>
                   <span
                     class="text-xs font-black text-white uppercase tracking-wider"
                     >{{ story.destination }}</span
@@ -206,7 +206,7 @@ const stats = ref([
           <span>View All Success Stories</span>
           <i
             class="pi pi-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"
-          ></i>
+          />
         </NuxtLink>
 
         <a
@@ -215,9 +215,9 @@ const stats = ref([
           rel="noopener noreferrer"
           class="group inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 hover:border-primary-500/30 transition-all duration-300"
         >
-          <i class="pi pi-facebook text-primary-500"></i>
+          <i class="pi pi-facebook text-primary-500"/>
           <span>More on Facebook</span>
-          <i class="pi pi-external-link text-xs"></i>
+          <i class="pi pi-external-link text-xs"/>
         </a>
       </div>
     </div>

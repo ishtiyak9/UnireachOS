@@ -6,10 +6,10 @@
       <div class="absolute inset-0 z-0">
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px)] bg-size-[60px_60px] opacity-30"
-        ></div>
+        />
         <div
           class="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-primary-500/10 blur-[150px] rounded-full animate-pulse-slow"
-        ></div>
+        />
       </div>
 
       <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10 text-center">
@@ -17,7 +17,7 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl mb-6"
         >
-          <i class="pi pi-question-circle text-primary-400 text-xs"></i>
+          <i class="pi pi-question-circle text-primary-400 text-xs"/>
           <span
             class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
             >Help Center</span

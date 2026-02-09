@@ -64,15 +64,15 @@ onUnmounted(() => {
               <span class="relative z-10">{{ item.label }}</span>
               <i
                 class="pi pi-chevron-down text-[7px] transition-transform group-hover:rotate-180 relative z-10"
-              ></i>
+              />
               <!-- Hover Gradient Underline -->
               <div
                 class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              ></div>
+              />
               <!-- Subtle Glow -->
               <div
                 class="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              ></div>
+              />
             </button>
 
             <!-- Ultra-Premium Dropdown -->
@@ -83,7 +83,7 @@ onUnmounted(() => {
               <!-- Gradient Border Glow -->
               <div
                 class="absolute inset-0 bg-gradient-to-br from-primary-500/20 via-transparent to-primary-600/20 rounded-2xl blur-xl opacity-50"
-              ></div>
+              />
 
               <div class="relative space-y-1 p-1">
                 <NuxtLink
@@ -95,7 +95,7 @@ onUnmounted(() => {
                   <!-- Hover Gradient Background -->
                   <div
                     class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-primary-600/10 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"
-                  ></div>
+                  />
 
                   <div
                     class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500/10 to-primary-600/10 flex items-center justify-center border border-primary-500/20 group-hover/item:border-primary-500/40 group-hover/item:scale-110 transition-all duration-300"
@@ -105,7 +105,7 @@ onUnmounted(() => {
                         child.icon,
                         'text-sm text-primary-500 group-hover/item:text-primary-400',
                       ]"
-                    ></i>
+                    />
                   </div>
                   <span
                     class="relative text-[10px] font-black uppercase tracking-[0.15em] text-surface-300 group-hover/item:text-white transition-colors"
@@ -114,7 +114,7 @@ onUnmounted(() => {
                   </span>
                   <i
                     class="pi pi-arrow-right text-[8px] text-primary-500 ml-auto opacity-0 group-hover/item:opacity-100 transform translate-x-[-4px] group-hover/item:translate-x-0 transition-all duration-300"
-                  ></i>
+                  />
                 </NuxtLink>
               </div>
             </div>
@@ -128,11 +128,11 @@ onUnmounted(() => {
             <!-- Hover Gradient Underline -->
             <div
               class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            ></div>
+            />
             <!-- Subtle Glow -->
             <div
               class="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            ></div>
+            />
           </NuxtLink>
         </template>
       </div>
@@ -145,7 +145,7 @@ onUnmounted(() => {
           <span class="relative z-10">Sign In</span>
           <div
             class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity"
-          ></div>
+          />
         </button>
         <NuxtLink
           to="/apply"
@@ -155,22 +155,22 @@ onUnmounted(() => {
           <!-- Animated Shine Effect -->
           <div
             class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-          ></div>
+          />
         </NuxtLink>
       </div>
 
       <!-- Mobile Menu Toggle -->
       <div class="md:hidden">
         <button
-          @click="mobileMenuOpen = !mobileMenuOpen"
           class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+          @click="mobileMenuOpen = !mobileMenuOpen"
         >
           <i
             :class="[
               mobileMenuOpen ? 'pi pi-times' : 'pi pi-bars',
               'text-white text-sm',
             ]"
-          ></i>
+          />
         </button>
       </div>
     </div>
@@ -204,7 +204,7 @@ onUnmounted(() => {
               <div
                 class="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
               >
-                <i :class="[child.icon, 'text-primary-500 text-sm']"></i>
+                <i :class="[child.icon, 'text-primary-500 text-sm']"/>
               </div>
               <span
                 class="text-sm font-black text-white uppercase tracking-wider group-hover:text-primary-500 transition-colors"
@@ -222,7 +222,7 @@ onUnmounted(() => {
             {{ item.label }}
           </NuxtLink>
         </template>
-        <hr class="border-white/10" />
+        <hr class="border-white/10" >
         <div class="flex flex-col gap-3">
           <button
             class="w-full h-12 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/5 transition-all"

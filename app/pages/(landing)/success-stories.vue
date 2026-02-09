@@ -149,18 +149,18 @@ const stats = ref([
         <div class="absolute inset-0 opacity-30">
           <div
             class="absolute top-0 left-0 w-[500px] h-[500px] bg-primary-500/20 rounded-full blur-[150px] animate-pulse"
-          ></div>
+          />
           <div
             class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-primary-600/10 rounded-full blur-[180px]"
-          ></div>
+          />
           <div
             class="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-primary-400/15 rounded-full blur-[120px]"
-          ></div>
+          />
         </div>
         <!-- Animated Grid -->
         <div
           class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-size-[80px_80px] opacity-20"
-        ></div>
+        />
       </div>
 
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
@@ -174,11 +174,11 @@ const stats = ref([
               <div class="relative">
                 <div
                   class="absolute inset-0 bg-primary-500 rounded-full blur-md opacity-50"
-                ></div>
+                />
                 <div
                   class="relative w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center"
                 >
-                  <i class="pi pi-check text-white text-sm font-black"></i>
+                  <i class="pi pi-check text-white text-sm font-black"/>
                 </div>
               </div>
               <div class="flex flex-col">
@@ -207,7 +207,7 @@ const stats = ref([
               </h1>
               <div
                 class="w-20 h-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full"
-              ></div>
+              />
             </div>
 
             <!-- Description -->
@@ -225,7 +225,7 @@ const stats = ref([
                 <div
                   class="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                 >
-                  <i class="pi pi-globe text-primary-500 text-lg"></i>
+                  <i class="pi pi-globe text-primary-500 text-lg"/>
                 </div>
                 <div>
                   <div class="text-xl font-black text-white">22+</div>
@@ -240,7 +240,7 @@ const stats = ref([
                 <div
                   class="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                 >
-                  <i class="pi pi-chart-line text-primary-500 text-lg"></i>
+                  <i class="pi pi-chart-line text-primary-500 text-lg"/>
                 </div>
                 <div>
                   <div class="text-xl font-black text-white">83%</div>
@@ -259,17 +259,17 @@ const stats = ref([
             <!-- Floating Elements -->
             <div
               class="absolute -top-6 -right-6 w-24 h-24 rounded-2xl bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl rotate-12 animate-float"
-            ></div>
+            />
             <div
               class="absolute -bottom-6 -left-6 w-20 h-20 rounded-xl bg-primary-600/10 border border-primary-600/20 backdrop-blur-xl -rotate-12 animate-float delay-150"
-            ></div>
+            />
 
             <!-- Main Featured Card -->
             <div class="relative">
               <!-- Animated Gradient Border -->
               <div
                 class="absolute -inset-1 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-500 rounded-3xl blur-lg opacity-50 animate-pulse"
-              ></div>
+              />
 
               <!-- Card Content -->
               <div
@@ -281,10 +281,10 @@ const stats = ref([
                     src="https://via.placeholder.com/800x600/1a1a1a/d4af37?text=Featured+Success+Story"
                     alt="Featured Success Story"
                     class="w-full h-full object-cover"
-                  />
+                  >
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-surface-900 via-surface-900/50 to-transparent"
-                  ></div>
+                  />
 
                   <!-- Play Button -->
                   <div
@@ -293,7 +293,7 @@ const stats = ref([
                     <div
                       class="w-20 h-20 rounded-full bg-primary-500/20 backdrop-blur-xl border-2 border-primary-500 flex items-center justify-center animate-pulse"
                     >
-                      <i class="pi pi-play text-primary-500 text-2xl ml-1"></i>
+                      <i class="pi pi-play text-primary-500 text-2xl ml-1"/>
                     </div>
                   </div>
 
@@ -319,7 +319,7 @@ const stats = ref([
                     <div
                       class="flex items-center gap-2 text-sm text-surface-400"
                     >
-                      <i class="pi pi-map-marker text-primary-500"></i>
+                      <i class="pi pi-map-marker text-primary-500"/>
                       <span class="font-bold"
                         >University of Toronto, Canada</span
                       >
@@ -340,7 +340,7 @@ const stats = ref([
                 <div
                   class="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center"
                 >
-                  <i class="pi pi-star-fill text-primary-500 text-xs"></i>
+                  <i class="pi pi-star-fill text-primary-500 text-xs"/>
                 </div>
                 <div>
                   <div class="text-xs font-black text-white">5.0 Rating</div>
@@ -360,7 +360,7 @@ const stats = ref([
                 <div
                   class="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center"
                 >
-                  <i class="pi pi-check-circle text-primary-500 text-xs"></i>
+                  <i class="pi pi-check-circle text-primary-500 text-xs"/>
                 </div>
                 <div>
                   <div class="text-xs font-black text-white">100% Verified</div>
@@ -383,13 +383,13 @@ const stats = ref([
     >
       <div
         class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5"
-      ></div>
+      />
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div v-for="stat in stats" :key="stat.label" class="group relative">
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
-            ></div>
+            />
             <div
               class="relative p-5 rounded-2xl bg-surface-900/30 border border-white/5 backdrop-blur-xl hover:border-primary-500/30 transition-all duration-500 text-center"
             >
@@ -418,22 +418,22 @@ const stats = ref([
           <button
             v-for="filter in filters"
             :key="filter.value"
-            @click="activeFilter = filter.value"
             :class="[
               'group relative px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300',
               activeFilter === filter.value
                 ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-black shadow-lg shadow-primary-500/30'
                 : 'bg-white/5 text-surface-400 hover:text-white border border-white/10 hover:border-primary-500/30',
             ]"
+            @click="activeFilter = filter.value"
           >
             <span class="relative z-10 flex items-center gap-2">
-              <i :class="[filter.icon, 'text-xs']"></i>
+              <i :class="[filter.icon, 'text-xs']"/>
               {{ filter.label }}
             </span>
             <div
               v-if="activeFilter !== filter.value"
               class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity"
-            ></div>
+            />
           </button>
         </div>
       </div>
@@ -446,13 +446,13 @@ const stats = ref([
           <div
             v-for="story in filteredStories"
             :key="story.id"
-            @click="openLightbox(story)"
             class="group relative cursor-pointer"
+            @click="openLightbox(story)"
           >
             <!-- Glow Effect -->
             <div
               class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            ></div>
+            />
 
             <!-- Card -->
             <div
@@ -464,11 +464,11 @@ const stats = ref([
                   :src="story.thumbnail"
                   :alt="story.name"
                   class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
+                >
                 <!-- Overlay Gradient -->
                 <div
                   class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/50 to-transparent"
-                ></div>
+                />
 
                 <!-- Type Badge -->
                 <div class="absolute top-3 right-3">
@@ -480,7 +480,7 @@ const stats = ref([
                         story.type === 'video' ? 'pi pi-play' : 'pi pi-image',
                         'text-primary-500 text-xs',
                       ]"
-                    ></i>
+                    />
                   </div>
                 </div>
 
@@ -504,7 +504,7 @@ const stats = ref([
                   <div
                     class="w-16 h-16 rounded-full bg-primary-500/20 backdrop-blur-xl border-2 border-primary-500 flex items-center justify-center group-hover:scale-110 transition-transform"
                   >
-                    <i class="pi pi-play text-primary-500 text-xl ml-1"></i>
+                    <i class="pi pi-play text-primary-500 text-xl ml-1"/>
                   </div>
                 </div>
               </div>
@@ -519,7 +519,7 @@ const stats = ref([
                     {{ story.name }}
                   </h3>
                   <div class="flex items-center gap-2 text-xs text-surface-400">
-                    <i class="pi pi-map-marker text-primary-500"></i>
+                    <i class="pi pi-map-marker text-primary-500"/>
                     <span class="font-bold">{{ story.destination }}</span>
                   </div>
                 </div>
@@ -548,7 +548,7 @@ const stats = ref([
                   >
                   <i
                     class="pi pi-arrow-right text-[8px] transform group-hover:translate-x-1 transition-transform"
-                  ></i>
+                  />
                 </div>
               </div>
             </div>
@@ -560,7 +560,7 @@ const stats = ref([
           <div
             class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
           >
-            <i class="pi pi-inbox text-3xl text-primary-500"></i>
+            <i class="pi pi-inbox text-3xl text-primary-500"/>
           </div>
           <h3 class="text-xl font-black text-white mb-2">No Stories Found</h3>
           <p class="text-sm text-surface-400">
@@ -577,7 +577,7 @@ const stats = ref([
       <div class="absolute inset-0">
         <div
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
-        ></div>
+        />
       </div>
 
       <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
@@ -608,7 +608,7 @@ const stats = ref([
               <span>Start Your Journey</span>
               <i
                 class="pi pi-arrow-right transform group-hover:translate-x-2 transition-transform"
-              ></i>
+              />
             </NuxtLink>
           </div>
         </div>
@@ -626,19 +626,19 @@ const stats = ref([
     >
       <div
         v-if="lightboxOpen && selectedStory"
-        @click="closeLightbox"
         class="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4"
+        @click="closeLightbox"
       >
         <div
-          @click.stop
           class="relative max-w-5xl w-full bg-surface-900 rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+          @click.stop
         >
           <!-- Close Button -->
           <button
-            @click="closeLightbox"
             class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 flex items-center justify-center hover:bg-black/80 transition-colors"
+            @click="closeLightbox"
           >
-            <i class="pi pi-times text-white"></i>
+            <i class="pi pi-times text-white"/>
           </button>
 
           <!-- Content -->
@@ -650,7 +650,7 @@ const stats = ref([
                 :src="selectedStory.image"
                 :alt="selectedStory.name"
                 class="w-full h-full object-cover"
-              />
+              >
               <iframe
                 v-else
                 :src="selectedStory.videoUrl"
@@ -658,7 +658,7 @@ const stats = ref([
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-              ></iframe>
+              />
             </div>
 
             <!-- Details -->
@@ -678,7 +678,7 @@ const stats = ref([
                   {{ selectedStory.name }}
                 </h2>
                 <div class="flex items-center gap-2 text-sm text-surface-400">
-                  <i class="pi pi-map-marker text-primary-500"></i>
+                  <i class="pi pi-map-marker text-primary-500"/>
                   <span class="font-bold">{{ selectedStory.destination }}</span>
                 </div>
               </div>
@@ -691,7 +691,7 @@ const stats = ref([
                   <div
                     class="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0"
                   >
-                    <i class="pi pi-building text-primary-500"></i>
+                    <i class="pi pi-building text-primary-500"/>
                   </div>
                   <div>
                     <div
@@ -712,7 +712,7 @@ const stats = ref([
                   <div
                     class="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0"
                   >
-                    <i class="pi pi-book text-primary-500"></i>
+                    <i class="pi pi-book text-primary-500"/>
                   </div>
                   <div>
                     <div
@@ -733,7 +733,7 @@ const stats = ref([
                   <div
                     class="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0"
                   >
-                    <i class="pi pi-id-card text-primary-500"></i>
+                    <i class="pi pi-id-card text-primary-500"/>
                   </div>
                   <div>
                     <div
@@ -751,7 +751,7 @@ const stats = ref([
               <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
                 <i
                   class="pi pi-quote-right text-2xl text-primary-500/30 mb-3 block"
-                ></i>
+                />
                 <p class="text-base text-surface-200 leading-relaxed italic">
                   "{{ selectedStory.quote }}"
                 </p>

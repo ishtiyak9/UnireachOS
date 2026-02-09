@@ -49,6 +49,19 @@ const MyPreset = definePreset(Aura, {
       900: "#493504",
       950: "#241a02",
     },
+    unireach_purple: {
+      50: "#f4eaff",
+      100: "#e9d5ff",
+      200: "#d2acfe",
+      300: "#bb83fd",
+      400: "#a35afc",
+      500: "#9651fe", // Brand Base
+      600: "#7d3fd4",
+      700: "#642da9",
+      800: "#4b1e7f",
+      900: "#321155",
+      950: "#1a082b",
+    },
   },
 });
 
@@ -117,14 +130,48 @@ export default defineNuxtConfig({
   // App defaults
   app: {
     head: {
-      title: "UniReach CRM - Enterprise Education Solutions",
+      title: "Unireach - Guidance, Strategy, Success",
+      titleTemplate: "%s | Unireach",
       meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
           name: "description",
           content:
-            "Advanced CRM for student recruitment and migration services.",
+            "Unireach serves as your link to a brighter future. We provide expert guidance for student admission, business migration, and job immigration services.",
         },
+        {
+          name: "keywords",
+          content:
+            "Unireach, study abroad, business migration, job immigration, visa consultant, education consultancy, student visa, work permit, global migration",
+        },
+        // Open Graph
+        { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "Unireach" },
+        {
+          property: "og:title",
+          content: "Unireach - Guidance, Strategy, Success",
+        },
+        {
+          property: "og:description",
+          content:
+            "Unireach serves as your link to a brighter future. Expert guidance for student admission, business migration, and job immigration.",
+        },
+        { property: "og:image", content: "/logo.png" }, // Assuming logo.png is suitable for OG image
+        // Twitter Card
+        { name: "twitter:card", content: "summary_large_image" },
+        {
+          name: "twitter:title",
+          content: "Unireach - Guidance, Strategy, Success",
+        },
+        {
+          name: "twitter:description",
+          content:
+            "Unireach serves as your link to a brighter future. Expert guidance for student admission, business migration, and job immigration.",
+        },
+        { name: "twitter:image", content: "/logo.png" },
       ],
+      link: [{ rel: "icon", type: "image/png", href: "/icon.png" }],
     },
   },
 });

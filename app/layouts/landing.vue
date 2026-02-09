@@ -23,10 +23,10 @@
       <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <div
           class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
-        ></div>
+        />
         <div
           class="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-indigo-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"
-        ></div>
+        />
       </div>
 
       <slot />

@@ -78,7 +78,7 @@ const destinations = [
           <h2
             class="text-2xl sm:text-3xl md:text-4xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-[1.1]"
           >
-            Best Study Abroad <br />
+            Best Study Abroad <br >
             <span
               class="italic font-light text-primary-600 dark:text-primary-400"
               >Destinations from Bangladesh.</span
@@ -107,13 +107,13 @@ const destinations = [
               :src="dest.image"
               :alt="dest.country"
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            >
             <div
               class="absolute inset-0 bg-linear-to-t from-surface-900 via-surface-900/40 to-transparent opacity-80"
-            ></div>
+            />
             <div
               class="absolute inset-0 bg-primary-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay"
-            ></div>
+            />
 
             <div class="absolute bottom-4 left-6 flex items-center gap-3">
               <span class="text-2xl drop-shadow-lg">{{ dest.flag }}</span>
@@ -184,7 +184,7 @@ const destinations = [
         <!-- Decorative Background Glow -->
         <div
           class="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-24 bg-primary-500/10 dark:bg-primary-500/5 blur-3xl rounded-full pointer-events-none"
-        ></div>
+        />
 
         <NuxtLink
           to="/destinations"
@@ -193,11 +193,11 @@ const destinations = [
           <!-- Internal Hover Glow & Shimmer -->
           <div
             class="absolute inset-0 bg-linear-to-tr from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-          ></div>
+          />
           <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <div
               class="absolute inset-0 bg-linear-to-r from-transparent via-primary-500/10 to-transparent w-full animate-shimmer"
-            ></div>
+            />
           </div>
 
           <span
@@ -211,7 +211,7 @@ const destinations = [
           >
             <i
               class="pi pi-arrow-right text-[10px] text-primary-600 dark:text-primary-400 group-hover:text-white transition-colors duration-500"
-            ></i>
+            />
           </div>
         </NuxtLink>
       </div>

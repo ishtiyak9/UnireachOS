@@ -40,7 +40,7 @@ const features = [
           <h2
             class="text-3xl md:text-5xl font-black text-surface-900 dark:text-surface-0 tracking-tighter italic leading-none"
           >
-            Advanced automation <br />
+            Advanced automation <br >
             <span
               class="italic font-light text-primary-600 dark:text-primary-500"
               >for your recruitment flow.</span
@@ -87,7 +87,7 @@ const features = [
           <!-- Visual Representation (Premium Glass) -->
           <div
             class="absolute -inset-4 bg-linear-to-tr from-primary-500/10 to-transparent rounded-[3rem] blur-2xl group-hover:blur-3xl transition-all duration-700 opacity-50"
-          ></div>
+          />
           <div
             class="relative bg-white/40 dark:bg-surface-950/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/5 dark:border-surface-800/50 p-12 shadow-3xl overflow-hidden min-h-[450px] flex flex-col justify-center items-center text-center"
           >
@@ -95,11 +95,11 @@ const features = [
               <div class="relative">
                 <div
                   class="absolute inset-0 bg-primary-500/20 blur-3xl rounded-full"
-                ></div>
+                />
                 <div
                   class="p-8 rounded-3xl bg-surface-900 border border-primary-500/20 relative z-10"
                 >
-                  <i class="pi pi-th-large text-primary-500 text-5xl"></i>
+                  <i class="pi pi-th-large text-primary-500 text-5xl"/>
                 </div>
               </div>
               <div class="space-y-2">
@@ -120,12 +120,12 @@ const features = [
             <div
               class="absolute top-12 right-12 p-4 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-primary-500/20 -rotate-12 translate-x-4 animate-float"
             >
-              <i class="pi pi-bolt text-primary-500 text-xl"></i>
+              <i class="pi pi-bolt text-primary-500 text-xl"/>
             </div>
             <div
               class="absolute bottom-24 left-12 p-4 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-primary-500/20 rotate-6 -translate-x-4 animate-pulse"
             >
-              <i class="pi pi-shield text-primary-500 text-xl"></i>
+              <i class="pi pi-shield text-primary-500 text-xl"/>
             </div>
           </div>
         </div>

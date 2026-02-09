@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { contactInfo } from "@/config/contact";
+import { contactInfo } from "~/config/contact";
 
 const showMessage = ref(false);
 const phoneNumber = contactInfo.whatsapp.number.replace("+", "");
@@ -31,13 +31,13 @@ onMounted(() => {
         <div class="flex items-start gap-3">
           <div class="relative">
             <div
-              class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center border border-emerald-200"
+              class="w-8 h-8 rounded-full bg-primary-500/10 flex items-center justify-center border border-primary-500/20"
             >
-              <i class="pi pi-user text-emerald-600 text-xs"></i>
+              <i class="pi pi-user text-primary-600 text-xs"/>
             </div>
             <div
               class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-white dark:border-surface-900"
-            ></div>
+            />
           </div>
           <div class="flex-1 space-y-1">
             <p
@@ -49,17 +49,17 @@ onMounted(() => {
               class="text-xs font-medium text-surface-900 dark:text-surface-0 leading-snug"
             >
               Hi! Looking for
-              <span class="text-emerald-500 font-bold">scholarships?</span>
+              <span class="text-primary-500 font-bold">scholarships?</span>
             </p>
           </div>
         </div>
 
         <!-- Close Button -->
         <button
-          @click="showMessage = false"
           class="absolute -top-2 -left-2 w-5 h-5 rounded-full bg-surface-200 dark:bg-surface-700 text-surface-500 hover:text-red-500 flex items-center justify-center transition-colors shadow-sm"
+          @click="showMessage = false"
         >
-          <i class="pi pi-times text-[10px]"></i>
+          <i class="pi pi-times text-[10px]"/>
         </button>
       </div>
     </Transition>
@@ -69,18 +69,18 @@ onMounted(() => {
       :href="whatsappUrl"
       target="_blank"
       rel="noopener noreferrer"
-      class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 rounded-full bg-[#25D366] hover:bg-[#20bd5a] shadow-[0_4px_20px_rgba(37,211,102,0.3)] hover:shadow-[0_8px_30px_rgba(37,211,102,0.5)] hover:-translate-y-1 transition-all duration-300"
+      class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 rounded-full bg-primary-500 hover:bg-primary-600 shadow-[0_4px_20px_rgba(var(--primary-500),0.3)] hover:shadow-[0_8px_30px_rgba(var(--primary-500),0.5)] hover:-translate-y-1 transition-all duration-300"
     >
       <!-- Pulse Effect -->
       <div
         class="absolute inset-0 rounded-full border border-white/30 animate-ping opacity-20"
-      ></div>
+      />
       <div
         class="absolute inset-0 rounded-full border border-white/50 animate-pulse"
-      ></div>
+      />
 
       <!-- Icon -->
-      <i class="pi pi-whatsapp text-white text-xl"></i>
+      <i class="pi pi-whatsapp text-white text-xl"/>
 
       <!-- Badge -->
       <div
