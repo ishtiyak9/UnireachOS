@@ -1,4 +1,56 @@
+import { definePreset } from "@primevue/themes";
 import Aura from "@primevue/themes/aura";
+
+const MyPreset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: "{gold.50}",
+      100: "{gold.100}",
+      200: "{gold.200}",
+      300: "{gold.300}",
+      400: "{gold.400}",
+      500: "{gold.500}",
+      600: "{gold.600}",
+      700: "{gold.700}",
+      800: "{gold.800}",
+      900: "{gold.900}",
+      950: "{gold.950}",
+    },
+    colorScheme: {
+      dark: {
+        surface: {
+          0: "#ffffff",
+          50: "#fafafa",
+          100: "#f5f5f5",
+          200: "#e5e5e5",
+          300: "#d4d4d4",
+          400: "#a3a3a3",
+          500: "#737373",
+          600: "#525252",
+          700: "#262626",
+          800: "#1A1A1A",
+          900: "#121212",
+          950: "#0A0A0A",
+        },
+      },
+    },
+  },
+  primitive: {
+    gold: {
+      50: "#fffdf0",
+      100: "#fef8c2",
+      200: "#fdee85",
+      300: "#fcdf47",
+      400: "#facc15",
+      500: "#D4AF37", // Metallic Gold
+      600: "#B8860B",
+      700: "#916a08",
+      800: "#6d5006",
+      900: "#493504",
+      950: "#241a02",
+    },
+  },
+});
 
 export default defineNuxtConfig({
   // Nuxt 4 directory structure and features
@@ -25,10 +77,10 @@ export default defineNuxtConfig({
   primevue: {
     options: {
       theme: {
-        preset: Aura,
+        preset: MyPreset,
         options: {
           darkModeSelector: ".dark",
-          cssLayer: false, // Matches Tailwind 4 behavior better for initial setup
+          cssLayer: false,
         },
       },
       ripple: true,

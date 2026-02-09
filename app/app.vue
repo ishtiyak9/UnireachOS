@@ -13,7 +13,23 @@
 </script>
 
 <style>
+/* Critical CSS to prevent FOUC/Skeleton flash during SSR/Hydration */
+html,
 body {
+  background-color: var(--p-surface-50);
+  color: var(--p-surface-900);
   margin: 0;
+}
+
+.dark html,
+.dark body {
+  background-color: var(--p-surface-950);
+  color: var(--p-surface-0);
+}
+
+/* Ensure the root container is ready */
+#main-content {
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 </style>
