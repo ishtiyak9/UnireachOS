@@ -254,6 +254,9 @@ const stats = ref([
       </div>
     </section>
 
+    <!-- Document Checklist -->
+    <LandingDocumentChecklist />
+
     <!-- Services Grid with Asymmetric Layout -->
     <section
       id="services"
@@ -274,7 +277,7 @@ const stats = ref([
           <h2
             class="text-4xl md:text-6xl font-black text-white italic tracking-tight"
           >
-            Services Designed <br >
+            Services Designed <br />
             <span
               class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
               >For Your Success.</span
@@ -343,7 +346,7 @@ const stats = ref([
                       <p
                         class="text-xs text-primary-400 font-bold uppercase tracking-[0.3em] flex items-center gap-2"
                       >
-                        <span class="w-8 h-px bg-primary-500"/>
+                        <span class="w-8 h-px bg-primary-500" />
                         {{ service.subtitle }}
                       </p>
                       <p
@@ -367,7 +370,7 @@ const stats = ref([
                           <div
                             class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0 group-hover/feature:bg-primary-500/20 transition-colors"
                           >
-                            <i class="pi pi-check text-primary-500 text-xs"/>
+                            <i class="pi pi-check text-primary-500 text-xs" />
                           </div>
                           <div class="flex-1">
                             <h4
@@ -498,15 +501,15 @@ const stats = ref([
             class="pt-8 flex flex-wrap justify-center gap-6 text-xs text-surface-500"
           >
             <div class="flex items-center gap-2">
-              <i class="pi pi-shield text-primary-500"/>
+              <i class="pi pi-shield text-primary-500" />
               <span>Secure Process</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-check-circle text-primary-500"/>
+              <i class="pi pi-check-circle text-primary-500" />
               <span>98.5% Success Rate</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-users text-primary-500"/>
+              <i class="pi pi-users text-primary-500" />
               <span>17+ Years Experience</span>
             </div>
           </div>

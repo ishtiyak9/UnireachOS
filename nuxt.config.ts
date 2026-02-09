@@ -66,6 +66,7 @@ const MyPreset = definePreset(Aura, {
 });
 
 export default defineNuxtConfig({
+  ssr: true,
   // Nuxt 4 directory structure and features
   future: {
     compatibilityVersion: 4,

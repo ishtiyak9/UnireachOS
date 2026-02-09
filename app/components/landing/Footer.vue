@@ -112,7 +112,7 @@ const quickLinks = [
                     rel="noopener noreferrer"
                     class="px-6 py-3 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-white/10 hover:border-primary-500/30 transition-all duration-300 text-center flex items-center justify-center gap-2"
                   >
-                    <i class="pi pi-whatsapp text-primary-500 text-xs"/>
+                    <i class="pi pi-whatsapp text-primary-500 text-xs" />
                     <span>WhatsApp Us</span>
                   </a>
                 </div>
@@ -169,7 +169,7 @@ const quickLinks = [
                   <div
                     class="relative w-11 h-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl text-surface-400 group-hover:text-primary-400 group-hover:border-primary-500/30 transition-all duration-300"
                   >
-                    <i :class="[social.icon, 'text-lg']"/>
+                    <i :class="[social.icon, 'text-lg']" />
                   </div>
                 </a>
               </div>
@@ -184,7 +184,7 @@ const quickLinks = [
                 <div
                   class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-br from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl"
                 >
-                  <i class="pi pi-verified text-primary-500 text-sm"/>
+                  <i class="pi pi-verified text-primary-500 text-sm" />
                   <span
                     class="text-xs text-surface-300 font-black uppercase tracking-wider"
                     >Verified</span
@@ -272,7 +272,7 @@ const quickLinks = [
                     <div
                       class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:bg-primary-500/30 transition-all duration-300"
                     >
-                      <i class="pi pi-whatsapp text-primary-500 text-sm"/>
+                      <i class="pi pi-whatsapp text-primary-500 text-sm" />
                     </div>
                   </div>
                   <div>
@@ -298,7 +298,7 @@ const quickLinks = [
                     <div
                       class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:bg-primary-500/30 transition-all duration-300"
                     >
-                      <i class="pi pi-envelope text-primary-500 text-sm"/>
+                      <i class="pi pi-envelope text-primary-500 text-sm" />
                     </div>
                   </div>
                   <div>
@@ -315,7 +315,7 @@ const quickLinks = [
                   <div
                     class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center flex-shrink-0"
                   >
-                    <i class="pi pi-map-marker text-primary-500 text-sm"/>
+                    <i class="pi pi-map-marker text-primary-500 text-sm" />
                   </div>
                   <div>
                     <div
@@ -346,6 +346,17 @@ const quickLinks = [
               <span class="font-black text-surface-400"
                 >Unireach Consultancy</span
               >. All rights reserved.
+              <span class="mx-2 text-surface-600">|</span>
+              <span class="opacity-70">
+                Developed by
+                <a
+                  href="https://innex.solutions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-bold hover:text-primary-500 transition-colors"
+                  >Innex Solution Ltd</a
+                >
+              </span>
             </p>
             <div
               class="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-surface-900/60 to-surface-900/30 border border-white/10 backdrop-blur-xl"
@@ -373,14 +384,14 @@ const quickLinks = [
             >
               FAQ
             </NuxtLink>
-            <div class="w-px h-3 bg-white/10"/>
+            <div class="w-px h-3 bg-white/10" />
             <NuxtLink
               to="/privacy"
               class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.2em] transition-colors duration-300"
             >
               Privacy Policy
             </NuxtLink>
-            <div class="w-px h-3 bg-white/10"/>
+            <div class="w-px h-3 bg-white/10" />
             <NuxtLink
               to="/terms"
               class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.2em] transition-colors duration-300"
