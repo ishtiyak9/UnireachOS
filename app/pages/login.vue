@@ -62,7 +62,7 @@ const handleSocialLogin = (provider: string) => {
           >
           <div class="relative group">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
             />
             <input
               v-model="email"
@@ -92,7 +92,7 @@ const handleSocialLogin = (provider: string) => {
           </div>
           <div class="relative group">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
             />
             <input
               v-model="password"
@@ -179,6 +179,7 @@ const handleSocialLogin = (provider: string) => {
         <p class="text-[10px] text-surface-400">
           Don't have an account?
           <NuxtLink
+            to="/register"
             class="text-primary-500 hover:text-primary-400 font-bold uppercase tracking-wider transition-colors ml-1"
           >
             Sign Up

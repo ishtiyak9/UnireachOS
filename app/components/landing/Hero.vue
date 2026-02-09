@@ -100,14 +100,12 @@ const europeanUnis = [
             class="relative flex flex-col sm:flex-row gap-1 p-1 rounded-2xl bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-800 shadow-xl dark:shadow-none overflow-hidden"
           >
             <div class="flex-1 relative flex items-center h-12 px-4">
-              <span
-                class="pi pi-search text-primary-500/70 mr-3 text-sm"
-              />
+              <span class="pi pi-search text-primary-500/70 mr-3 text-sm" />
               <input
                 type="text"
                 placeholder="Destination or Course..."
                 class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-surface-900 dark:text-surface-0 placeholder:text-surface-300 placeholder:font-medium uppercase tracking-widest"
-              >
+              />
             </div>
             <BaseButton
               label="Launch Journey"
@@ -192,13 +190,13 @@ const europeanUnis = [
                   <h3
                     class="text-xl font-black italic tracking-tighter text-surface-900 dark:text-surface-0"
                   >
-                    Germany
+                    Hungary
                   </h3>
                 </div>
                 <div
                   class="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/10 flex items-center justify-center"
                 >
-                  <i class="pi pi-clock text-primary-600 text-sm"/>
+                  <i class="pi pi-clock text-primary-600 text-sm" />
                 </div>
               </div>
 
@@ -259,7 +257,7 @@ const europeanUnis = [
             <div
               class="w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30"
             >
-              <i class="pi pi-award text-white text-xl"/>
+              <i class="pi pi-award text-white text-xl" />
             </div>
             <div class="flex-1">
               <h5
@@ -289,7 +287,7 @@ const europeanUnis = [
                 src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
                 alt="Student"
                 class="w-full h-full object-cover"
-              >
+              />
               <div
                 class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-surface-900 animate-pulse"
               />
