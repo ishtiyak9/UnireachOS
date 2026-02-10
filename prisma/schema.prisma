@@ -1,0 +1,481 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- CORE IDENTITY ---
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+
+  // Dynamic Role System (Cerebro Core)
+  roleId String
+  role   SystemRole @relation(fields: [roleId], references: [id])
+
+  status    AccountStatus @default(PENDING_VERIFICATION)
+  lastLogin DateTime?
+
+  // Profiles (Exclusive relation based on Role Permissions)
+  staffProfile     StaffProfile?
+  agentProfile     AgentProfile?
+  applicantProfile ApplicantProfile?
+
+  // Infrastructure
+  loginLogs LoginLog[]
+  auditLogs AuditLog[] @relation("PerformedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roleId])
+  @@index([status])
+}
+
+// --- AUTHORIZATION ENGINE (RBAC v2: Neural Clusters) ---
+model SystemRole {
+  id          String       @id @default(uuid())
+  name        String       @unique // e.g. "SUPERADMIN", "REGIONAL_AGENT", "HEAD_OFFICIAL"
+  code        String       @unique // e.g. "super_admin", "agent_standard"
+  category    RoleCategory @default(APPLICANT)
+  description String?
+  isSystem    Boolean      @default(false)
+
+  users       User[]
+  permissions RolePermission[]
+  groups      RolePermissionGroup[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PermissionGroup {
+  id          String  @id @default(uuid())
+  name        String  @unique // e.g. "Admission Operations Pack"
+  code        String  @unique // e.g. "pkg_admission_ops"
+  description String?
+
+  permissions GroupPermission[]
+  roles       RolePermissionGroup[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  code        String  @unique // e.g. "application:approve", "user:create"
+  name        String
+  group       String  @default("GENERAL") // UI Grouping (e.g. "ACCOUNTS")
+  description String?
+
+  roles            RolePermission[]
+  permissionGroups GroupPermission[]
+
+  createdAt DateTime @default(now())
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         SystemRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model GroupPermission {
+  groupId      String
+  permissionId String
+  group        PermissionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  permission   Permission      @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, permissionId])
+}
+
+model RolePermissionGroup {
+  roleId  String
+  groupId String
+  role    SystemRole      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  group   PermissionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, groupId])
+}
+
+// --- SYSTEM/OFFICIAL PROFILES ---
+model StaffProfile {
+  id         String  @id @default(uuid())
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName  String
+  lastName   String
+  department String?
+  position   String?
+
+  assignedApplicants ApplicantProfile[] @relation("StaffAssignments")
+  applications       Application[]
+}
+
+// --- AGENT PROFILES ---
+model AgentProfile {
+  id         String             @id @default(uuid())
+  userId     String             @unique
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agencyName String
+  licenseNo  String?            @unique
+  phone      String?
+  commission Float              @default(0.0)
+  applicants ApplicantProfile[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  enquiries Enquiry[]
+}
+
+// --- APPLICANT PROFILES (Students/Expatriates) ---
+model ApplicantProfile {
+  id     String        @id @default(uuid())
+  userId String        @unique
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type   ApplicantType @default(STUDENT)
+
+  // External Ownership (Third Party)
+  agentId String?
+  agent   AgentProfile? @relation(fields: [agentId], references: [id])
+
+  // Internal Ownership (UniReach Official)
+  assignedStaffId String?
+  assignedStaff   StaffProfile? @relation("StaffAssignments", fields: [assignedStaffId], references: [id])
+
+  // --- 1. Personal Information ---
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime?
+  gender        String? // Male, Female, Other
+  maritalStatus String? // Single, Married, etc.
+  
+  // --- 2. Contact & Address ---
+  phone         String?
+  email         String? // Alternate email
+  addresses     ApplicantAddress[]
+
+  // --- 3. Passport & Nationality ---
+  passportNo        String?   @unique
+  passportIssueDate DateTime?
+  passportExpiryDate DateTime?
+  passportIssueCountry String?
+  cityOfBirth       String?
+  countryOfBirth    String?
+  
+  nationality       String?
+  citizenship       String? // Primary Citizenship
+  otherCitizenships String[] // List of other citizenships
+  livingInOtherCountry Boolean @default(false)
+  currentCountry    String?
+  visaStatus        String?
+
+  // --- 4. Background Information ---
+  immigrationApplied Boolean @default(false)
+  immigrationDetails String?
+  
+  medicalCondition   Boolean @default(false)
+  medicalDetails     String?
+  
+  visaRefusal        Boolean @default(false)
+  refusalDetails     Json? // { country: "USA", date: "2023", reason: "..." }
+  
+  criminalOffence    Boolean @default(false)
+  criminalDetails    String?
+
+  // --- 5. Additional Info ---
+  isUSGreenCardHolder Boolean @default(false)
+  isCanadianPR        Boolean @default(false)
+  gapExplanation      String? // Details about education/work gaps
+
+  // --- 6. Related Records ---
+  emergencyContacts   EmergencyContact[]
+  educationHistory    EducationHistory[]
+  workExperience      WorkExperience[]
+  englishProficiency  EnglishProficiency[]
+
+  metadata    Json? // Custom/Legacy fields
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  enquiries    Enquiry[]
+  applications Application[]
+}
+
+model ApplicantAddress {
+  id          String   @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  
+  type        AddressType // MAILING, PERMANENT
+  address1    String
+  address2    String?
+  country     String
+  state       String
+  city        String
+  pincode     String
+
+  createdAt   DateTime @default(now())
+}
+
+model EmergencyContact {
+  id          String   @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  
+  name        String
+  phone       String
+  email       String?
+  relation    String // Father, Mother, Spouse, etc.
+}
+
+model EducationHistory {
+  id          String   @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  
+  level       EducationLevel // GRADE_10, GRADE_12, UNDERGRAD, POSTGRAD, DIPLOMA
+  institutionName String
+  boardOrUniversity String?
+  
+  startDate   DateTime?
+  endDate     DateTime? // If null, currently studying
+  isPursuing  Boolean @default(false)
+  
+  score       String? // CGPA or Percentage
+  grade       String? // "A", "First Class"
+  
+  primaryLanguage String? // Medium of Instruction
+  
+  createdAt   DateTime @default(now())
+}
+
+model WorkExperience {
+  id          String   @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  
+  employerName String
+  designation  String
+  startDate    DateTime
+  endDate      DateTime? // If null, currently working
+  isCurrent    Boolean @default(false)
+  
+  responsibilities String? // Description of role
+  
+  address      String? // City/Country of work
+  
+  createdAt    DateTime @default(now())
+}
+
+model EnglishProficiency {
+  id          String   @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  
+  testName    EnglishTestType // IELTS, TOEFL, PTE, DUOLINGO
+  examDate    DateTime
+  
+  overallScore Float
+  reading      Float?
+  writing      Float?
+  listening    Float?
+  speaking     Float?
+  
+  trfNumber    String? // Test Report Form Number
+  
+  createdAt    DateTime @default(now())
+}
+
+enum AddressType {
+  MAILING
+  PERMANENT
+}
+
+enum EducationLevel {
+  GRADE_10
+  GRADE_12
+  DIPLOMA
+  UNDERGRADUATE
+  POSTGRADUATE
+  PHD
+  OTHER
+}
+
+enum EnglishTestType {
+  IELTS
+  TOEFL
+  PTE
+  DUOLINGO
+  OTHER
+}
+
+// --- AUDIT & HISTORY ---
+model LoginLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ip        String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  performedById String
+  performedBy   User     @relation("PerformedBy", fields: [performedById], references: [id])
+  action        String
+  entityType    String
+  entityId      String
+  oldValue      Json?
+  newValue      Json?
+  createdAt     DateTime @default(now())
+}
+
+// --- ENUMS ---
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+  DEACTIVATED
+}
+
+enum ApplicantType {
+  STUDENT
+  EXPATRIATE
+}
+
+enum RoleCategory {
+  SYSTEM
+  AGENT
+  APPLICANT
+}
+
+// --- INVENTORY (Universities & Courses) ---
+model University {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  country     String
+  code        String  @unique // e.g. "UNI_OXF"
+  description String?
+  logo        String?
+  website     String?
+
+  courses Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id           String     @id @default(uuid())
+  universityId String
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  name         String
+  code         String? // e.g. "CS_101"
+  level        String // e.g. "Undergraduate", "Postgraduate"
+  duration     String // e.g. "3 Years"
+  tuitionFee   Float
+  currency     String   @default("USD")
+  intakeMonths String[] // e.g. ["September", "January"]
+
+  applications Application[]
+  enquiries    Enquiry[]
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- OPERATIONS (Enquiries & Applications) ---
+model Enquiry {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // Reference Number
+
+  // Who is asking?
+  applicantId String?
+  applicant   ApplicantProfile? @relation(fields: [applicantId], references: [id])
+
+  agentId String?
+  agent   AgentProfile? @relation(fields: [agentId], references: [id])
+
+  // About what?
+  courseId String?
+  course   Course? @relation(fields: [courseId], references: [id])
+
+  subject String
+  message String
+  status  EnquiryStatus @default(OPEN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Application {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // Application Reference ID
+
+  // Who is applying?
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  // To what?
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  // Processed By (Unireach Staff)
+  assignedStaffId String?
+  assignedStaff   StaffProfile? @relation(fields: [assignedStaffId], references: [id])
+
+  status ApplicationStatus @default(DRAFT)
+
+  // Timeline/Notes
+  notes ApplicationNote[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([applicantId, courseId]) // Prevent duplicate applications to same course
+}
+
+model ApplicationNote {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  content    String
+  isInternal Boolean @default(true) // If true, only visible to Unireach Staff
+
+  createdBy String // User ID or Name snapshot
+  createdAt DateTime @default(now())
+}
+
+enum EnquiryStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED_TO_UNIREACH
+  UNDER_REVIEW
+  SUBMITTED_TO_UNIVERSITY
+  OFFER_CONDITIONAL
+  OFFER_UNCONDITIONAL
+  REJECTED
+  VISA_PROCESSING
+  ENROLLED
+  WITHDRAWN
+}

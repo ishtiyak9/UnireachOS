@@ -6,10 +6,12 @@ definePageMeta({
   title: "Create Account",
 });
 
-const name = ref("");
+const firstName = ref("");
+const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
+const type = ref<"STUDENT" | "EXPATRIATE">("STUDENT");
 const showPassword = ref(false);
 const isLoading = ref(false);
 
@@ -20,11 +22,30 @@ const handleRegister = async () => {
   }
 
   isLoading.value = true;
-  // Simulate API call
-  console.log("Registering with:", name.value, email.value, password.value);
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  isLoading.value = false;
-  // Handle success/error
+  try {
+    const response = await $fetch("/api/auth/register", {
+      method: "POST",
+      body: {
+        email: email.value,
+        password: password.value,
+        firstName: firstName.value,
+        lastName: lastName.value,
+        type: type.value,
+      },
+    });
+
+    if (response.success) {
+      alert(
+        "Registration successful! Please check your email for verification instructions (Simulated)."
+      );
+      navigateTo("/login");
+    }
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    alert(error.data?.message || "Registration failed. Please try again.");
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const handleSocialLogin = (provider: string) => {
@@ -62,20 +83,20 @@ const handleSocialLogin = (provider: string) => {
       <form @submit.prevent="handleRegister" class="space-y-3">
         <!-- Name & Email Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <!-- Name Input -->
+          <!-- First Name Input -->
           <div class="space-y-1">
             <label
               class="text-[9px] font-bold text-surface-300 uppercase tracking-wider ml-1"
-              >Full Name</label
+              >First Name</label
             >
             <div class="relative group">
               <div
                 class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
               />
               <input
-                v-model="name"
+                v-model="firstName"
                 type="text"
-                placeholder="John Doe"
+                placeholder="John"
                 class="w-full bg-surface-950/50 border border-white/10 rounded-xl px-3 py-2 pl-9 text-[11px] text-white placeholder-surface-500 focus:outline-none focus:border-primary-500/50 focus:bg-surface-900/80 transition-all duration-300"
                 required
               />
@@ -85,6 +106,32 @@ const handleSocialLogin = (provider: string) => {
             </div>
           </div>
 
+          <!-- Last Name Input -->
+          <div class="space-y-1">
+            <label
+              class="text-[9px] font-bold text-surface-300 uppercase tracking-wider ml-1"
+              >Last Name</label
+            >
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+              />
+              <input
+                v-model="lastName"
+                type="text"
+                placeholder="Doe"
+                class="w-full bg-surface-950/50 border border-white/10 rounded-xl px-3 py-2 pl-9 text-[11px] text-white placeholder-surface-500 focus:outline-none focus:border-primary-500/50 focus:bg-surface-900/80 transition-all duration-300"
+                required
+              />
+              <i
+                class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-surface-500 group-focus-within:text-primary-500 transition-colors"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Email & Type Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <!-- Email Input -->
           <div class="space-y-1">
             <label
@@ -104,6 +151,27 @@ const handleSocialLogin = (provider: string) => {
               />
               <i
                 class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-surface-500 group-focus-within:text-primary-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <!-- Applicant Type -->
+          <div class="space-y-1">
+            <label
+              class="text-[9px] font-bold text-surface-300 uppercase tracking-wider ml-1"
+              >I am a</label
+            >
+            <div class="relative group">
+              <select
+                v-model="type"
+                class="w-full bg-surface-950/50 border border-white/10 rounded-xl px-3 py-2 text-[11px] text-white focus:outline-none focus:border-primary-500/50 focus:bg-surface-900/80 transition-all duration-300 appearance-none"
+                required
+              >
+                <option value="STUDENT">Student</option>
+                <option value="EXPATRIATE">Expatriate</option>
+              </select>
+              <i
+                class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-surface-500 pointer-events-none"
               />
             </div>
           </div>

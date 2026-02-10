@@ -10,6 +10,11 @@
 
 <script setup>
 // Root app component
+useHead({
+  htmlAttrs: {
+    class: "dark",
+  },
+});
 </script>
 
 <style>

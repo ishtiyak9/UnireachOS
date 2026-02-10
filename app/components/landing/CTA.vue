@@ -11,12 +11,12 @@
       <!-- Gradient Mesh -->
       <div class="absolute inset-0">
         <div
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-linear-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
         />
       </div>
       <!-- Animated Grid -->
       <div
-        class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30"
+        class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.02)_1px,transparent_1px)] bg-size-[80px_80px] opacity-30"
       />
     </div>
 
@@ -25,16 +25,16 @@
       <div class="relative">
         <!-- Animated Gradient Border -->
         <div
-          class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-500 rounded-3xl blur opacity-20 animate-pulse"
+          class="absolute -inset-0.5 bg-linear-to-r from-primary-500 via-primary-600 to-primary-500 rounded-3xl blur opacity-20 animate-pulse"
         />
 
         <!-- Main Card -->
         <div
-          class="relative rounded-3xl bg-gradient-to-br from-surface-900/90 to-surface-900/60 border border-white/10 backdrop-blur-2xl overflow-hidden"
+          class="relative rounded-3xl bg-linear-to-br from-surface-900/90 to-surface-900/60 border border-white/10 backdrop-blur-2xl overflow-hidden"
         >
           <!-- Inner Glow -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-600/5"
+            class="absolute inset-0 bg-linear-to-br from-primary-500/5 via-transparent to-primary-600/5"
           />
 
           <!-- Content -->
@@ -63,7 +63,7 @@
                   >
                     <span class="block text-white">Ready to Transform</span>
                     <span
-                      class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic mt-1"
+                      class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600 italic mt-1"
                       >Your Global Journey?</span
                     >
                   </h2>
@@ -85,7 +85,7 @@
                       <div
                         class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                       >
-                        <i class="pi pi-check text-primary-500 text-xs"/>
+                        <i class="pi pi-check text-primary-500 text-xs" />
                       </div>
                       <span class="text-xs text-surface-400 font-bold"
                         >83% Success Rate</span
@@ -95,7 +95,7 @@
                       <div
                         class="w-8 h-8 rounded-lg bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                       >
-                        <i class="pi pi-shield text-primary-500 text-xs"/>
+                        <i class="pi pi-shield text-primary-500 text-xs" />
                       </div>
                       <span class="text-xs text-surface-400 font-bold"
                         >Verified Reviews</span
@@ -108,7 +108,7 @@
                 <div class="flex flex-col gap-3 lg:min-w-[280px]">
                   <NuxtLink
                     to="/contact"
-                    class="group relative px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105 text-center overflow-hidden"
+                    class="group relative px-8 py-4 bg-linear-to-r from-primary-500 to-primary-600 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105 text-center overflow-hidden"
                   >
                     <span
                       class="relative z-10 flex items-center justify-center gap-2"
@@ -120,7 +120,7 @@
                     </span>
                     <!-- Animated Shine -->
                     <div
-                      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                      class="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
                     />
                   </NuxtLink>
 
@@ -133,18 +133,14 @@
                   <!-- Trust Indicators (Desktop) -->
                   <div class="hidden lg:flex flex-col gap-2 pt-2">
                     <div class="flex items-center gap-2">
-                      <i
-                        class="pi pi-check-circle text-primary-500 text-xs"
-                      />
+                      <i class="pi pi-check-circle text-primary-500 text-xs" />
                       <span
                         class="text-[9px] text-surface-500 font-bold uppercase tracking-wider"
                         >No Hidden Fees</span
                       >
                     </div>
                     <div class="flex items-center gap-2">
-                      <i
-                        class="pi pi-check-circle text-primary-500 text-xs"
-                      />
+                      <i class="pi pi-check-circle text-primary-500 text-xs" />
                       <span
                         class="text-[9px] text-surface-500 font-bold uppercase tracking-wider"
                         >Free Initial Consultation</span
@@ -160,7 +156,7 @@
               >
                 <div class="text-center">
                   <div
-                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary-400 to-primary-600 italic mb-1"
+                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-br from-primary-400 to-primary-600 italic mb-1"
                   >
                     350+
                   </div>
@@ -172,7 +168,7 @@
                 </div>
                 <div class="text-center">
                   <div
-                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary-400 to-primary-600 italic mb-1"
+                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-br from-primary-400 to-primary-600 italic mb-1"
                   >
                     22+
                   </div>
@@ -184,7 +180,7 @@
                 </div>
                 <div class="text-center">
                   <div
-                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary-400 to-primary-600 italic mb-1"
+                    class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-linear-to-br from-primary-400 to-primary-600 italic mb-1"
                   >
                     24/7
                   </div>
@@ -203,8 +199,4 @@
   </section>
 </template>
 
-<style scoped>
-.bg-\[size\:80px_80px\] {
-  background-size: 80px 80px;
-}
-</style>
+<style scoped></style>

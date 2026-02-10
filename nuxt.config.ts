@@ -20,17 +20,17 @@ const MyPreset = definePreset(Aura, {
       dark: {
         surface: {
           0: "#ffffff",
-          50: "#fafafa",
-          100: "#f5f5f5",
-          200: "#e5e5e5",
-          300: "#d4d4d4",
-          400: "#a3a3a3",
-          500: "#737373",
-          600: "#525252",
-          700: "#262626",
-          800: "#1A1A1A",
-          900: "#121212",
-          950: "#0A0A0A",
+          50: "#f8fafc",
+          100: "#f1f5f9",
+          200: "#e2e8f0",
+          300: "#cbd5e1",
+          400: "#94a3b8",
+          500: "#64748b",
+          600: "#475569",
+          700: "#334155",
+          800: "#1e293b",
+          900: "#0f172a",
+          950: "#020617",
         },
       },
     },
@@ -79,6 +79,7 @@ export default defineNuxtConfig({
   // Enable all enterprise modules
   modules: [
     "@primevue/nuxt-module",
+    "@prisma/nuxt",
     "nuxt-security",
     "nuxt-auth-utils",
     "@nuxt/icon",
@@ -86,6 +87,11 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/eslint",
   ],
+
+  // Prisma Configuration
+  prisma: {
+    autoSetupPrisma: true,
+  },
 
   // PrimeVue Configuration
   primevue: {

@@ -11,14 +11,41 @@ const password = ref("");
 const rememberMe = ref(false);
 const showPassword = ref(false);
 const isLoading = ref(false);
+const { fetch: fetchSession } = useUserSession();
 
 const handleLogin = async () => {
+  if (isLoading.value) return;
   isLoading.value = true;
-  // Simulate API call
-  console.log("Logging in with:", email.value, password.value);
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  isLoading.value = false;
-  // Handle success/error
+
+  try {
+    const response = await $fetch("/api/auth/login", {
+      method: "POST",
+      body: {
+        email: email.value,
+        password: password.value,
+      },
+    });
+
+    if (response.success) {
+      await fetchSession(); // Refresh session data
+
+      const category = response.user.roleCategory;
+      if (category === "SYSTEM") {
+        await navigateTo("/dashboard");
+      } else if (category === "AGENT") {
+        await navigateTo("/agent/dashboard");
+      } else {
+        await navigateTo("/profile");
+      }
+    }
+  } catch (error: any) {
+    console.error("Login error:", error);
+    alert(
+      error.data?.message || "Login failed. Please check your credentials."
+    );
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const handleSocialLogin = (provider: string) => {

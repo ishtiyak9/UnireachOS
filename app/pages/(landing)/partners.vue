@@ -98,7 +98,7 @@ const stats = ref([
         <div class="max-w-4xl mx-auto text-center space-y-5">
           <!-- Premium Badge -->
           <div
-            class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 backdrop-blur-xl"
+            class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-linear-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 backdrop-blur-xl"
           >
             <div class="flex gap-1">
               <div
@@ -123,7 +123,7 @@ const stats = ref([
           >
             <span class="block text-white">Expanding Your</span>
             <span
-              class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic"
+              class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600 italic"
               >Institutional Reach.</span
             >
           </h1>
@@ -160,7 +160,7 @@ const stats = ref([
       class="py-12 bg-surface-950 border-y border-white/5 relative overflow-hidden"
     >
       <div
-        class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5"
+        class="absolute inset-0 bg-linear-to-r from-primary-500/5 via-transparent to-primary-500/5"
       />
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -170,13 +170,13 @@ const stats = ref([
             class="group relative"
           >
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
+              class="absolute -inset-1 bg-linear-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
             />
             <div
               class="relative p-6 rounded-2xl bg-surface-900/30 border border-white/5 backdrop-blur-xl hover:border-primary-500/30 transition-all duration-500 text-center"
             >
               <div
-                class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary-400 to-primary-600 italic mb-2"
+                class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-linear-to-br from-primary-400 to-primary-600 italic mb-2"
               >
                 {{ stat.value }}
               </div>
@@ -210,15 +210,15 @@ const stats = ref([
             <h2
               class="text-3xl md:text-5xl font-black text-white italic tracking-tight"
             >
-              About Our <br >
+              About Our <br />
               <span
-                class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+                class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 not-italic font-light"
                 >Partner Network.</span
               >
             </h2>
           </div>
           <div
-            class="p-8 md:p-10 rounded-3xl bg-gradient-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl"
+            class="p-8 md:p-10 rounded-3xl bg-linear-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl"
           >
             <p
               class="text-base md:text-lg text-surface-200 leading-relaxed text-center"
@@ -245,9 +245,9 @@ const stats = ref([
           <h2
             class="text-3xl md:text-5xl font-black text-white italic tracking-tight"
           >
-            What We Do <br >
+            What We Do <br />
             <span
-              class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+              class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 not-italic font-light"
               >For Our Partners.</span
             >
           </h2>
@@ -260,10 +260,10 @@ const stats = ref([
             class="group relative"
           >
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              class="absolute -inset-1 bg-linear-to-r from-primary-500/20 to-primary-600/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             />
             <div
-              class="relative h-full p-6 rounded-2xl bg-gradient-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/30 transition-all duration-500"
+              class="relative h-full p-6 rounded-2xl bg-linear-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/30 transition-all duration-500"
             >
               <div class="flex flex-col h-full">
                 <div class="flex items-start justify-between mb-4">
@@ -272,11 +272,9 @@ const stats = ref([
                       class="absolute inset-0 bg-primary-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity"
                     />
                     <div
-                      class="relative w-14 h-14 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"
+                      class="relative w-14 h-14 rounded-xl bg-linear-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"
                     >
-                      <i
-                        :class="[service.icon, 'text-primary-500 text-xl']"
-                      />
+                      <i :class="[service.icon, 'text-primary-500 text-xl']" />
                     </div>
                   </div>
                   <span class="text-3xl font-black text-surface-800 italic">{{
@@ -309,9 +307,9 @@ const stats = ref([
           <h2
             class="text-3xl md:text-5xl font-black text-white italic tracking-tight"
           >
-            Why Partner <br >
+            Why Partner <br />
             <span
-              class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+              class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 not-italic font-light"
               >With UniReach.</span
             >
           </h2>
@@ -327,7 +325,7 @@ const stats = ref([
               <div
                 class="w-12 h-12 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-500/20 transition-colors"
               >
-                <i :class="[benefit.icon, 'text-primary-500 text-lg']"/>
+                <i :class="[benefit.icon, 'text-primary-500 text-lg']" />
               </div>
               <div class="flex-1">
                 <h3
@@ -356,9 +354,9 @@ const stats = ref([
           <h2
             class="text-3xl md:text-5xl font-black text-white italic tracking-tight"
           >
-            Testimonials <br >
+            Testimonials <br />
             <span
-              class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+              class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 not-italic font-light"
               >From Our Partners.</span
             >
           </h2>
@@ -371,13 +369,13 @@ const stats = ref([
             class="group relative"
           >
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary-500/10 to-primary-600/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              class="absolute -inset-1 bg-linear-to-r from-primary-500/10 to-primary-600/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
             />
             <div
-              class="relative p-8 rounded-2xl bg-gradient-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/20 transition-all duration-500"
+              class="relative p-8 rounded-2xl bg-linear-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/20 transition-all duration-500"
             >
               <div class="mb-6">
-                <i class="pi pi-quote-right text-4xl text-primary-500/20"/>
+                <i class="pi pi-quote-right text-4xl text-primary-500/20" />
               </div>
               <p class="text-base text-surface-200 leading-relaxed mb-6 italic">
                 "{{ testimonial.quote }}"
@@ -386,7 +384,7 @@ const stats = ref([
                 <div
                   class="w-10 h-10 rounded-full bg-primary-500/10 border border-primary-500/20 flex items-center justify-center"
                 >
-                  <i class="pi pi-user text-primary-500 text-sm"/>
+                  <i class="pi pi-user text-primary-500 text-sm" />
                 </div>
                 <div>
                   <div class="text-sm font-bold text-white">
@@ -407,7 +405,7 @@ const stats = ref([
     <section class="py-20 md:py-24 bg-surface-950 relative overflow-hidden">
       <div class="absolute inset-0">
         <div
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-linear-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
         />
       </div>
 
@@ -439,7 +437,7 @@ const stats = ref([
             >
               <span class="block text-white">Ready to Form</span>
               <span
-                class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic"
+                class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600 italic"
                 >A Partnership?</span
               >
             </h2>
@@ -456,7 +454,7 @@ const stats = ref([
           <div class="pt-4">
             <NuxtLink
               to="/contact"
-              class="group inline-flex items-center gap-4 px-12 py-5 bg-gradient-to-r from-primary-500 to-primary-600 text-black text-[11px] font-black uppercase tracking-widest rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
+              class="group inline-flex items-center gap-4 px-12 py-5 bg-linear-to-r from-primary-500 to-primary-600 text-black text-[11px] font-black uppercase tracking-widest rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
             >
               <span>Start the Conversation</span>
               <i
@@ -469,15 +467,15 @@ const stats = ref([
             class="pt-8 flex flex-wrap justify-center gap-6 text-xs text-surface-500"
           >
             <div class="flex items-center gap-2">
-              <i class="pi pi-shield text-primary-500"/>
+              <i class="pi pi-shield text-primary-500" />
               <span>Trusted Partner</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-check-circle text-primary-500"/>
+              <i class="pi pi-check-circle text-primary-500" />
               <span>Proven Track Record</span>
             </div>
             <div class="flex items-center gap-2">
-              <i class="pi pi-users text-primary-500"/>
+              <i class="pi pi-users text-primary-500" />
               <span>Global Network</span>
             </div>
           </div>

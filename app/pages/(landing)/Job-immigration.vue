@@ -74,7 +74,7 @@ const careerHubs = ref([
     <section class="relative pt-32 pb-24 overflow-hidden bg-surface-950">
       <div class="absolute inset-0 z-0">
         <div
-          class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent:100%)] opacity-20"
+          class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.05)_1px,transparent_1px)] bg-size-[40px_40px] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent:100%)] opacity-20"
         />
         <div
           class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary-500/10 blur-[120px] rounded-full animate-pulse"
@@ -95,10 +95,11 @@ const careerHubs = ref([
             <h1
               class="text-6xl md:text-8xl font-black text-white tracking-tighter leading-[0.9] animate-slide-up"
             >
-              Career <br >
+              Career <br />
               <span
-                class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 italic"
+                class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 italic"
                 >Redefined.</span
+              >
               >
             </h1>
             <p
@@ -126,7 +127,7 @@ const careerHubs = ref([
           <!-- Professional Dashboard Visual -->
           <div class="relative hidden lg:block">
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-surface-500 rounded-3xl blur opacity-10"
+              class="absolute -inset-1 bg-linear-to-r from-primary-500 to-surface-500 rounded-3xl blur opacity-10"
             />
             <div
               class="relative bg-surface-900/40 backdrop-blur-3xl border border-white/5 rounded-3xl p-8 space-y-6"
@@ -258,9 +259,7 @@ const careerHubs = ref([
             <div
               class="w-12 h-12 rounded-full border border-primary-500/20 flex items-center justify-center group-hover:bg-primary-500/10 transition-colors"
             >
-              <div
-                class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"
-              />
+              <div class="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
             </div>
             <div class="space-y-2">
               <h4
@@ -301,7 +300,7 @@ const careerHubs = ref([
           <div v-for="hub in careerHubs" :key="hub.name" class="group relative">
             <!-- Compact Surgical Card -->
             <div
-              class="relative h-full p-5 rounded-2xl bg-surface-900/10 border border-white/[0.03] hover:border-primary-500/20 transition-all duration-500 overflow-hidden backdrop-blur-3xl"
+              class="relative h-full p-5 rounded-2xl bg-surface-900/10 border border-white/3 hover:border-primary-500/20 transition-all duration-500 overflow-hidden backdrop-blur-3xl"
             >
               <!-- Animated Glow -->
               <div
@@ -312,7 +311,7 @@ const careerHubs = ref([
                 <!-- Header -->
                 <div class="flex justify-between items-start">
                   <div
-                    class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center group-hover:scale-105 group-hover:border-primary-500/20 transition-all duration-500"
+                    class="w-10 h-10 rounded-xl bg-white/3 border border-white/5 flex items-center justify-center group-hover:scale-105 group-hover:border-primary-500/20 transition-all duration-500"
                   >
                     <i
                       :class="[
@@ -340,7 +339,7 @@ const careerHubs = ref([
                 </div>
 
                 <!-- Action -->
-                <div class="pt-3 border-t border-white/[0.03]">
+                <div class="pt-3 border-t border-white/3">
                   <NuxtLink
                     to="/contact"
                     class="flex items-center justify-between text-[8px] font-black text-surface-400 uppercase tracking-[0.2em] group-hover:text-primary-500 transition-colors duration-500"
@@ -375,7 +374,7 @@ const careerHubs = ref([
         <h2
           class="text-5xl md:text-7xl font-black text-white tracking-tighter italic leading-none"
         >
-          Inject Your Talent <br >
+          Inject Your Talent <br />
           <span class="text-primary-500 not-italic font-light"
             >Into the Future.</span
           >

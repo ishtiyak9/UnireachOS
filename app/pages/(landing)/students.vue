@@ -142,7 +142,7 @@ const stats = ref([
         <div class="max-w-4xl mx-auto text-center space-y-5">
           <!-- Premium Badge -->
           <div
-            class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 backdrop-blur-xl"
+            class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-linear-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 backdrop-blur-xl"
           >
             <div class="flex gap-1">
               <div
@@ -167,7 +167,7 @@ const stats = ref([
           >
             <span class="block text-white animate-slide-up">Your Academic</span>
             <span
-              class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic animate-slide-up delay-100"
+              class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600 italic animate-slide-up delay-100"
               >Journey Begins.</span
             >
           </h1>
@@ -211,7 +211,7 @@ const stats = ref([
       class="py-12 bg-surface-950 border-y border-white/5 relative overflow-hidden"
     >
       <div
-        class="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5"
+        class="absolute inset-0 bg-linear-to-r from-primary-500/5 via-transparent to-primary-500/5"
       />
       <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -222,7 +222,7 @@ const stats = ref([
           >
             <!-- Glow Effect -->
             <div
-              class="absolute -inset-1 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
+              class="absolute -inset-1 bg-linear-to-r from-primary-500 to-primary-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity"
             />
 
             <!-- Card -->
@@ -230,7 +230,7 @@ const stats = ref([
               class="relative p-6 rounded-2xl bg-surface-900/30 border border-white/5 backdrop-blur-xl hover:border-primary-500/30 transition-all duration-500 text-center"
             >
               <div
-                class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary-400 to-primary-600 italic mb-2"
+                class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-linear-to-br from-primary-400 to-primary-600 italic mb-2"
               >
                 {{ stat.value }}
               </div>
@@ -279,7 +279,7 @@ const stats = ref([
           >
             Services Designed <br />
             <span
-              class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 not-italic font-light"
+              class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600 not-italic font-light"
               >For Your Success.</span
             >
           </h2>
@@ -296,12 +296,12 @@ const stats = ref([
             <div class="relative">
               <!-- Animated Glow -->
               <div
-                class="absolute -inset-2 bg-gradient-to-r from-primary-500/20 via-primary-600/20 to-primary-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                class="absolute -inset-2 bg-linear-to-r from-primary-500/20 via-primary-600/20 to-primary-500/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
               />
 
               <!-- Main Card -->
               <div
-                class="relative p-8 md:p-10 rounded-3xl bg-gradient-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/30 transition-all duration-700 overflow-hidden"
+                class="relative p-8 md:p-10 rounded-3xl bg-linear-to-br from-surface-900/40 to-surface-900/20 border border-white/10 backdrop-blur-3xl hover:border-primary-500/30 transition-all duration-700 overflow-hidden"
               >
                 <!-- Floating Background Pattern -->
                 <div
@@ -319,7 +319,7 @@ const stats = ref([
                         class="absolute inset-0 bg-primary-500 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity"
                       />
                       <div
-                        class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
+                        class="relative w-16 h-16 rounded-2xl bg-linear-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
                       >
                         <i
                           :class="[service.icon, 'text-primary-500 text-2xl']"
@@ -364,7 +364,7 @@ const stats = ref([
                       <div
                         v-for="(feature, idx) in service.features"
                         :key="feature.label"
-                        class="group/feature p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-primary-500/20 hover:bg-white/[0.04] transition-all duration-300"
+                        class="group/feature p-4 rounded-xl bg-white/2 border border-white/5 hover:border-primary-500/20 hover:bg-white/4 transition-all duration-300"
                       >
                         <div class="flex items-start gap-3">
                           <div
@@ -400,7 +400,7 @@ const stats = ref([
                             class="absolute inset-0 bg-primary-500 rounded-full blur opacity-0 group-hover/step:opacity-30 transition-opacity"
                           />
                           <div
-                            class="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center"
+                            class="relative w-10 h-10 rounded-full bg-linear-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/30 flex items-center justify-center"
                           >
                             <span class="text-xs font-black text-primary-500">{{
                               idx + 1
@@ -419,7 +419,7 @@ const stats = ref([
                 <!-- Decorative Corner -->
                 <div class="absolute bottom-0 right-0 w-32 h-32 opacity-5">
                   <div
-                    class="absolute inset-0 bg-gradient-to-tl from-primary-500 to-transparent rounded-tl-full"
+                    class="absolute inset-0 bg-linear-to-tl from-primary-500 to-transparent rounded-tl-full"
                   />
                 </div>
               </div>
@@ -436,7 +436,7 @@ const stats = ref([
       <!-- Animated Background -->
       <div class="absolute inset-0">
         <div
-          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-gradient-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-linear-to-r from-primary-500/10 via-primary-600/10 to-primary-500/10 blur-[150px] rounded-full animate-pulse"
         />
       </div>
 
@@ -470,7 +470,7 @@ const stats = ref([
             >
               <span class="block text-white">Ready to Start Your</span>
               <span
-                class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic"
+                class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600 italic"
                 >Academic Journey?</span
               >
             </h2>
@@ -487,7 +487,7 @@ const stats = ref([
           <div class="pt-4">
             <NuxtLink
               to="/contact"
-              class="group inline-flex items-center gap-4 px-12 py-5 bg-gradient-to-r from-primary-500 to-primary-600 text-black text-[11px] font-black uppercase tracking-widest rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
+              class="group inline-flex items-center gap-4 px-12 py-5 bg-linear-to-r from-primary-500 to-primary-600 text-black text-[11px] font-black uppercase tracking-widest rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105"
             >
               <span>Begin Your Journey</span>
               <i

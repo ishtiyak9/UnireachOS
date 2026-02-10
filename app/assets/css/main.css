@@ -47,3 +47,84 @@
   box-shadow: none !important;
   margin-bottom: 1rem !important;
 }
+
+/* Premium Dark Mode Global Overrides */
+
+/* Forms & Inputs */
+.p-inputtext,
+.p-textarea,
+.p-select,
+.p-multiselect,
+.p-dropdown,
+.p-inputnumber-input {
+  background-color: var(--p-surface-900) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--p-surface-0) !important;
+}
+
+.p-inputtext:enabled:hover,
+.p-textarea:enabled:hover,
+.p-select:not(.p-disabled):hover,
+.p-multiselect:not(.p-disabled):hover,
+.p-dropdown:not(.p-disabled):hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.p-inputtext:enabled:focus,
+.p-textarea:enabled:focus,
+.p-select:not(.p-disabled).p-focus,
+.p-multiselect:not(.p-disabled).p-focus,
+.p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--p-primary-500) !important;
+  box-shadow: 0 0 0 1px var(--p-primary-500) !important;
+}
+
+/* DataTable Premium Styling */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-tfoot > tr > td,
+.p-datatable .p-datatable-footer {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  color: var(--p-surface-200) !important;
+}
+
+.p-datatable-paginator-bottom {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  color: var(--p-surface-400) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 0.75rem !important;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background: transparent !important;
+  transition: background-color 0.2s;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: rgba(var(--p-primary-500-rgb), 0.1) !important;
+  color: var(--p-primary-400) !important;
+}
+
+/* Skeleton Loading Dark Mode Fix */
+.p-skeleton {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+.p-skeleton::after {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0)
+  ) !important;
+}
