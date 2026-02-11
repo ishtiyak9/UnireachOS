@@ -393,7 +393,7 @@ const stats = ref([
                       <div
                         v-for="(step, idx) in service.steps"
                         :key="idx"
-                        class="group/step flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-primary-500/20 hover:bg-white/[0.04] transition-all duration-300"
+                        class="group/step flex items-center gap-4 p-4 rounded-xl bg-white/2 border border-white/5 hover:border-primary-500/20 hover:bg-white/4 transition-all duration-300"
                       >
                         <div class="relative flex-shrink-0">
                           <div

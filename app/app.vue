@@ -15,6 +15,11 @@ useHead({
     class: "dark",
   },
 });
+
+// Initialize Realtime Notification Engine
+if (process.client) {
+  useNotifications();
+}
 </script>
 
 <style>

@@ -6,6 +6,9 @@ const route = useRoute();
 const { user } = useUserSession();
 const { state } = useThemeConfig();
 
+const { unreadCount } = useNotifications();
+const notificationDrawerVisible = ref(false);
+
 // Breadcrumb generation
 const breadcrumbs = computed(() => {
   const paths = route.path.split("/").filter(Boolean);
@@ -138,10 +141,12 @@ const fullName = computed(() => {
           <div class="flex items-center gap-1.5 text-surface-500">
             <button
               class="w-7 h-7 rounded-lg hover:text-white hover:bg-white/5 transition-all relative group/btn"
+              @click="notificationDrawerVisible = true"
             >
               <i class="pi pi-bell text-[11px]" />
               <span
-                class="absolute top-1.5 right-1.5 w-1 h-1 bg-primary-500 rounded-full"
+                v-if="unreadCount > 0"
+                class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary-500 rounded-full shadow-[0_0_5px_rgba(212,175,55,1)]"
               />
             </button>
 
@@ -236,4 +241,7 @@ const fullName = computed(() => {
       </div>
     </header>
   </div>
+
+  <!-- Notification Drawer -->
+  <DashboardNotificationDrawer v-model:visible="notificationDrawerVisible" />
 </template>

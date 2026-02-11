@@ -7,7 +7,7 @@ const registerSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  type: z.enum(["STUDENT", "EXPATRIATE"]).optional(),
+  type: z.enum(["STUDENT", "EXPATRIATE", "AGENT"]).optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -16,6 +16,10 @@ export default defineEventHandler(async (event) => {
 
     // Validate input
     const validated = registerSchema.parse(body);
+
+    // [GUARD] System Access Control
+    const roleType = validated.type === "AGENT" ? "AGENT" : "PUBLIC"; // Map type to guard role
+    await checkSystemAccess(event, "REGISTER", roleType);
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({

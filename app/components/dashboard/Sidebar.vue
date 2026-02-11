@@ -43,12 +43,22 @@ const menuItems = [
     ],
   },
   {
-    label: "User",
+    label: "User Management",
     items: [
       {
-        label: "User Directory",
-        icon: "pi pi-user",
-        to: "/dashboard/user",
+        label: "Employees",
+        icon: "pi pi-shield",
+        to: "/dashboard/user/employees",
+      },
+      {
+        label: "Partners",
+        icon: "pi pi-briefcase",
+        to: "/dashboard/user/partners",
+      },
+      {
+        label: "Applicants",
+        icon: "pi pi-id-card",
+        to: "/dashboard/user/applicants",
       },
     ],
   },

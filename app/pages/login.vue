@@ -34,6 +34,8 @@ const handleLogin = async () => {
         await navigateTo("/dashboard");
       } else if (category === "AGENT") {
         await navigateTo("/agent/dashboard");
+      } else if (category === "APPLICANT") {
+        await navigateTo("/applicant-portal");
       } else {
         await navigateTo("/profile");
       }

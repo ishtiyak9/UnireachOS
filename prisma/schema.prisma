@@ -28,6 +28,10 @@ model User {
   // Infrastructure
   loginLogs LoginLog[]
   auditLogs AuditLog[] @relation("PerformedBy")
+  maintenanceWindows MaintenanceWindow[] @relation("MaintenanceCreator")
+  
+  notifications          Notification[]
+  notificationPreference NotificationPreference?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -120,9 +124,76 @@ model StaffProfile {
   applications       Application[]
 }
 
+// --- SYSTEM CONFIGURATION (Control Panel) ---
+// Singleton row (id="global") stores strict operational flags
+model SystemConfig {
+  id                  String  @id @default("global")
+
+  // --- 1. Global Switches (Operational Gates) ---
+  allowPublicRegister Boolean @default(true) // Students
+  allowAgentRegister  Boolean @default(true) // Startups/Partners
+  
+  allowStudentLogin   Boolean @default(true)
+  allowAgentLogin     Boolean @default(true)
+  
+  systemBannerMessage String?  // "Scheduled maintenance at 2 AM"
+  systemBannerType    String?  // INFO, WARNING, ERROR
+
+  // --- 4. Feature Flags ---
+  metadata            Json?
+  
+  updatedAt           DateTime @updatedAt
+}
+
+// --- MAINTENANCE ORCHESTRATOR ---
+model MaintenanceWindow {
+  id          String            @id @default(uuid())
+  reason      String            // e.g. "Database Migration" or "Emergency Patch"
+  description String?           // Public facing message
+  
+  startTime   DateTime          // When it starts
+  endTime     DateTime?         // If null, indefinite/manual stop required
+  
+  status      MaintenanceStatus @default(SCHEDULED)
+  
+  // Auditor
+  createdById String
+  createdBy   User     @relation("MaintenanceCreator", fields: [createdById], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum MaintenanceStatus {
+  SCHEDULED // Future planned
+  ACTIVE    // Currently enforcing
+  COMPLETED // Finished/History
+  CANCELLED // Aborted
+}
+
+// --- ACCESS CONTROL (Firewall) ---
+model SystemAccessControl {
+  id          String   @id @default(uuid())
+  type        AccessControlType @default(ALLOW) // ALLOW (Whitelist) or BLOCK (Blacklist)
+  
+  ipAddress   String   @unique // Individual IP or CIDR block
+  reason      String?  // "HQ VPN" or "DDoS Attack Source"
+  
+  addedBy     String?  // User ID of Admin
+  expiresAt   DateTime? // For temporary bans or temporary access
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum AccessControlType {
+  ALLOW
+  BLOCK
+}
+
 // --- AGENT PROFILES ---
 model AgentProfile {
-  id         String             @id @default(uuid())
+  id         String             @id
   userId     String             @unique
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   agencyName String
@@ -142,6 +213,8 @@ model ApplicantProfile {
   userId String        @unique
   user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   type   ApplicantType @default(STUDENT)
+  isLocked Boolean @default(false)
+  submittedAt DateTime?
 
   // External Ownership (Third Party)
   agentId String?
@@ -242,18 +315,23 @@ model EducationHistory {
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   
-  level       EducationLevel // GRADE_10, GRADE_12, UNDERGRAD, POSTGRAD, DIPLOMA
+  level       EducationLevel
+  country     String
+  state       String
+  city        String
   institutionName String
-  boardOrUniversity String?
+  boardOrUniversity String // Name of University/Board
   
-  startDate   DateTime?
+  qualification String? // Degree Awarded (e.g. B.Sc, High School Diploma)
+  
+  startDate   DateTime
   endDate     DateTime? // If null, currently studying
   isPursuing  Boolean @default(false)
   
-  score       String? // CGPA or Percentage
-  grade       String? // "A", "First Class"
+  score       String // CGPA or Percentage
+  gradingSystem String // e.g. "4.0 Scale", "Percentage", "Letter"
   
-  primaryLanguage String? // Medium of Instruction
+  primaryLanguage String // Medium of Instruction
   
   createdAt   DateTime @default(now())
 }
@@ -281,33 +359,24 @@ model EnglishProficiency {
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   
-  testName    EnglishTestType // IELTS, TOEFL, PTE, DUOLINGO
+  testName    EnglishTestType // IELTS, TOEFL, PTE, DUOLINGO, GRE
   examDate    DateTime
   
-  overallScore Float
+  overallScore Float?
   reading      Float?
   writing      Float?
   listening    Float?
   speaking     Float?
   
-  trfNumber    String? // Test Report Form Number
+  // For tests like GRE/GMAT that don't fit reading/writing/listening/speaking
+  scoreDetails Json? // e.g. { "verbal": 160, "quant": 170, "analytical": 4.5 }
+  
+  trfNumber    String? // Test Report Form Number or Registration Number
+  
+  certificatePending Boolean @default(false) // Yet to Receive Certificate
+  hasMOI             Boolean @default(false) // Medium of Instruction available
   
   createdAt    DateTime @default(now())
-}
-
-enum AddressType {
-  MAILING
-  PERMANENT
-}
-
-enum EducationLevel {
-  GRADE_10
-  GRADE_12
-  DIPLOMA
-  UNDERGRADUATE
-  POSTGRADUATE
-  PHD
-  OTHER
 }
 
 enum EnglishTestType {
@@ -315,6 +384,8 @@ enum EnglishTestType {
   TOEFL
   PTE
   DUOLINGO
+  GRE
+  GMAT
   OTHER
 }
 
@@ -460,6 +531,40 @@ model ApplicationNote {
   createdAt DateTime @default(now())
 }
 
+// --- NOTIFICATION ENGINE (UNE) ---
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      NotificationType    @default(INFO)
+  channel   NotificationChannel @default(IN_APP)
+  
+  title     String
+  message   String   @db.Text
+  metadata  Json?    // e.g. { "link": "/applications/123", "action": "View" }
+  
+  isRead    Boolean  @default(false)
+  sentAt    DateTime?
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([isRead])
+}
+
+model NotificationPreference {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  emailEnabled     Boolean @default(true)
+  pushEnabled      Boolean @default(true)
+  marketingEnabled Boolean @default(false)
+  
+  updatedAt DateTime @updatedAt
+}
+
 enum EnquiryStatus {
   OPEN
   IN_PROGRESS
@@ -478,4 +583,35 @@ enum ApplicationStatus {
   VISA_PROCESSING
   ENROLLED
   WITHDRAWN
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+  SYSTEM
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+  SMS
+  PUSH
+}
+
+enum AddressType {
+  MAILING
+  PERMANENT
+}
+
+enum EducationLevel {
+  GRADE_10
+  GRADE_12
+  DIPLOMA
+  UNDERGRADUATE
+  POSTGRADUATE
+  PHD
+  OTHER
 }

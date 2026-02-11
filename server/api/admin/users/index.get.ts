@@ -7,12 +7,25 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const query = getQuery(event);
+    const category = query.category as string | undefined;
+
+    const where: any = {};
+    if (category) {
+      where.role = { category };
+    }
+
     const users = await prisma.user.findMany({
+      where,
       include: {
         role: true,
         staffProfile: true,
         agentProfile: true,
-        applicantProfile: true,
+        applicantProfile: {
+          include: {
+            agent: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -22,6 +35,7 @@ export default defineEventHandler(async (event) => {
     return users.map((user) => {
       let firstName = "Unknown";
       let lastName = "";
+      let agentName = null;
 
       if (user.staffProfile) {
         firstName = user.staffProfile.firstName;
@@ -32,6 +46,9 @@ export default defineEventHandler(async (event) => {
       } else if (user.applicantProfile) {
         firstName = user.applicantProfile.firstName;
         lastName = user.applicantProfile.lastName;
+        if ((user.applicantProfile as any).agent) {
+          agentName = (user.applicantProfile as any).agent.agencyName;
+        }
       }
 
       return {
@@ -39,10 +56,11 @@ export default defineEventHandler(async (event) => {
         email: user.email,
         role: user.role.name,
         roleCode: user.role.code,
-        roleCategory: user.role.category,
+        roleCategory: (user.role as any).category,
         status: user.status,
         firstName,
         lastName,
+        agentName,
         avatar: firstName[0]?.toUpperCase() || user.email[0].toUpperCase(),
         createdAt: user.createdAt,
         lastLogin: user.lastLogin,

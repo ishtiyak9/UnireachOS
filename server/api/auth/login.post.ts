@@ -1,6 +1,7 @@
 import { verify } from "argon2";
 import { prisma } from "../../utils/db";
 import { z } from "zod";
+import { checkSystemAccess } from "../../utils/guards";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -51,6 +52,11 @@ export default defineEventHandler(async (event) => {
         message: "Invalid email or password",
       });
     }
+
+    // [GUARD] System Access Control
+    // We check gates AFTER authentication to allow Super Admins to bypass Maintenance Mode
+    // Cast to any because raw query return type is loose
+    await checkSystemAccess(event, "LOGIN", (user as any).roleCategory);
 
     // --- NEURAL PERMISSION HARVESTING (Raw SQL) ---
     // This query pulls from both Direct Role-Permissions and Neural Cluster-Permissions
