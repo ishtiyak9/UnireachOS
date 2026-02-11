@@ -26,10 +26,10 @@ model User {
   applicantProfile ApplicantProfile?
 
   // Infrastructure
-  loginLogs LoginLog[]
-  auditLogs AuditLog[] @relation("PerformedBy")
+  loginLogs          LoginLog[]
+  auditLogs          AuditLog[]          @relation("PerformedBy")
   maintenanceWindows MaintenanceWindow[] @relation("MaintenanceCreator")
-  
+
   notifications          Notification[]
   notificationPreference NotificationPreference?
 
@@ -122,68 +122,71 @@ model StaffProfile {
 
   assignedApplicants ApplicantProfile[] @relation("StaffAssignments")
   applications       Application[]
+
+  unlockRequests         ProfileUnlockRequest[]
+  documentUnlockRequests DocumentUnlockRequest[]
 }
 
 // --- SYSTEM CONFIGURATION (Control Panel) ---
 // Singleton row (id="global") stores strict operational flags
 model SystemConfig {
-  id                  String  @id @default("global")
+  id String @id @default("global")
 
   // --- 1. Global Switches (Operational Gates) ---
   allowPublicRegister Boolean @default(true) // Students
   allowAgentRegister  Boolean @default(true) // Startups/Partners
-  
-  allowStudentLogin   Boolean @default(true)
-  allowAgentLogin     Boolean @default(true)
-  
-  systemBannerMessage String?  // "Scheduled maintenance at 2 AM"
-  systemBannerType    String?  // INFO, WARNING, ERROR
+
+  allowStudentLogin Boolean @default(true)
+  allowAgentLogin   Boolean @default(true)
+
+  systemBannerMessage String? // "Scheduled maintenance at 2 AM"
+  systemBannerType    String? // INFO, WARNING, ERROR
 
   // --- 4. Feature Flags ---
-  metadata            Json?
-  
-  updatedAt           DateTime @updatedAt
+  metadata Json?
+
+  updatedAt DateTime @updatedAt
 }
 
 // --- MAINTENANCE ORCHESTRATOR ---
 model MaintenanceWindow {
-  id          String            @id @default(uuid())
-  reason      String            // e.g. "Database Migration" or "Emergency Patch"
-  description String?           // Public facing message
-  
-  startTime   DateTime          // When it starts
-  endTime     DateTime?         // If null, indefinite/manual stop required
-  
-  status      MaintenanceStatus @default(SCHEDULED)
-  
+  id          String  @id @default(uuid())
+  reason      String // e.g. "Database Migration" or "Emergency Patch"
+  description String? // Public facing message
+
+  startTime DateTime // When it starts
+  endTime   DateTime? // If null, indefinite/manual stop required
+
+  status MaintenanceStatus @default(SCHEDULED)
+
   // Auditor
   createdById String
-  createdBy   User     @relation("MaintenanceCreator", fields: [createdById], references: [id])
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy   User   @relation("MaintenanceCreator", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum MaintenanceStatus {
   SCHEDULED // Future planned
-  ACTIVE    // Currently enforcing
+  ACTIVE // Currently enforcing
   COMPLETED // Finished/History
   CANCELLED // Aborted
 }
 
 // --- ACCESS CONTROL (Firewall) ---
 model SystemAccessControl {
-  id          String   @id @default(uuid())
-  type        AccessControlType @default(ALLOW) // ALLOW (Whitelist) or BLOCK (Blacklist)
-  
-  ipAddress   String   @unique // Individual IP or CIDR block
-  reason      String?  // "HQ VPN" or "DDoS Attack Source"
-  
-  addedBy     String?  // User ID of Admin
-  expiresAt   DateTime? // For temporary bans or temporary access
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id   String            @id @default(uuid())
+  type AccessControlType @default(ALLOW) // ALLOW (Whitelist) or BLOCK (Blacklist)
+
+  ipAddress String  @unique // Individual IP or CIDR block
+  reason    String? // "HQ VPN" or "DDoS Attack Source"
+
+  addedBy   String? // User ID of Admin
+  expiresAt DateTime? // For temporary bans or temporary access
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum AccessControlType {
@@ -209,11 +212,11 @@ model AgentProfile {
 
 // --- APPLICANT PROFILES (Students/Expatriates) ---
 model ApplicantProfile {
-  id     String        @id @default(uuid())
-  userId String        @unique
-  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type   ApplicantType @default(STUDENT)
-  isLocked Boolean @default(false)
+  id          String        @id @default(uuid())
+  userId      String        @unique
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        ApplicantType @default(STUDENT)
+  isLocked    Boolean       @default(false)
   submittedAt DateTime?
 
   // External Ownership (Third Party)
@@ -230,39 +233,39 @@ model ApplicantProfile {
   dateOfBirth   DateTime?
   gender        String? // Male, Female, Other
   maritalStatus String? // Single, Married, etc.
-  
+
   // --- 2. Contact & Address ---
-  phone         String?
-  email         String? // Alternate email
-  addresses     ApplicantAddress[]
+  phone     String?
+  email     String? // Alternate email
+  addresses ApplicantAddress[]
 
   // --- 3. Passport & Nationality ---
-  passportNo        String?   @unique
-  passportIssueDate DateTime?
-  passportExpiryDate DateTime?
+  passportNo           String?   @unique
+  passportIssueDate    DateTime?
+  passportExpiryDate   DateTime?
   passportIssueCountry String?
-  cityOfBirth       String?
-  countryOfBirth    String?
-  
-  nationality       String?
-  citizenship       String? // Primary Citizenship
-  otherCitizenships String[] // List of other citizenships
-  livingInOtherCountry Boolean @default(false)
-  currentCountry    String?
-  visaStatus        String?
+  cityOfBirth          String?
+  countryOfBirth       String?
+
+  nationality          String?
+  citizenship          String? // Primary Citizenship
+  otherCitizenships    String[] // List of other citizenships
+  livingInOtherCountry Boolean  @default(false)
+  currentCountry       String?
+  visaStatus           String?
 
   // --- 4. Background Information ---
   immigrationApplied Boolean @default(false)
   immigrationDetails String?
-  
-  medicalCondition   Boolean @default(false)
-  medicalDetails     String?
-  
-  visaRefusal        Boolean @default(false)
-  refusalDetails     Json? // { country: "USA", date: "2023", reason: "..." }
-  
-  criminalOffence    Boolean @default(false)
-  criminalDetails    String?
+
+  medicalCondition Boolean @default(false)
+  medicalDetails   String?
+
+  visaRefusal    Boolean @default(false)
+  refusalDetails Json? // { country: "USA", date: "2023", reason: "..." }
+
+  criminalOffence Boolean @default(false)
+  criminalDetails String?
 
   // --- 5. Additional Info ---
   isUSGreenCardHolder Boolean @default(false)
@@ -270,12 +273,16 @@ model ApplicantProfile {
   gapExplanation      String? // Details about education/work gaps
 
   // --- 6. Related Records ---
-  emergencyContacts   EmergencyContact[]
-  educationHistory    EducationHistory[]
-  workExperience      WorkExperience[]
-  englishProficiency  EnglishProficiency[]
+  emergencyContacts  EmergencyContact[]
+  educationHistory   EducationHistory[]
+  workExperience     WorkExperience[]
+  englishProficiency EnglishProficiency[]
 
-  metadata    Json? // Custom/Legacy fields
+  documents              Document[]
+  unlockRequests         ProfileUnlockRequest[]
+  documentUnlockRequests DocumentUnlockRequest[]
+
+  metadata Json? // Custom/Legacy fields
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -284,99 +291,99 @@ model ApplicantProfile {
 }
 
 model ApplicantAddress {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  
-  type        AddressType // MAILING, PERMANENT
-  address1    String
-  address2    String?
-  country     String
-  state       String
-  city        String
-  pincode     String
 
-  createdAt   DateTime @default(now())
+  type     AddressType // MAILING, PERMANENT
+  address1 String
+  address2 String?
+  country  String
+  state    String
+  city     String
+  pincode  String
+
+  createdAt DateTime @default(now())
 }
 
 model EmergencyContact {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  
-  name        String
-  phone       String
-  email       String?
-  relation    String // Father, Mother, Spouse, etc.
+
+  name     String
+  phone    String
+  email    String?
+  relation String // Father, Mother, Spouse, etc.
 }
 
 model EducationHistory {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  
-  level       EducationLevel
-  country     String
-  state       String
-  city        String
-  institutionName String
+
+  level             EducationLevel
+  country           String
+  state             String
+  city              String
+  institutionName   String
   boardOrUniversity String // Name of University/Board
-  
+
   qualification String? // Degree Awarded (e.g. B.Sc, High School Diploma)
-  
-  startDate   DateTime
-  endDate     DateTime? // If null, currently studying
-  isPursuing  Boolean @default(false)
-  
-  score       String // CGPA or Percentage
+
+  startDate  DateTime
+  endDate    DateTime? // If null, currently studying
+  isPursuing Boolean   @default(false)
+
+  score         String // CGPA or Percentage
   gradingSystem String // e.g. "4.0 Scale", "Percentage", "Letter"
-  
+
   primaryLanguage String // Medium of Instruction
-  
-  createdAt   DateTime @default(now())
+
+  createdAt DateTime @default(now())
 }
 
 model WorkExperience {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  
+
   employerName String
   designation  String
   startDate    DateTime
   endDate      DateTime? // If null, currently working
-  isCurrent    Boolean @default(false)
-  
+  isCurrent    Boolean   @default(false)
+
   responsibilities String? // Description of role
-  
-  address      String? // City/Country of work
-  
-  createdAt    DateTime @default(now())
+
+  address String? // City/Country of work
+
+  createdAt DateTime @default(now())
 }
 
 model EnglishProficiency {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   applicantId String
   applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
-  
-  testName    EnglishTestType // IELTS, TOEFL, PTE, DUOLINGO, GRE
-  examDate    DateTime
-  
+
+  testName EnglishTestType // IELTS, TOEFL, PTE, DUOLINGO, GRE
+  examDate DateTime
+
   overallScore Float?
   reading      Float?
   writing      Float?
   listening    Float?
   speaking     Float?
-  
+
   // For tests like GRE/GMAT that don't fit reading/writing/listening/speaking
   scoreDetails Json? // e.g. { "verbal": 160, "quant": 170, "analytical": 4.5 }
-  
-  trfNumber    String? // Test Report Form Number or Registration Number
-  
+
+  trfNumber String? // Test Report Form Number or Registration Number
+
   certificatePending Boolean @default(false) // Yet to Receive Certificate
   hasMOI             Boolean @default(false) // Medium of Instruction available
-  
-  createdAt    DateTime @default(now())
+
+  createdAt DateTime @default(now())
 }
 
 enum EnglishTestType {
@@ -511,7 +518,8 @@ model Application {
   status ApplicationStatus @default(DRAFT)
 
   // Timeline/Notes
-  notes ApplicationNote[]
+  notes     ApplicationNote[]
+  documents Document[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -533,35 +541,35 @@ model ApplicationNote {
 
 // --- NOTIFICATION ENGINE (UNE) ---
 model Notification {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  type      NotificationType    @default(INFO)
-  channel   NotificationChannel @default(IN_APP)
-  
-  title     String
-  message   String   @db.Text
-  metadata  Json?    // e.g. { "link": "/applications/123", "action": "View" }
-  
-  isRead    Boolean  @default(false)
-  sentAt    DateTime?
-  
+  type    NotificationType    @default(INFO)
+  channel NotificationChannel @default(IN_APP)
+
+  title    String
+  message  String @db.Text
+  metadata Json? // e.g. { "link": "/applications/123", "action": "View" }
+
+  isRead Boolean   @default(false)
+  sentAt DateTime?
+
   createdAt DateTime @default(now())
-  
+
   @@index([userId])
   @@index([isRead])
 }
 
 model NotificationPreference {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   emailEnabled     Boolean @default(true)
   pushEnabled      Boolean @default(true)
   marketingEnabled Boolean @default(false)
-  
+
   updatedAt DateTime @updatedAt
 }
 
@@ -614,4 +622,138 @@ enum EducationLevel {
   POSTGRADUATE
   PHD
   OTHER
+}
+
+// --- DMS MODELS ---
+
+model Document {
+  id          String           @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+  name     String // Display name
+  category DocumentCategory
+
+  fileKey  String // Storage path (S3/Tebi)
+  fileSize Int // Bytes
+  mimeType String
+
+  uploadSource UploadSource
+  uploaderId   String // User ID who uploaded
+
+  status      DocumentStatus @default(PENDING)
+  isAdminOnly Boolean        @default(false)
+  isLocked    Boolean        @default(false)
+
+  adminNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  unlockRequests DocumentUnlockRequest[]
+
+  @@index([applicantId])
+  @@index([category])
+  @@index([uploadSource])
+}
+
+model ProfileUnlockRequest {
+  id          String           @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  reason String
+  status RequestStatus @default(PENDING)
+
+  adminNote    String?
+  resolvedById String?
+  resolvedBy   StaffProfile? @relation(fields: [resolvedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicantId])
+  @@index([status])
+}
+
+model DocumentUnlockRequest {
+  id          String           @id @default(uuid())
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  reason String
+  status RequestStatus @default(PENDING)
+
+  adminNote    String?
+  resolvedById String?
+  resolvedBy   StaffProfile? @relation(fields: [resolvedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicantId])
+  @@index([documentId])
+  @@index([status])
+}
+
+enum DocumentCategory {
+  // Academic - Mandatory
+  STD_10_MARKSHEET
+  STD_10_CERTIFICATE
+  STD_12_MARKSHEET
+  STD_12_CERTIFICATE
+  BACHELORS_TRANSCRIPTS
+  BACHELORS_CERTIFICATE
+  MASTERS_TRANSCRIPTS
+  MASTERS_CERTIFICATE
+
+  // Academic - Optional
+  CONSOLIDATED_MARKSHEET
+
+  // Identity/Personal
+  PASSPORT
+  CV
+  SOP_ESSAY
+  LOR
+
+  // Language & Background
+  ENGLISH_CERTIFICATE
+  MOI_LETTER
+  WORK_EXPERIENCE_LETTER
+
+  // Others
+  POWER_OF_ATTORNEY
+  GRE_GMAT
+  OTHER
+
+  // Staff/Official Docs
+  OFFER_LETTER
+  ADMISSION_CONFIRMATION
+  VISA_GUIDANCE
+  INVOICE
+}
+
+enum UploadSource {
+  APPLICANT
+  STAFF
+  AGENT
+}
+
+enum DocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  OFFICIAL
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

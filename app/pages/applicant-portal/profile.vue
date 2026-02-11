@@ -205,6 +205,49 @@ const submitFinalProfile = async () => {
   }
 };
 
+// Unlock Request Logic
+const unlockDialogVisible = ref(false);
+const unlockReason = ref("");
+const isRequestingUnlock = ref(false);
+
+const submitUnlockRequest = async () => {
+  if (unlockReason.value.length < 10) {
+    toast.add({
+      severity: "warn",
+      summary: "Reason Too Short",
+      detail:
+        "Please provide at least 10 characters explaining why you need to unlock your profile.",
+      life: 3000,
+    });
+    return;
+  }
+
+  isRequestingUnlock.value = true;
+  try {
+    await $fetch(`/api/applicants/${sessionUser.value?.id}/unlock-request`, {
+      method: "POST",
+      body: { reason: unlockReason.value },
+    });
+    toast.add({
+      severity: "success",
+      summary: "Request Submitted",
+      detail: "Your unlock request has been sent for administrator approval.",
+      life: 5000,
+    });
+    unlockDialogVisible.value = false;
+    unlockReason.value = "";
+  } catch (err: any) {
+    toast.add({
+      severity: "error",
+      summary: "Request Failed",
+      detail: err.data?.message || "Failed to submit unlock request.",
+      life: 5000,
+    });
+  } finally {
+    isRequestingUnlock.value = false;
+  }
+};
+
 // Tabs
 const activeTab = ref(0);
 const tabs = [
@@ -257,14 +300,23 @@ const tabs = [
           />
         </template>
         <template v-else>
-          <div
-            class="px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3"
-          >
-            <i class="pi pi-lock text-xs text-emerald-400" />
-            <span
-              class="text-[9px] font-black text-emerald-400 uppercase tracking-widest"
-              >Profile Verified & Locked</span
+          <div class="flex items-center gap-3">
+            <div
+              class="px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3"
             >
+              <i class="pi pi-lock text-xs text-emerald-400" />
+              <span
+                class="text-[9px] font-black text-emerald-400 uppercase tracking-widest"
+                >Profile Verified & Locked</span
+              >
+            </div>
+            <Button
+              icon="pi pi-unlock"
+              label="Request Unlock"
+              text
+              class="!text-amber-500 !text-[9px] font-black uppercase tracking-widest hover:!bg-amber-500/10 !border-amber-500/30"
+              @click="unlockDialogVisible = true"
+            />
           </div>
         </template>
       </div>
@@ -1626,6 +1678,60 @@ const tabs = [
             :loading="isSaving"
             @click="saveProfile"
             class="!bg-primary-500 !text-black !border-0 !text-[10px] font-black uppercase tracking-widest px-6 rounded-xl"
+          />
+        </div>
+      </template>
+    </Dialog>
+
+    <!-- Profile Unlock Request Dialog -->
+    <Dialog
+      v-model:visible="unlockDialogVisible"
+      modal
+      header="Request Profile Modification"
+      :style="{ width: '450px' }"
+      class="border border-white/10 !bg-surface-950/90 backdrop-blur-2xl rounded-3xl"
+    >
+      <div class="space-y-6 py-4">
+        <div
+          class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex gap-4"
+        >
+          <i class="pi pi-exclamation-triangle text-amber-500 mt-1" />
+          <p class="text-[10px] font-medium text-surface-300 leading-relaxed">
+            Your profile is currently verified and locked. Requesting an unlock
+            will notify the administration. Please provide a valid reason for
+            the requested changes.
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <label
+            class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
+            >Provide Reason for Data Modification</label
+          >
+          <Textarea
+            v-model="unlockReason"
+            rows="5"
+            autoResize
+            class="w-full !bg-white/[0.03] !border-white/10 !text-white rounded-2xl p-4 text-xs"
+            placeholder="Example: Need to update my phone number or fix a typo in my passport number..."
+          />
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-3 mt-4">
+          <Button
+            label="Dismiss"
+            text
+            class="!text-surface-500 uppercase tracking-widest text-[10px] font-black"
+            @click="unlockDialogVisible = false"
+          />
+          <Button
+            label="Submit Request"
+            icon="pi pi-send"
+            :loading="isRequestingUnlock"
+            @click="submitUnlockRequest"
+            class="!bg-amber-500 !text-black !border-0 !text-[10px] font-black uppercase tracking-widest px-6 rounded-xl"
           />
         </div>
       </template>
