@@ -21,6 +21,17 @@ export default defineEventHandler(async (event) => {
     const data = roleSchema.parse(body);
 
     if (data.id) {
+      // Guard: Super Admin is Immutable
+      const roleToEdit = await prisma.systemRole.findUnique({
+        where: { id: data.id },
+      });
+      if (roleToEdit?.code === "super_admin") {
+        throw createError({
+          statusCode: 403,
+          message: "IMMUNITY ACTIVE: Neural Core Archetype is immutable.",
+        });
+      }
+
       // Update with transaction to sync groups
       return await prisma.$transaction(async (tx) => {
         const updated = await tx.systemRole.update({

@@ -2,10 +2,16 @@ import { z } from "zod";
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
-  if (!session?.user || session.user.roleCode !== "super_admin") {
+  const hasPermission =
+    session?.user?.permissions?.includes("system:maintenance");
+
+  if (
+    !session?.user ||
+    (session.user.roleCode !== "super_admin" && !hasPermission)
+  ) {
     throw createError({
       statusCode: 403,
-      message: "Neural Access Denied. Restricted to Supreme Administrator.",
+      message: "Neural Access Denied. Required Authority: system:maintenance",
     });
   }
 

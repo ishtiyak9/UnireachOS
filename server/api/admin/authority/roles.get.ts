@@ -12,6 +12,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     const roles = await prisma.systemRole.findMany({
+      where:
+        session.user.roleCode === "super_admin"
+          ? {}
+          : { NOT: { code: "super_admin" } },
       include: {
         _count: {
           select: {

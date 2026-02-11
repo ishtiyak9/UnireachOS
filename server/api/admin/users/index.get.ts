@@ -10,9 +10,16 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event);
     const category = query.category as string | undefined;
 
-    const where: any = {};
+    const where: any = { AND: [] };
     if (category) {
-      where.role = { category };
+      where.AND.push({ role: { category } });
+    }
+
+    // IMMUNITY: Hide Super Admin ghost node from everyone else
+    if (session.user.roleCode !== "super_admin") {
+      where.AND.push({
+        role: { NOT: { code: "super_admin" } },
+      });
     }
 
     const users = await prisma.user.findMany({

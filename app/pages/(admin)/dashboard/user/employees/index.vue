@@ -129,26 +129,28 @@ const newUser = reactive({
   lastName: "",
   email: "",
   password: "",
-  role: "STUDENT",
+  role: "STAFF", // Default
+  roleId: null,
 });
-
-const roleOptions = [
-  { label: "Student", value: "STUDENT" },
-  { label: "Agent", value: "AGENT" },
-  { label: "Staff", value: "STAFF" },
-];
 
 const openCreateDialog = () => {
   newUser.firstName = "";
   newUser.lastName = "";
   newUser.email = "";
-  newUser.password = "ChangeMe123!"; // Default suggestion
-  newUser.role = "STUDENT";
+  newUser.password = "Employee123!"; // Default suggestion
+  newUser.role = "STAFF";
+  newUser.roleId = systemRoles.value?.[0]?.id || null;
   showCreateDialog.value = true;
 };
 
 const addUser = async () => {
-  if (!newUser.email || !newUser.password || !newUser.firstName) return;
+  if (
+    !newUser.email ||
+    !newUser.password ||
+    !newUser.firstName ||
+    !newUser.roleId
+  )
+    return;
   creatingUser.value = true;
   try {
     await $fetch("/api/admin/users/create", {
@@ -158,7 +160,7 @@ const addUser = async () => {
     toast.add({
       severity: "success",
       summary: "User Created",
-      detail: "New node added to database.",
+      detail: "New official node added to the matrix.",
     });
     showCreateDialog.value = false;
     refreshUsers();
@@ -179,6 +181,10 @@ const {
   refresh: refreshUsers,
   pending,
 } = useFetch("/api/admin/users", { query: { category: "SYSTEM" } });
+
+const { data: systemRoles } = useFetch("/api/admin/authority/roles", {
+  transform: (roles: any) => roles.filter((r: any) => r.category === "SYSTEM"),
+});
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -460,14 +466,16 @@ const getRoleBadge = (category: string) => {
         </div>
         <div>
           <label class="block text-xs font-bold text-surface-400 mb-1"
-            >Assigned Function</label
+            >Role Archetype</label
           >
           <Dropdown
-            v-model="newUser.role"
-            :options="roleOptions"
-            optionLabel="label"
-            optionValue="value"
-            class="w-full"
+            v-model="newUser.roleId"
+            :options="systemRoles || []"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select Role"
+            :filter="true"
+            class="w-full bg-surface-950/50 border-white/10"
           />
         </div>
       </div>

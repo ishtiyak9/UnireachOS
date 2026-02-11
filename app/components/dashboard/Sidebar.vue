@@ -34,6 +34,11 @@ const menuItems = [
             icon: "pi pi-users",
           },
           {
+            label: "Role Assignments",
+            to: "/dashboard/authority/assignments",
+            icon: "pi pi-user-plus",
+          },
+          {
             label: "Permission Groups",
             to: "/dashboard/authority/groups",
             icon: "pi pi-clone",
@@ -150,24 +155,28 @@ const fullName = computed(() => {
   >
     <!-- Dynamic Logo Hub -->
     <div
-      class="h-11 flex items-center px-6 border-b border-white/[0.03] relative group/logo transition-colors hover:bg-white/[0.02]"
+      class="h-12 flex items-center px-6 border-b border-white/5 relative group/logo transition-colors hover:bg-white/[0.02]"
     >
       <div
-        class="absolute top-0 left-0 w-full h-[1px] bg-linear-to-r from-transparent via-primary-500/10 to-transparent opacity-0 group-hover/logo:opacity-100 transition-opacity duration-700"
+        class="absolute top-0 left-0 w-full h-[1px] bg-linear-to-r from-transparent via-primary-500/10 to-transparent"
       />
 
-      <NuxtLink to="/" class="flex items-center gap-3 group">
+      <NuxtLink to="/dashboard" class="flex items-center gap-3 group">
         <div
-          class="w-8 h-8 rounded-xl bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/10 transition-all duration-500 group-hover:rotate-[360deg] group-hover:shadow-primary-500/30"
+          class="w-8 h-8 rounded-xl bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:rotate-[360deg] transition-all duration-700"
         >
           <i class="pi pi-shield text-xs text-black font-black" />
         </div>
         <div class="flex flex-col">
           <span
-            class="text-[12px] font-black text-white tracking-[0.1em] uppercase leading-none"
+            class="text-[11px] font-black text-white tracking-[0.15em] uppercase leading-none"
           >
-            Unireach<span class="text-primary-500"> Intelligence</span>
+            Uni<span class="text-primary-500">Reach</span>
           </span>
+          <span
+            class="text-[7px] font-bold text-surface-600 uppercase tracking-[0.3em] mt-1"
+            >Intelligence</span
+          >
         </div>
       </NuxtLink>
     </div>

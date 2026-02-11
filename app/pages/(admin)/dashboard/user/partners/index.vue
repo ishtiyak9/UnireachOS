@@ -105,6 +105,7 @@ const newUser = reactive({
   email: "",
   password: "",
   role: "AGENT",
+  roleId: null,
 });
 
 const openCreateDialog = () => {
@@ -113,18 +114,25 @@ const openCreateDialog = () => {
   newUser.email = "";
   newUser.password = "Partner123!";
   newUser.role = "AGENT";
+  newUser.roleId = agentRoles.value?.[0]?.id || null;
   showCreateDialog.value = true;
 };
 
 const addUser = async () => {
-  if (!newUser.email || !newUser.password || !newUser.firstName) return;
+  if (
+    !newUser.email ||
+    !newUser.password ||
+    !newUser.firstName ||
+    !newUser.roleId
+  )
+    return;
   creatingUser.value = true;
   try {
     await $fetch("/api/admin/users/create", { method: "POST", body: newUser });
     toast.add({
       severity: "success",
       summary: "Partner Onboarded",
-      detail: "New agency node active.",
+      detail: "New agency node active with assigned authorities.",
     });
     showCreateDialog.value = false;
     refreshUsers();
@@ -145,6 +153,10 @@ const {
   refresh: refreshUsers,
   pending,
 } = useFetch("/api/admin/users", { query: { category: "AGENT" } }); // Filter AGENT
+
+const { data: agentRoles } = useFetch("/api/admin/authority/roles", {
+  transform: (roles: any) => roles.filter((r: any) => r.category === "AGENT"),
+});
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -381,6 +393,21 @@ const getStatusBadge = (status: string) => {
           >
           <InputText v-model="newUser.email" class="w-full" type="email" />
         </div>
+        <div>
+          <label class="block text-xs font-bold text-surface-400 mb-1"
+            >Role Archetype</label
+          >
+          <Dropdown
+            v-model="newUser.roleId"
+            :options="agentRoles || []"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select Tier"
+            :filter="true"
+            class="w-full bg-surface-950/50 border-white/10"
+          />
+        </div>
+
         <div>
           <label class="block text-xs font-bold text-surface-400 mb-1"
             >Initial Access Key</label

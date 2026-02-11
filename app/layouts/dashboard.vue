@@ -48,19 +48,19 @@ const toggleSidebar = () => {
     <!-- Theme Configurator -->
     <DashboardConfigurator />
 
+    <!-- Topbar -->
+    <DashboardTopbar
+      @toggle-sidebar="toggleSidebar"
+      :class="[sidebarVisible && !isMobile ? 'lg:left-64' : 'left-0']"
+    />
+
     <!-- Main Content Area -->
     <div
       class="relative z-10 transition-all duration-300 min-h-screen flex flex-col overflow-x-hidden"
       :class="[sidebarVisible && !isMobile ? 'lg:ml-64' : 'ml-0']"
     >
-      <!-- Topbar -->
-      <DashboardTopbar
-        @toggle-sidebar="toggleSidebar"
-        :class="[sidebarVisible && !isMobile ? 'lg:left-64 left-0' : 'left-0']"
-      />
-
-      <!-- Spacer for fixed Topbar (Status Bar + Header = 20px + 44px = 64px) -->
-      <div class="h-16 w-full shrink-0" />
+      <!-- Spacer for fixed Topbar (Header h-12 = h-12) -->
+      <div class="h-12 w-full shrink-0" />
 
       <!-- Page Content -->
       <main class="flex-1 p-4 lg:p-8 w-full max-w-[100vw]">

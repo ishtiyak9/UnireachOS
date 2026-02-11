@@ -99,14 +99,17 @@ const handleUpload = () => {
           <div class="flex items-center gap-3 mt-1">
             <p
               v-if="document"
-              class="text-[10px] text-surface-400 font-medium truncate max-w-[150px] md:max-w-[250px]"
+              class="text-[12px] text-surface-400 font-medium truncate max-w-[150px] md:max-w-[250px]"
             >
               {{ document.name }}
             </p>
-            <p v-else class="text-[10px] text-surface-500 italic">
+            <p v-else class="text-[12px] text-surface-500 italic">
               Awaiting upload...
             </p>
-            <span v-if="document" class="text-[9px] text-surface-600 font-mono">
+            <span
+              v-if="document"
+              class="text-[11px] text-surface-600 font-mono"
+            >
               {{ (document.fileSize / 1024).toFixed(1) }} KB
             </span>
           </div>
@@ -121,7 +124,7 @@ const handleUpload = () => {
         <div
           v-if="document"
           :class="[
-            'px-3 py-1 rounded-full text-[8px] font-black uppercase border tracking-widest flex items-center gap-1.5',
+            'px-3 py-1 rounded-full text-[10px] font-black uppercase border tracking-widest flex items-center gap-1.5',
             document.status === 'VERIFIED'
               ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
               : document.status === 'REJECTED'
@@ -131,7 +134,7 @@ const handleUpload = () => {
               : 'bg-blue-500/10 text-blue-400 border-blue-500/20',
           ]"
         >
-          <i :class="statusDetails.icon" class="text-[10px]" />
+          <i :class="statusDetails.icon" class="text-[12px]" />
           {{ statusDetails.label }}
         </div>
 
@@ -171,7 +174,7 @@ const handleUpload = () => {
             :icon="document ? 'pi pi-sync' : 'pi pi-cloud-upload'"
             size="small"
             variant="text"
-            class="!text-[10px] !font-black !uppercase !tracking-widest"
+            class="!text-[12px] !font-black !uppercase !tracking-widest"
             :class="
               document
                 ? '!text-surface-400 hover:!text-white'
@@ -192,10 +195,10 @@ const handleUpload = () => {
         <i class="pi pi-exclamation-circle text-rose-400 text-xs mt-0.5" />
         <div class="space-y-1">
           <span
-            class="text-[9px] font-black text-rose-400 uppercase tracking-widest leading-none"
+            class="text-[11px] font-black text-rose-400 uppercase tracking-widest leading-none"
             >Correction Required</span
           >
-          <p class="text-[10px] text-surface-300 leading-relaxed">
+          <p class="text-[12px] text-surface-300 leading-relaxed">
             {{ document.adminNote }}
           </p>
         </div>

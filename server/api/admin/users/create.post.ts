@@ -7,6 +7,8 @@ const createUserSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   role: z.enum(["STUDENT", "AGENT", "STAFF"]),
+  roleId: z.string().uuid().optional(),
+  groupIds: z.array(z.string().uuid()).optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -28,31 +30,35 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 409, message: "Email already exists" });
   }
 
-  // Resolve Role
-  let roleCode = "applicant_standard";
-  if (data.role === "AGENT") roleCode = "agent_standard";
-  if (data.role === "STAFF") roleCode = "staff_standard";
+  // Resolve Role ID
+  let targetRoleId = data.roleId;
 
-  const roleFn = await prisma.systemRole.findUnique({
-    where: { code: roleCode },
-  });
+  if (!targetRoleId) {
+    let roleCode = "applicant_standard";
+    if (data.role === "AGENT") roleCode = "agent_standard";
+    if (data.role === "STAFF") roleCode = "staff_standard";
 
-  if (!roleFn) {
-    throw createError({
-      statusCode: 500,
-      message: `Role configuration '${roleCode}' is missing.`,
+    const roleFn = await prisma.systemRole.findUnique({
+      where: { code: roleCode },
     });
+
+    if (!roleFn) {
+      throw createError({
+        statusCode: 500,
+        message: `Default role configuration '${roleCode}' is missing.`,
+      });
+    }
+    targetRoleId = roleFn.id;
   }
 
   const hashedPassword = await hash(data.password);
 
   // Create User with appropriate profile
-  // Note: User model does not have name fields, they belong to profiles.
   const user = await prisma.user.create({
     data: {
       email: data.email,
       password: hashedPassword,
-      roleId: roleFn.id,
+      roleId: targetRoleId,
       status: "ACTIVE", // Admin-created users are pre-verified
 
       // Conditional Profile Creation
@@ -68,7 +74,6 @@ export default defineEventHandler(async (event) => {
       ...(data.role === "AGENT" && {
         agentProfile: {
           create: {
-            // Agents use Agency Name. We map name to agency name for now.
             agencyName: data.firstName,
           },
         },
@@ -82,8 +87,17 @@ export default defineEventHandler(async (event) => {
           },
         },
       }),
+
+      // Instance Permissions (Neural Add-ons)
+      ...(data.groupIds &&
+        data.groupIds.length > 0 && {
+          groups: {
+            createMany: {
+              data: data.groupIds.map((gid) => ({ groupId: gid })),
+            },
+          },
+        }),
     },
-    // select: { id: true, email: true }, // Return minimal info
   });
 
   // Log Action
@@ -93,7 +107,12 @@ export default defineEventHandler(async (event) => {
       action: "CREATE_USER",
       entityType: "User",
       entityId: user.id,
-      newValue: { email: user.email, role: data.role },
+      newValue: {
+        email: user.email,
+        role: data.role,
+        roleId: targetRoleId,
+        groupIds: data.groupIds,
+      },
     },
   });
 

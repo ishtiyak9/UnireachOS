@@ -54,6 +54,7 @@ const inferredStudyLevel = computed(() => {
 const categories = {
   IDENT: [
     { id: "PASSPORT", label: "Copy of Passport", mandatory: true },
+    { id: "PASSPORT_PHOTO", label: "Passport Size Photo", mandatory: true },
     { id: "CV", label: "Curriculum Vitae (CV)", mandatory: true },
     {
       id: "SOP_ESSAY",
@@ -144,6 +145,7 @@ const isMandatory = (docId: string) => {
     "STD_12_MARKSHEET",
     "STD_12_CERTIFICATE",
     "PASSPORT",
+    "PASSPORT_PHOTO",
     "CV",
     "SOP_ESSAY",
     "LOR",
@@ -343,7 +345,7 @@ const submitDocUnlockRequest = async () => {
             >Vault</span
           >
         </h1>
-        <p class="text-surface-400 text-sm font-medium">
+        <p class="text-surface-400 text-base font-medium">
           Centralized archive for your academic credentials and official
           correspondence.
         </p>
@@ -360,12 +362,12 @@ const submitDocUnlockRequest = async () => {
         </div>
         <div class="flex flex-col">
           <p
-            class="text-[8px] font-black text-amber-500/80 uppercase tracking-widest"
+            class="text-[10px] font-black text-amber-500/80 uppercase tracking-widest"
           >
             Upload Logic
           </p>
           <p
-            class="text-[9px] font-bold text-surface-300 uppercase tracking-wider"
+            class="text-[11px] font-bold text-surface-300 uppercase tracking-wider"
           >
             Max 500KB • PDF, PNG, JPG Only
           </p>
@@ -377,7 +379,7 @@ const submitDocUnlockRequest = async () => {
     <div class="flex items-center gap-10 border-b border-white/5 relative">
       <button
         @click="activeTab = 0"
-        class="pb-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative"
+        class="pb-5 text-[12px] font-black uppercase tracking-[0.3em] transition-all relative"
         :class="
           activeTab === 0
             ? 'text-primary-500'
@@ -392,7 +394,7 @@ const submitDocUnlockRequest = async () => {
       </button>
       <button
         @click="activeTab = 1"
-        class="pb-5 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative"
+        class="pb-5 text-[12px] font-black uppercase tracking-[0.3em] transition-all relative"
         :class="
           activeTab === 1
             ? 'text-primary-500'
@@ -407,15 +409,70 @@ const submitDocUnlockRequest = async () => {
       </button>
     </div>
 
+    <!-- Loading State -->
+    <div v-if="docsPending" class="space-y-10 animate-pulse">
+      <section v-for="i in 2" :key="i" class="space-y-4">
+        <div class="flex items-center gap-4">
+          <Skeleton width="150px" height="15px" class="!bg-white/5" />
+          <div class="h-px bg-white/5 flex-grow" />
+        </div>
+        <div class="flex flex-col gap-3">
+          <div
+            v-for="j in 3"
+            :key="j"
+            class="h-24 w-full bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-4">
+              <Skeleton shape="circle" size="3rem" class="!bg-white/5" />
+              <div class="space-y-2">
+                <Skeleton width="200px" height="15px" class="!bg-white/5" />
+                <Skeleton width="100px" height="10px" class="!bg-white/5" />
+              </div>
+            </div>
+            <Skeleton
+              width="80px"
+              height="30px"
+              class="!bg-white/5 rounded-lg"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Error State -->
+    <div
+      v-else-if="error"
+      class="bg-red-500/5 border border-red-500/20 rounded-3xl p-12 text-center backdrop-blur-xl"
+    >
+      <div
+        class="w-16 h-16 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center mx-auto mb-6"
+      >
+        <i class="pi pi-cloud-offline text-2xl" />
+      </div>
+      <h2 class="text-xl font-black text-white uppercase tracking-widest mb-2">
+        Vault Connection Error
+      </h2>
+      <p class="text-red-400/60 text-sm max-w-sm mx-auto mb-8 leading-relaxed">
+        We were unable to establish a secure link with your document vault.
+        Please verify your connection status.
+      </p>
+      <Button
+        label="Retry Sync"
+        icon="pi pi-refresh"
+        @click="refresh"
+        class="bg-red-500! text-black! border-0! text-[12px]! font-black uppercase tracking-widest px-8 py-3 rounded-xl"
+      />
+    </div>
+
     <!-- TAB 0: Applicant Uploads (Vertical List Layout) -->
     <div
-      v-if="activeTab === 0"
+      v-else-if="activeTab === 0"
       class="space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-700"
     >
       <!-- Section: Identity -->
       <section class="space-y-4">
         <h2
-          class="text-[11px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
+          class="text-[13px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
         >
           Identity & Documents
           <div class="h-px bg-white/5 flex-grow" />
@@ -439,7 +496,7 @@ const submitDocUnlockRequest = async () => {
       <!-- Section: Academic -->
       <section class="space-y-4">
         <h2
-          class="text-[11px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
+          class="text-[13px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
         >
           Academic History
           <div class="h-px bg-white/5 flex-grow" />
@@ -463,7 +520,7 @@ const submitDocUnlockRequest = async () => {
       <!-- Section: Language -->
       <section class="space-y-4">
         <h2
-          class="text-[11px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
+          class="text-[13px] font-black text-primary-500/80 uppercase tracking-[0.4em] flex items-center gap-4"
         >
           Language Proficiency
           <div class="h-px bg-white/5 flex-grow" />
@@ -537,10 +594,10 @@ const submitDocUnlockRequest = async () => {
         >
           <i class="pi pi-folder-open text-surface-700 text-3xl" />
         </div>
-        <h3 class="text-xs font-black text-white uppercase tracking-[0.3em]">
+        <h3 class="text-sm font-black text-white uppercase tracking-[0.3em]">
           Vault is Empty
         </h3>
-        <p class="text-[10px] text-surface-500 mt-2 font-medium">
+        <p class="text-[12px] text-surface-500 mt-2 font-medium">
           Official university letters and confirmations will appear here.
         </p>
       </div>
@@ -556,11 +613,11 @@ const submitDocUnlockRequest = async () => {
         <i class="pi pi-shield text-primary-500 text-xl" />
       </div>
       <div class="text-center md:text-left">
-        <h4 class="text-sm font-black text-white uppercase tracking-widest">
+        <h4 class="text-base font-black text-white uppercase tracking-widest">
           Enterprise Privacy Standards
         </h4>
         <p
-          class="text-[11px] text-surface-500 font-medium leading-relaxed mt-2 max-w-2xl"
+          class="text-[13px] text-surface-500 font-medium leading-relaxed mt-2 max-w-2xl"
         >
           All uploads are automatically scanned for malware and encrypted at
           rest using AES-256. Verification logs are recorded for institutional
@@ -575,14 +632,14 @@ const submitDocUnlockRequest = async () => {
       modal
       header="Request Document Correction"
       :style="{ width: '450px' }"
-      class="border border-white/10 !bg-surface-950/90 backdrop-blur-2xl rounded-3xl"
+      class="border border-white/10 bg-surface-950/90! backdrop-blur-2xl rounded-3xl"
     >
       <div class="space-y-6 py-4">
         <div
           class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex gap-4"
         >
           <i class="pi pi-exclamation-triangle text-amber-500 mt-1" />
-          <p class="text-[10px] font-medium text-surface-300 leading-relaxed">
+          <p class="text-[12px] font-medium text-surface-300 leading-relaxed">
             This document is verified. To replace it, you must first request an
             unlock from the administration.
           </p>
@@ -590,14 +647,14 @@ const submitDocUnlockRequest = async () => {
 
         <div class="space-y-2">
           <label
-            class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
+            class="text-[12px] font-black text-surface-500 uppercase tracking-widest"
             >Reason for Update</label
           >
           <Textarea
             v-model="unlockReason"
             rows="4"
             autoResize
-            class="w-full !bg-white/[0.03] !border-white/10 !text-white rounded-2xl p-4 text-xs"
+            class="w-full !bg-white/[0.03] !border-white/10 !text-white rounded-2xl p-4 text-sm"
             placeholder="Explain why this document needs to be re-uploaded..."
           />
         </div>
@@ -608,7 +665,7 @@ const submitDocUnlockRequest = async () => {
           <Button
             label="Dismiss"
             text
-            class="!text-surface-500 uppercase tracking-widest text-[10px] font-black"
+            class="!text-surface-500 uppercase tracking-widest text-[12px] font-black"
             @click="unlockDocDialogVisible = false"
           />
           <Button
@@ -616,7 +673,7 @@ const submitDocUnlockRequest = async () => {
             icon="pi pi-send"
             :loading="isRequestingUnlock"
             @click="submitDocUnlockRequest"
-            class="!bg-amber-500 !text-black !border-0 !text-[10px] font-black uppercase tracking-widest px-6 rounded-xl"
+            class="!bg-amber-500 !text-black !border-0 !text-[12px] font-black uppercase tracking-widest px-6 rounded-xl"
           />
         </div>
       </template>

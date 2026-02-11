@@ -5,6 +5,7 @@ const groupSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(2),
   code: z.string().min(2),
+  category: z.enum(["SYSTEM", "AGENT", "APPLICANT"]).default("SYSTEM"),
   description: z.string().optional(),
   permissionIds: z.array(z.string()).optional(),
 });
@@ -26,6 +27,7 @@ export default defineEventHandler(async (event) => {
         data: {
           name: data.name,
           code: data.code,
+          category: data.category,
           description: data.description,
           permissions: data.permissionIds
             ? {
@@ -42,6 +44,7 @@ export default defineEventHandler(async (event) => {
         data: {
           name: data.name,
           code: data.code,
+          category: data.category,
           description: data.description,
           permissions: data.permissionIds
             ? {

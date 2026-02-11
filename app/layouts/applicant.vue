@@ -48,18 +48,18 @@
         <div class="flex flex-col items-center md:items-start gap-4">
           <div class="flex items-center gap-3">
             <div
-              class="w-7 h-7 rounded-sm border border-primary-500/30 bg-primary-500/10 flex items-center justify-center"
+              class="w-8 h-8 rounded-sm border border-primary-500/30 bg-primary-500/10 flex items-center justify-center"
             >
-              <i class="pi pi-shield text-[11px] text-primary-500 font-black" />
+              <i class="pi pi-shield text-[12px] text-primary-500 font-black" />
             </div>
-            <span class="text-[11px] font-black uppercase tracking-[0.4em]"
+            <span class="text-[13px] font-black uppercase tracking-[0.4em]"
               >UniReach<span class="text-primary-500 opacity-80">
                 Intelligence</span
               ></span
             >
           </div>
           <p
-            class="text-[8px] font-bold text-surface-600 uppercase tracking-[0.3em] max-w-[200px] text-center md:text-left leading-relaxed"
+            class="text-[12px] font-bold text-surface-600 uppercase tracking-[0.3em] max-w-[250px] text-center md:text-left leading-relaxed"
           >
             Elite Strategy for Global Academic Advancement.
           </p>
@@ -67,24 +67,24 @@
 
         <div class="flex flex-col items-center gap-4">
           <p
-            class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em]"
+            class="text-[11px] font-black text-surface-500 uppercase tracking-[0.2em]"
           >
             &copy; 2026 UniReach Intelligence • v4.0 Platinum
           </p>
           <div class="flex gap-8">
             <a
               href="#"
-              class="text-[8px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
+              class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
               >Protocol</a
             >
             <a
               href="#"
-              class="text-[8px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
+              class="text-[10px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
               >Privacy</a
             >
             <a
               href="#"
-              class="text-[8px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
+              class="text-[12px] font-black text-surface-500 hover:text-primary-500 uppercase tracking-[0.3em] transition-all"
               >Support</a
             >
           </div>

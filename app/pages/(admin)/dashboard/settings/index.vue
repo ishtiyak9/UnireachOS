@@ -8,7 +8,30 @@ definePageMeta({
 });
 
 const toast = useToast();
+const { user, data: sessionData } = useUserSession();
 const { data, refresh, pending } = await useFetch("/api/admin/settings");
+
+// RBAC
+const canManageConfig = computed(() => {
+  return (
+    user.value?.roleCode === "super_admin" ||
+    user.value?.permissions?.includes("system:control")
+  );
+});
+
+const canManageMaintenance = computed(() => {
+  return (
+    user.value?.roleCode === "super_admin" ||
+    user.value?.permissions?.includes("system:maintenance")
+  );
+});
+
+const canManageAccess = computed(() => {
+  return (
+    user.value?.roleCode === "super_admin" ||
+    user.value?.permissions?.includes("system:manage_access")
+  );
+});
 
 // Reactive State
 const config = ref(data.value?.config || {});
@@ -217,20 +240,24 @@ const deleteRule = async (id: string) => {
     <!-- Main Content -->
     <Tabs value="0">
       <TabList>
-        <Tab value="0" class="flex items-center gap-2">
+        <Tab v-if="canManageConfig" value="0" class="flex items-center gap-2">
           <i class="pi pi-sliders-h"></i> Operational Gates
         </Tab>
-        <Tab value="1" class="flex items-center gap-2">
+        <Tab
+          v-if="canManageMaintenance"
+          value="1"
+          class="flex items-center gap-2"
+        >
           <i class="pi pi-clock"></i> Maintenance
         </Tab>
-        <Tab value="2" class="flex items-center gap-2">
+        <Tab v-if="canManageAccess" value="2" class="flex items-center gap-2">
           <i class="pi pi-shield"></i> Firewall & Security
         </Tab>
       </TabList>
 
       <TabPanels>
         <!-- TAB 1: OPERATIONS -->
-        <TabPanel value="0">
+        <TabPanel v-if="canManageConfig" value="0">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
             <!-- Registration Control -->
             <Card
@@ -365,7 +392,7 @@ const deleteRule = async (id: string) => {
         </TabPanel>
 
         <!-- TAB 2: MAINTENANCE -->
-        <TabPanel value="1">
+        <TabPanel v-if="canManageMaintenance" value="1">
           <div
             class="card p-6 bg-surface-0 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-xl shadow-sm space-y-6"
           >
@@ -483,7 +510,7 @@ const deleteRule = async (id: string) => {
         </TabPanel>
 
         <!-- TAB 3: FIREWALL -->
-        <TabPanel value="2">
+        <TabPanel v-if="canManageAccess" value="2">
           <div
             class="card p-6 bg-surface-0 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 rounded-xl shadow-sm"
           >

@@ -118,7 +118,7 @@ const handleTypeChange = (index: number) => {
         <!-- Test Type -->
         <div class="col-span-1 md:col-span-2 lg:col-span-1 space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Test Type <span class="text-red-400">*</span>
           </label>
@@ -134,7 +134,7 @@ const handleTypeChange = (index: number) => {
         <!-- Exam Date -->
         <div class="col-span-1 md:col-span-2 lg:col-span-1 space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Exam Date <span class="text-red-400">*</span>
           </label>
@@ -150,7 +150,7 @@ const handleTypeChange = (index: number) => {
         <!-- TRF / Reg Number -->
         <div class="col-span-1 md:col-span-2 space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             TRF / Registration No.
           </label>
@@ -432,7 +432,7 @@ const handleTypeChange = (index: number) => {
         size="small"
         text
         @click="addTest"
-        class="!text-primary-400 hover:!text-primary-300 !text-xs uppercase tracking-widest font-black"
+        class="!text-primary-400 hover:!text-primary-300 !text-[12px] uppercase tracking-widest font-black"
       />
     </div>
   </div>

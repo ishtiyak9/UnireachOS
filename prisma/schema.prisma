@@ -25,6 +25,9 @@ model User {
   agentProfile     AgentProfile?
   applicantProfile ApplicantProfile?
 
+  // Instance Permissions (Neural Add-ons)
+  groups UserPermissionGroup[]
+
   // Infrastructure
   loginLogs          LoginLog[]
   auditLogs          AuditLog[]          @relation("PerformedBy")
@@ -61,10 +64,12 @@ model PermissionGroup {
   id          String  @id @default(uuid())
   name        String  @unique // e.g. "Admission Operations Pack"
   code        String  @unique // e.g. "pkg_admission_ops"
+  category    String  @default("SYSTEM") // SYSTEM, AGENT, APPLICANT
   description String?
 
   permissions GroupPermission[]
   roles       RolePermissionGroup[]
+  users       UserPermissionGroup[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,6 +113,15 @@ model RolePermissionGroup {
   group   PermissionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@id([roleId, groupId])
+}
+
+model UserPermissionGroup {
+  userId  String
+  groupId String
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group   PermissionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
 }
 
 // --- SYSTEM/OFFICIAL PROFILES ---
@@ -718,6 +732,7 @@ enum DocumentCategory {
 
   // Identity/Personal
   PASSPORT
+  PASSPORT_PHOTO
   CV
   SOP_ESSAY
   LOR

@@ -118,7 +118,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Organization Name -->
         <div class="space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Name of the Organisation <span class="text-red-400">*</span>
           </label>
@@ -132,7 +132,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Designation -->
         <div class="space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Designation <span class="text-red-400">*</span>
           </label>
@@ -146,7 +146,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Organization Address -->
         <div class="col-span-1 md:col-span-2 space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Organisation Address <span class="text-red-400">*</span>
           </label>
@@ -160,7 +160,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Working From -->
         <div class="space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Working From <span class="text-red-400">*</span>
           </label>
@@ -177,7 +177,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Working Till -->
         <div class="space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Working Till
           </label>
@@ -212,7 +212,7 @@ const handleCurrentToggle = (index: number) => {
         <!-- Responsibilities -->
         <div class="col-span-1 md:col-span-2 space-y-2">
           <label
-            class="text-[10px] font-bold text-surface-400 uppercase tracking-widest"
+            class="text-[12px] font-bold text-surface-400 uppercase tracking-widest"
           >
             Responsibilities (Description)
           </label>
@@ -234,7 +234,7 @@ const handleCurrentToggle = (index: number) => {
         size="small"
         text
         @click="addExperience"
-        class="!text-primary-400 hover:!text-primary-300 !text-xs uppercase tracking-widest font-black"
+        class="!text-primary-400 hover:!text-primary-300 !text-[12px] uppercase tracking-widest font-black"
       />
     </div>
   </div>

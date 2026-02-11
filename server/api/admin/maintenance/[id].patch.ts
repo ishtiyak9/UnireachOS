@@ -9,8 +9,17 @@ const maintenanceUpdateSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
-  if (!session?.user || session.user.roleCode !== "super_admin") {
-    throw createError({ statusCode: 403, message: "Forbidden" });
+  const hasPermission =
+    session?.user?.permissions?.includes("system:maintenance");
+
+  if (
+    !session?.user ||
+    (session.user.roleCode !== "super_admin" && !hasPermission)
+  ) {
+    throw createError({
+      statusCode: 403,
+      message: "Forbidden. Authority Required: system:maintenance",
+    });
   }
 
   const id = getRouterParam(event, "id");

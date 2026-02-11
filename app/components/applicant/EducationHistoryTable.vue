@@ -152,10 +152,10 @@ const removeQualification = (indexInOther: number) => {
           10
         </div>
         <div>
-          <h3 class="text-sm font-bold text-white">
+          <h3 class="text-base font-bold text-white">
             Grade 10 / Secondary Schooling
           </h3>
-          <p class="text-xs text-surface-400">Mandatory</p>
+          <p class="text-sm text-surface-400">Mandatory</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Institution -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Name of Institution *</label
           >
           <InputText
@@ -174,7 +174,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Board / University *</label
           >
           <InputText
@@ -187,7 +187,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Location -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Country *</label
           >
           <InputText
@@ -197,7 +197,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >State *</label
           >
           <InputText
@@ -207,7 +207,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >City *</label
           >
           <InputText
@@ -219,7 +219,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Academic Details -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Primary Language *</label
           >
           <InputText
@@ -230,7 +230,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Grading System *</label
           >
           <Select
@@ -244,7 +244,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Score / CGPA *</label
           >
           <InputText
@@ -257,14 +257,14 @@ const removeQualification = (indexInOther: number) => {
         <!-- Dates -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Start Date *</label
           >
           <Calendar v-model="grade10.startDate" class="w-full" showIcon />
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >End Date</label
           >
           <Calendar v-model="grade10.endDate" class="w-full" showIcon />
@@ -284,10 +284,10 @@ const removeQualification = (indexInOther: number) => {
           12
         </div>
         <div>
-          <h3 class="text-sm font-bold text-white">
+          <h3 class="text-base font-bold text-white">
             Grade 12 / Higher Secondary
           </h3>
-          <p class="text-xs text-surface-400">Mandatory</p>
+          <p class="text-sm text-surface-400">Mandatory</p>
         </div>
       </div>
 
@@ -295,7 +295,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Institution -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Name of Institution *</label
           >
           <InputText
@@ -306,7 +306,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Board / University *</label
           >
           <InputText
@@ -319,7 +319,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Location -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Country *</label
           >
           <InputText
@@ -329,7 +329,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >State *</label
           >
           <InputText
@@ -339,7 +339,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >City *</label
           >
           <InputText
@@ -351,7 +351,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Academic Details -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Primary Language *</label
           >
           <InputText
@@ -362,7 +362,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Grading System *</label
           >
           <Select
@@ -376,7 +376,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Score / CGPA *</label
           >
           <InputText
@@ -389,7 +389,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Qualification Title (Optional distinction like "Science Stream") -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Qualification / Stream</label
           >
           <InputText
@@ -402,14 +402,14 @@ const removeQualification = (indexInOther: number) => {
         <!-- Dates -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Start Date *</label
           >
           <Calendar v-model="grade12.startDate" class="w-full" showIcon />
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >End Date</label
           >
           <Calendar v-model="grade12.endDate" class="w-full" showIcon />
@@ -439,7 +439,9 @@ const removeQualification = (indexInOther: number) => {
           {{ index + 1 }}
         </div>
         <div class="flex flex-col">
-          <h3 class="text-sm font-bold text-white">Additional Qualification</h3>
+          <h3 class="text-base font-bold text-white">
+            Additional Qualification
+          </h3>
           <div class="mt-1">
             <Select
               v-model="edu.level"
@@ -456,7 +458,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Institution -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Name of Institution *</label
           >
           <InputText
@@ -467,7 +469,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Board / University *</label
           >
           <InputText
@@ -478,7 +480,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Degree / Qualification *</label
           >
           <InputText
@@ -491,7 +493,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Location -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Country *</label
           >
           <InputText
@@ -501,7 +503,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >State *</label
           >
           <InputText
@@ -511,7 +513,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >City *</label
           >
           <InputText
@@ -523,7 +525,7 @@ const removeQualification = (indexInOther: number) => {
         <!-- Academic Details -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Primary Language *</label
           >
           <InputText
@@ -534,7 +536,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Grading System *</label
           >
           <Select
@@ -547,7 +549,7 @@ const removeQualification = (indexInOther: number) => {
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Score / CGPA *</label
           >
           <InputText
@@ -559,14 +561,14 @@ const removeQualification = (indexInOther: number) => {
         <!-- Dates -->
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >Start Date *</label
           >
           <Calendar v-model="edu.startDate" class="w-full" showIcon />
         </div>
         <div class="space-y-2">
           <label
-            class="text-[10px] uppercase font-bold text-surface-400 tracking-wider"
+            class="text-[12px] uppercase font-bold text-surface-400 tracking-wider"
             >End Date</label
           >
           <Calendar
@@ -587,7 +589,7 @@ const removeQualification = (indexInOther: number) => {
     <button
       @click="addQualification"
       type="button"
-      class="w-full py-4 rounded-2xl border border-dashed border-white/10 text-surface-400 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all text-sm font-bold flex items-center justify-center gap-2"
+      class="w-full py-4 rounded-2xl border border-dashed border-white/10 text-surface-400 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all text-base font-black flex items-center justify-center gap-2"
     >
       <i class="pi pi-plus" />
       Add Qualification (Undergrad, Postgrad, etc.)

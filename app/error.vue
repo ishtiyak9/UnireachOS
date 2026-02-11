@@ -61,12 +61,38 @@ const handleError = () => clearError({ redirect: "/dashboard" });
             {{
               error.statusCode === 404
                 ? "Resource Not Found"
+                : error.statusCode === 503
+                ? "System Maintenance"
                 : "System Exception"
             }}
           </p>
         </div>
 
+        <div v-if="error.statusCode === 503" class="space-y-4">
+          <p
+            class="text-sm text-surface-400 leading-relaxed max-w-sm mx-auto font-medium"
+          >
+            {{
+              error.message ||
+              "The platform is currently undergoing a structural update to improve your experience. We will be back online shortly."
+            }}
+          </p>
+          <div
+            v-if="error.data?.endTime"
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20"
+          >
+            <i class="pi pi-clock text-[10px] text-primary-500" />
+            <span
+              class="text-[9px] font-black text-primary-400 uppercase tracking-widest"
+            >
+              Estimated Completion:
+              {{ new Date(error.data.endTime).toLocaleTimeString() }}
+            </span>
+          </div>
+        </div>
+
         <p
+          v-else
           class="text-sm text-surface-400 leading-relaxed max-w-sm mx-auto font-medium"
         >
           {{
