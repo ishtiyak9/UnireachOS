@@ -9,9 +9,16 @@ export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event);
     const category = query.category as string | undefined;
+    const categories = query.categories as string[] | string | undefined;
 
     const where: any = { AND: [] };
-    if (category) {
+
+    if (categories) {
+      const categoryList = Array.isArray(categories)
+        ? categories
+        : [categories];
+      where.AND.push({ role: { category: { in: categoryList } } });
+    } else if (category) {
       where.AND.push({ role: { category } });
     }
 

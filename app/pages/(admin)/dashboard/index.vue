@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, reactive, computed } from "vue";
 definePageMeta({
   layout: "dashboard",
   middleware: "auth",
@@ -96,7 +97,7 @@ const recentApplications = [
         <h1 class="text-3xl lg:text-4xl font-black text-white tracking-tight">
           Executive
           <span
-            class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600"
+            class="text-transparent bg-clip-text bg-linear-to-r from-primary-400 to-primary-600"
             >Overview</span
           >
         </h1>
@@ -116,14 +117,14 @@ const recentApplications = [
             <Button
               icon="pi pi-shield"
               label="Governance"
-              class="!bg-linear-to-r !from-primary-400 !to-primary-600 !border-0 !text-black !text-[10px] font-black uppercase tracking-wider px-4 rounded-xl shadow-lg shadow-primary-500/10"
+              class="bg-linear-to-r! from-primary-400! to-primary-600! border-0! text-black! text-[10px]! font-black uppercase tracking-wider px-4 rounded-xl shadow-lg shadow-primary-500/10"
             />
           </NuxtLink>
           <NuxtLink to="/dashboard/settings">
             <Button
               icon="pi pi-sliders-h"
               label="Control Hub"
-              class="!bg-surface-800 !border-white/10 !text-white !text-[10px] font-black uppercase tracking-wider px-4 rounded-xl hover:!bg-surface-700"
+              class="bg-surface-800! border-white/10! text-white! text-[10px]! font-black uppercase tracking-wider px-4 rounded-xl hover:bg-surface-700!"
             />
           </NuxtLink>
         </div>
@@ -133,12 +134,12 @@ const recentApplications = [
           label="Export Report"
           outlined
           severity="secondary"
-          class="!border-white/10 !text-surface-300 hover:!bg-white/5 !text-xs font-bold uppercase tracking-wider px-4 rounded-xl"
+          class="border-white/10! text-surface-300! hover:bg-white/5! text-xs font-bold uppercase tracking-wider px-4 rounded-xl"
         />
         <Button
           icon="pi pi-plus"
           label="Add Record"
-          class="!bg-linear-to-r !from-primary-500 !to-primary-600 !border-0 !text-black !text-xs font-black uppercase tracking-wider px-4 rounded-xl shadow-lg shadow-primary-500/20"
+          class="bg-linear-to-r! from-primary-500! to-primary-600! border-0! text-black! text-xs font-black uppercase tracking-wider px-4 rounded-xl shadow-lg shadow-primary-500/20"
         />
       </div>
     </div>
@@ -153,7 +154,7 @@ const recentApplications = [
         <!-- Card Interior Glow -->
         <div
           :class="[
-            'absolute top-0 right-0 w-24 h-24 bg-gradient-to-br opacity-0 group-hover:opacity-10 blur-2xl transition-opacity duration-500 rounded-full',
+            'absolute top-0 right-0 w-24 h-24 bg-linear-to-br opacity-0 group-hover:opacity-10 blur-2xl transition-opacity duration-500 rounded-full',
             stat.color,
           ]"
         />
@@ -162,7 +163,7 @@ const recentApplications = [
           <div class="space-y-4">
             <div class="flex items-center gap-2">
               <div
-                :class="['w-2 h-2 rounded-full bg-gradient-to-r', stat.color]"
+                :class="['w-2 h-2 rounded-full bg-linear-to-r', stat.color]"
               />
               <span
                 class="text-[10px] font-black text-surface-400 uppercase tracking-widest"
@@ -195,7 +196,7 @@ const recentApplications = [
 
           <div
             :class="[
-              'w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300',
+              'w-12 h-12 rounded-2xl bg-linear-to-br flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300',
               stat.color,
             ]"
           >
@@ -242,7 +243,7 @@ const recentApplications = [
           <!-- Decorative Chart Elements (Simulated) -->
           <div class="absolute inset-0 opacity-20 pointer-events-none">
             <div
-              class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary-500/20 to-transparent"
+              class="absolute bottom-0 left-0 w-full h-1/2 bg-linear-to-t from-primary-500/20 to-transparent"
             />
             <!-- Simulated Grid Lines -->
             <div class="grid grid-cols-6 h-full w-full">
@@ -334,7 +335,7 @@ const recentApplications = [
 
     <!-- Bottom Section: Detailed Stats / System Health -->
     <div
-      class="bg-gradient-to-r from-surface-900/60 to-surface-800/40 border border-white/5 rounded-3xl p-6 backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6"
+      class="bg-linear-to-r from-surface-900/60 to-surface-800/40 border border-white/5 rounded-3xl p-6 backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6"
     >
       <div class="flex items-center gap-5">
         <div

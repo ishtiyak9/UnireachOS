@@ -5,8 +5,16 @@ const isMobile = ref(false);
 // Check if mobile on mount
 onMounted(() => {
   const checkMobile = () => {
+    const wasMobile = isMobile.value;
     isMobile.value = window.innerWidth < 1024;
-    if (isMobile.value) {
+
+    // Auto-expand sidebar when switching from mobile to desktop
+    if (wasMobile && !isMobile.value) {
+      sidebarVisible.value = true;
+    }
+
+    // Auto-hide sidebar when switching from desktop to mobile
+    if (!wasMobile && isMobile.value) {
       sidebarVisible.value = false;
     }
   };
@@ -51,6 +59,7 @@ const toggleSidebar = () => {
     <!-- Topbar -->
     <DashboardTopbar
       @toggle-sidebar="toggleSidebar"
+      :is-mobile="isMobile"
       :class="[sidebarVisible && !isMobile ? 'lg:left-64' : 'left-0']"
     />
 
@@ -59,8 +68,8 @@ const toggleSidebar = () => {
       class="relative z-10 transition-all duration-300 min-h-screen flex flex-col overflow-x-hidden"
       :class="[sidebarVisible && !isMobile ? 'lg:ml-64' : 'ml-0']"
     >
-      <!-- Spacer for fixed Topbar (Header h-12 = h-12) -->
-      <div class="h-12 w-full shrink-0" />
+      <!-- Spacer for fixed Topbar (Header h-12 + Breadcrumb h-7 = 76px) -->
+      <div class="h-[76px] w-full shrink-0" />
 
       <!-- Page Content -->
       <main class="flex-1 p-4 lg:p-8 w-full max-w-[100vw]">

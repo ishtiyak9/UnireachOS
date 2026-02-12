@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { useThemeConfig } from "~/composables/useThemeConfig";
+const props = defineProps<{
+  isMobile?: boolean;
+}>();
+
 const emit = defineEmits(["toggleSidebar"]);
 
 const route = useRoute();
@@ -87,7 +91,7 @@ const fullName = computed(() => {
         class="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary-500/20 to-transparent"
       />
 
-      <!-- Left: Mobile Toggle & Breadcrumbs -->
+      <!-- Left: Mobile Toggle -->
       <div class="flex items-center gap-4">
         <button
           class="lg:hidden w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-95"
@@ -95,39 +99,6 @@ const fullName = computed(() => {
         >
           <i class="pi pi-bars text-xs" />
         </button>
-
-        <!-- Refined In-Header Breadcrumbs -->
-        <nav class="hidden md:flex items-center gap-3">
-          <NuxtLink
-            to="/dashboard"
-            class="text-surface-600 hover:text-primary-400 transition-colors flex items-center group/home"
-          >
-            <i
-              class="pi pi-home text-[10px] group-hover/home:scale-110 transition-transform"
-            />
-          </NuxtLink>
-
-          <template v-for="(crumb, index) in breadcrumbs" :key="index">
-            <div class="flex items-center gap-3">
-              <span class="text-surface-800 text-[8px] font-black select-none"
-                >/</span
-              >
-              <NuxtLink
-                v-if="!crumb.active"
-                :to="crumb.to"
-                class="text-[9px] font-black text-surface-500 hover:text-white transition-colors uppercase tracking-[0.2em]"
-              >
-                {{ crumb.label }}
-              </NuxtLink>
-              <span
-                v-else
-                class="text-[9px] font-black text-primary-500/80 uppercase tracking-[0.2em]"
-              >
-                {{ crumb.label }}
-              </span>
-            </div>
-          </template>
-        </nav>
       </div>
 
       <!-- Right: Search & User Actions -->

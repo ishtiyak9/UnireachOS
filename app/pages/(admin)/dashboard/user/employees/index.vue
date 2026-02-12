@@ -180,10 +180,13 @@ const {
   data: users,
   refresh: refreshUsers,
   pending,
-} = useFetch("/api/admin/users", { query: { category: "SYSTEM" } });
+} = useFetch("/api/admin/users", {
+  query: { categories: ["SYSTEM", "STAFF"] },
+});
 
 const { data: systemRoles } = useFetch("/api/admin/authority/roles", {
-  transform: (roles: any) => roles.filter((r: any) => r.category === "SYSTEM"),
+  transform: (roles: any) =>
+    roles.filter((r: any) => ["SYSTEM", "STAFF"].includes(r.category)),
 });
 
 const filters = ref({

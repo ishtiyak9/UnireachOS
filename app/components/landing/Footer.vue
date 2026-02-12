@@ -89,7 +89,7 @@ const quickLinks = [
                 <!-- Right: Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 sm:min-w-fit">
                   <NuxtLink
-                    to="/contact"
+                    to="/apply"
                     class="group/btn relative px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:shadow-2xl hover:shadow-primary-500/50 transition-all duration-500 hover:scale-105 text-center overflow-hidden"
                   >
                     <span
@@ -350,11 +350,11 @@ const quickLinks = [
               <span class="opacity-70">
                 Developed by
                 <a
-                  href="https://innex.solutions"
+                  href="https://stackzen.io"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="font-bold hover:text-primary-500 transition-colors"
-                  >Innex Solution Ltd</a
+                  >Stakzen Technologies</a
                 >
               </span>
             </p>

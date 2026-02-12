@@ -1,3 +1,71 @@
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
+
+// Form state
+const formSubmitted = ref(false);
+const isSubmitting = ref(false);
+
+// Dynamic Countries
+const { data: countriesRes } = await useFetch("/api/countries");
+const countries = computed(() => (countriesRes.value as any)?.data || []);
+
+// Form data
+const formData = reactive({
+  fullName: "",
+  email: "",
+  whatsapp: "",
+  destination: "",
+  studyLevel: "",
+  fieldOfStudy: "",
+  academicResults: "",
+  passingYear: "",
+  englishProficiency: "",
+  message: "",
+});
+
+// Handle form submission
+const handleSubmit = async () => {
+  isSubmitting.value = true;
+
+  try {
+    const response = await $fetch("/api/leads/apply", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.success) {
+      formSubmitted.value = true;
+    }
+  } catch (error: any) {
+    console.error("Form submission error:", error);
+    if (error.statusCode === 409) {
+      alert(error.message);
+    } else {
+      alert(
+        "There was an error submitting your application. Please check your data and try again."
+      );
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+// Reset form
+const resetForm = () => {
+  formData.fullName = "";
+  formData.email = "";
+  formData.whatsapp = "";
+  formData.destination = "";
+  formData.studyLevel = "";
+  formData.fieldOfStudy = "";
+  formData.academicResults = "";
+  formData.passingYear = "";
+  formData.englishProficiency = "";
+  formData.message = "";
+  formSubmitted.value = false;
+};
+</script>
+
 <template>
   <section class="relative py-20 overflow-hidden bg-surface-950">
     <!-- Background Effects -->
@@ -16,7 +84,7 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl mb-6"
         >
-          <i class="pi pi-graduation-cap text-primary-400 text-xs"/>
+          <i class="pi pi-graduation-cap text-primary-400 text-xs" />
           <span
             class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
             >Start Your Journey</span
@@ -29,7 +97,7 @@
           <span class="block text-white">Study Abroad</span>
           <span
             class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic"
-            >Application Form</span
+            >Enquiry Form</span
           >
         </h2>
 
@@ -48,7 +116,7 @@
           <div
             class="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
           >
-            <i class="pi pi-check text-primary-400 text-2xl"/>
+            <i class="pi pi-check text-primary-400 text-2xl" />
           </div>
           <h3 class="text-2xl font-black text-white mb-3">
             Application Received!
@@ -82,7 +150,7 @@
               required
               placeholder="Enter your full name"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            >
+            />
           </div>
 
           <!-- Email -->
@@ -100,7 +168,7 @@
               required
               placeholder="your.email@example.com"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            >
+            />
           </div>
 
           <!-- WhatsApp Number -->
@@ -115,7 +183,7 @@
               <div
                 class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-surface-400"
               >
-                <i class="pi pi-whatsapp text-green-400"/>
+                <i class="pi pi-whatsapp text-green-400" />
                 <span class="text-sm">+</span>
               </div>
               <input
@@ -125,7 +193,7 @@
                 required
                 placeholder="880 1XXX-XXXXXX"
                 class="w-full pl-16 pr-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-              >
+              />
             </div>
             <p class="text-xs text-surface-500 mt-1">
               Include country code (e.g., 880 for Bangladesh)
@@ -154,52 +222,22 @@
             >
               <option value="" disabled selected>Select a country</option>
 
-              <!-- Popular Destinations -->
-              <optgroup label="Popular Destinations">
+              <!-- Dynamic Countries from DB -->
+              <optgroup v-if="countries.length > 0" label="Active Destinations">
+                <option v-for="c in countries" :key="c.code" :value="c.name">
+                  {{ c.name }}
+                </option>
+              </optgroup>
+
+              <!-- Popular Destinations Fallback -->
+              <optgroup v-else label="Popular Destinations">
                 <option value="Australia">Australia</option>
                 <option value="Hungary">Hungary</option>
                 <option value="Italy">Italy</option>
                 <option value="Denmark">Denmark</option>
               </optgroup>
 
-              <!-- EU Countries (27 Member States) -->
-              <optgroup label="European Union Countries">
-                <option value="Austria">Austria</option>
-                <option value="Belgium">Belgium</option>
-                <option value="Bulgaria">Bulgaria</option>
-                <option value="Croatia">Croatia</option>
-                <option value="Cyprus">Cyprus</option>
-                <option value="Czech Republic">Czech Republic</option>
-                <option value="Denmark">Denmark</option>
-                <option value="Estonia">Estonia</option>
-                <option value="Finland">Finland</option>
-                <option value="France">France</option>
-                <option value="Germany">Germany</option>
-                <option value="Greece">Greece</option>
-                <option value="Hungary">Hungary</option>
-                <option value="Ireland">Ireland</option>
-                <option value="Italy">Italy</option>
-                <option value="Latvia">Latvia</option>
-                <option value="Lithuania">Lithuania</option>
-                <option value="Luxembourg">Luxembourg</option>
-                <option value="Malta">Malta</option>
-                <option value="Netherlands">Netherlands</option>
-                <option value="Poland">Poland</option>
-                <option value="Portugal">Portugal</option>
-                <option value="Romania">Romania</option>
-                <option value="Slovakia">Slovakia</option>
-                <option value="Slovenia">Slovenia</option>
-                <option value="Spain">Spain</option>
-                <option value="Sweden">Sweden</option>
-              </optgroup>
-
-              <!-- Other Countries -->
-              <optgroup label="Other Countries">
-                <option value="Malaysia">Malaysia</option>
-                <option value="New Zealand">New Zealand</option>
-                <option value="Singapore">Singapore</option>
-                <option value="Other">Other</option>
-              </optgroup>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -245,7 +283,7 @@
               type="text"
               placeholder="e.g., Computer Science, Business, Medicine"
               class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            >
+            />
           </div>
 
           <!-- Academic Results & Passing Year (Side by Side) -->
@@ -265,7 +303,7 @@
                 required
                 placeholder="e.g., 3.5 GPA or 85%"
                 class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-              >
+              />
               <p class="text-xs text-surface-500 mt-1">
                 Enter your GPA (out of 4.0) or percentage
               </p>
@@ -388,71 +426,27 @@
   </section>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive } from "vue";
+<style scoped>
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
-// Form state
-const formSubmitted = ref(false);
-const isSubmitting = ref(false);
-
-// Form data
-const formData = reactive({
-  fullName: "",
-  email: "",
-  whatsapp: "",
-  destination: "",
-  studyLevel: "",
-  fieldOfStudy: "",
-  academicResults: "",
-  passingYear: "",
-  englishProficiency: "",
-  message: "",
-});
-
-// Handle form submission
-const handleSubmit = async () => {
-  isSubmitting.value = true;
-
-  try {
-    // TODO: Replace with actual API endpoint
-    // const response = await fetch('/api/leads/study-abroad', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formData),
-    // })
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // Log to console for now
-    console.log("Study Abroad Lead Submitted:", formData);
-
-    // Show success message
-    formSubmitted.value = true;
-  } catch (error) {
-    console.error("Form submission error:", error);
-    alert("There was an error submitting your application. Please try again.");
-  } finally {
-    isSubmitting.value = false;
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
   }
-};
+  50% {
+    opacity: 0.5;
+  }
+}
 
-// Reset form
-const resetForm = () => {
-  formData.fullName = "";
-  formData.email = "";
-  formData.whatsapp = "";
-  formData.destination = "";
-  formData.studyLevel = "";
-  formData.fieldOfStudy = "";
-  formData.academicResults = "";
-  formData.passingYear = "";
-  formData.englishProficiency = "";
-  formData.message = "";
-  formSubmitted.value = false;
-};
-</script>
-
+/* Custom select arrow */
+select option {
+  background-color: rgb(var(--p-surface-800));
+  color: white;
+}
+</style>
 <style scoped>
 .animate-pulse-slow {
   animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;

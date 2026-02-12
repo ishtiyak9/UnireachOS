@@ -158,4 +158,23 @@ export const notify = {
       data: { isRead: true },
     });
   },
+
+  /**
+   * Broadcast a notification to an entire team.
+   */
+  async broadcastToTeam(
+    teamId: string,
+    payload: Omit<NotificationPayload, "userId">
+  ) {
+    const members = await prisma.staffProfile.findMany({
+      where: { teamId },
+      select: { userId: true },
+    });
+
+    const notifications = await Promise.all(
+      members.map((member) => this.send({ ...payload, userId: member.userId }))
+    );
+
+    return notifications;
+  },
 };

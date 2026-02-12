@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { hash } from "argon2";
+import { randomUUID } from "crypto";
 
 const createUserSchema = z.object({
   email: z.string().email(),
@@ -74,6 +75,7 @@ export default defineEventHandler(async (event) => {
       ...(data.role === "AGENT" && {
         agentProfile: {
           create: {
+            id: randomUUID(),
             agencyName: data.firstName,
           },
         },

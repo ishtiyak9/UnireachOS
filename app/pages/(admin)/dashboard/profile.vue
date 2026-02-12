@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, reactive, computed } from "vue";
 definePageMeta({
   layout: "dashboard",
   middleware: "auth",
@@ -75,7 +76,7 @@ const userInitials = computed(() => {
           <Avatar
             :label="userInitials"
             shape="circle"
-            class="!bg-linear-to-br !from-primary-400 !to-primary-600 !text-black !font-black !text-2xl !w-24 !h-24 shadow-2xl ring-4 ring-white/5"
+            class="bg-linear-to-br! from-primary-400! to-primary-600! text-black! font-black! text-2xl! w-24! h-24! shadow-2xl ring-4 ring-white/5"
           />
           <div
             class="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 rounded-full border-4 border-surface-950 flex items-center justify-center"
@@ -146,7 +147,7 @@ const userInitials = computed(() => {
           >
           <InputText
             v-model="form.firstName"
-            class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+            class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
           />
         </div>
 
@@ -157,7 +158,7 @@ const userInitials = computed(() => {
           >
           <InputText
             v-model="form.lastName"
-            class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+            class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
           />
         </div>
 
@@ -170,7 +171,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.phone"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
 
@@ -181,7 +182,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.nationality"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
 
@@ -192,7 +193,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.passportNo"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
 
@@ -204,7 +205,7 @@ const userInitials = computed(() => {
             <InputText
               v-model="form.dateOfBirth"
               type="date"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
         </template>
@@ -218,7 +219,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.agencyName"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
           <div class="space-y-2">
@@ -228,7 +229,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.phone"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
         </template>
@@ -242,7 +243,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.department"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
           <div class="space-y-2">
@@ -252,7 +253,7 @@ const userInitials = computed(() => {
             >
             <InputText
               v-model="form.position"
-              class="w-full !bg-surface-950 !border-white/10 !text-white rounded-xl py-3"
+              class="w-full bg-surface-950! border-white/10! text-white! rounded-xl py-3"
             />
           </div>
         </template>
@@ -264,7 +265,7 @@ const userInitials = computed(() => {
           :icon="isSaving ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
           :disabled="isSaving"
           @click="saveProfile"
-          class="!bg-primary-500 !text-black !border-0 !text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl shadow-lg shadow-primary-500/20"
+          class="bg-primary-500! text-black! border-0! text-[10px]! font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl shadow-lg shadow-primary-500/20"
         />
       </div>
     </div>

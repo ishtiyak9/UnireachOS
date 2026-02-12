@@ -137,6 +137,19 @@ model StaffProfile {
   assignedApplicants ApplicantProfile[] @relation("StaffAssignments")
   applications       Application[]
 
+  // Core Specialties (e.g. ["Germany", "Australia"])
+  specialties String[]
+
+  // Intelligence Layer Config
+  lastLeadAssignedAt  DateTime?
+  isAutoAssignEnabled Boolean   @default(true)
+
+  leads                  Lead[]                 @relation("CounselorLeads")
+  leadEvents            LeadEvent[]            @relation("EventPerformer")
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+
   unlockRequests         ProfileUnlockRequest[]
   documentUnlockRequests DocumentUnlockRequest[]
 }
@@ -210,7 +223,7 @@ enum AccessControlType {
 
 // --- AGENT PROFILES ---
 model AgentProfile {
-  id         String             @id
+  id         String             @id @default(uuid())
   userId     String             @unique
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   agencyName String
@@ -448,8 +461,112 @@ enum ApplicantType {
 
 enum RoleCategory {
   SYSTEM
+  STAFF
   AGENT
   APPLICANT
+}
+
+// --- LEAD MANAGEMENT (Intelligence Layer) ---
+model Lead {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String?
+  email     String  @unique
+  phone     String? // WhatsApp or Direct
+
+  // Education Intent
+  preferredCountry   String // e.g. "Germany", "Hungary"
+  studyLevel         String? // Undergraduate, Postgraduate
+  fieldOfStudy       String?
+  academicResults    String?
+  passingYear        String?
+  englishProficiency String?
+  message            String? @db.Text
+
+  status         String    @default("New Inquiry")
+  source         String?   @default("LANDING_PAGE")
+  nextFollowUpAt DateTime?
+
+  // Chain of Custody
+  assignedCounselorId String?
+  assignedCounselor   StaffProfile? @relation("CounselorLeads", fields: [assignedCounselorId], references: [id])
+
+  // Black Box Recorder
+  events LeadEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([preferredCountry])
+  @@index([nextFollowUpAt])
+}
+
+model LeadEvent {
+  id     String @id @default(uuid())
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  type LeadEventType
+
+  // Auditor (Optional for system-generated events)
+  performerId String?
+  performer   StaffProfile? @relation("EventPerformer", fields: [performerId], references: [id])
+
+  // Context (e.g. { "from": "UK Team", "to": "DE Team", "note": "..." })
+  metadata Json?
+
+  createdAt DateTime @default(now())
+}
+
+enum LeadEventType {
+  CREATE
+  ASSIGNMENT
+  TRANSFER
+  STATUS_CHANGE
+  NOTE
+  QUALIFICATION
+  CONVERSION
+}
+
+// --- TEAM MANAGEMENT (Specialized Cells) ---
+model Team {
+  id           String   @id @default(uuid())
+  name         String
+  vertical     Vertical
+  targetLocale String?  // e.g. "Germany", "AU", or "Global"
+  description  String?
+  
+  // Relations
+  members   StaffProfile[]
+  managerId String?        // Reference to a StaffProfile ID who is the lead
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Vertical {
+  EDUCATION
+  MIGRATION
+  SALES
+  NETWORKING
+  FINANCE
+  ADMINISTRATION
+  LEGAL
+}
+
+// --- GLOBAL CONFIGURATION (Geo-Registry) ---
+model Country {
+  id        String  @id @default(uuid())
+  name      String  @unique // e.g. "Germany"
+  code      String  @unique // e.g. "DE"
+  flag      String? // URL or path to flag image
+  
+  isActive  Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // --- INVENTORY (Universities & Courses) ---

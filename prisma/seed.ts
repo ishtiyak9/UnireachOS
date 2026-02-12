@@ -62,10 +62,10 @@ async function main() {
     },
 
     // --- CATEGORY: ACCOUNTS (User Management) ---
-    { code: "user:view", name: "Browse User Directory", group: "ACCOUNTS" },
-    { code: "user:create", name: "Provision New Users", group: "ACCOUNTS" },
-    { code: "user:update", name: "Edit User Accounts", group: "ACCOUNTS" },
-    { code: "user:delete", name: "Deactivate/Delete Users", group: "ACCOUNTS" },
+    { code: "user:view", name: "Browse User Directory", group: "USER" },
+    { code: "user:create", name: "Provision New Users", group: "USER" },
+    { code: "user:update", name: "Edit User Accounts", group: "USER" },
+    { code: "user:delete", name: "Deactivate/Delete Users", group: "USER" },
 
     // --- CATEGORY: APPLICANTS (Student/Expat Profiles) ---
     {
@@ -237,6 +237,40 @@ async function main() {
       group: "COMMUNICATIONS",
     },
 
+    // --- CATEGORY: LEADS (Intake & Routing) ---
+    { code: "leads:view_all", name: "View All Leads (Global)", group: "LEADS" },
+    {
+      code: "leads:view_assigned",
+      name: "View Only Assigned Leads",
+      group: "LEADS",
+    },
+    {
+      code: "leads:assign_manual",
+      name: "Manually (Re)Assign Leads",
+      group: "LEADS",
+    },
+    {
+      code: "leads:auto_route_config",
+      name: "Configure Auto-Assignment",
+      group: "LEADS",
+    },
+
+    // --- CATEGORY: TEAMS (Specialized Cells) ---
+    { code: "teams:view", name: "View Team Structures", group: "TEAMS" },
+    { code: "teams:manage", name: "Provision/Delete Teams", group: "TEAMS" },
+    {
+      code: "teams:assign_members",
+      name: "Manage Team Memberships",
+      group: "TEAMS",
+    },
+
+    // --- CATEGORY: GEO (Global Registry) ---
+    {
+      code: "geo:manage_countries",
+      name: "Manage Countries & Flags",
+      group: "GEO",
+    },
+
     // --- CATEGORY: CLIENT (End-User/Student Actions) ---
     {
       code: "client:portal_access",
@@ -346,10 +380,164 @@ async function main() {
     },
   });
 
+  // 5. Seed Geo-Registry (Countries)
+  console.log("🗺️ Provisioning Geo-Registry...");
+  const countries = [
+    { name: "Austria", code: "AT", flag: "https://flagcdn.com/w320/at.png" },
+    { name: "Belgium", code: "BE", flag: "https://flagcdn.com/w320/be.png" },
+    { name: "Bulgaria", code: "BG", flag: "https://flagcdn.com/w320/bg.png" },
+    { name: "Croatia", code: "HR", flag: "https://flagcdn.com/w320/hr.png" },
+    {
+      name: "Czech Republic",
+      code: "CZ",
+      flag: "https://flagcdn.com/w320/cz.png",
+    },
+    { name: "Denmark", code: "DK", flag: "https://flagcdn.com/w320/dk.png" },
+    { name: "Estonia", code: "EE", flag: "https://flagcdn.com/w320/ee.png" },
+    { name: "Finland", code: "FI", flag: "https://flagcdn.com/w320/fi.png" },
+    { name: "France", code: "FR", flag: "https://flagcdn.com/w320/fr.png" },
+    { name: "Germany", code: "DE", flag: "https://flagcdn.com/w320/de.png" },
+    { name: "Greece", code: "GR", flag: "https://flagcdn.com/w320/gr.png" },
+    { name: "Hungary", code: "HU", flag: "https://flagcdn.com/w320/hu.png" },
+    { name: "Iceland", code: "IS", flag: "https://flagcdn.com/w320/is.png" },
+    { name: "Italy", code: "IT", flag: "https://flagcdn.com/w320/it.png" },
+    { name: "Latvia", code: "LV", flag: "https://flagcdn.com/w320/lv.png" },
+    {
+      name: "Liechtenstein",
+      code: "LI",
+      flag: "https://flagcdn.com/w320/li.png",
+    },
+    { name: "Lithuania", code: "LT", flag: "https://flagcdn.com/w320/lt.png" },
+    { name: "Luxembourg", code: "LU", flag: "https://flagcdn.com/w320/lu.png" },
+    { name: "Malta", code: "MT", flag: "https://flagcdn.com/w320/mt.png" },
+    {
+      name: "Netherlands",
+      code: "NL",
+      flag: "https://flagcdn.com/w320/nl.png",
+    },
+    { name: "Norway", code: "NO", flag: "https://flagcdn.com/w320/no.png" },
+    { name: "Poland", code: "PL", flag: "https://flagcdn.com/w320/pl.png" },
+    { name: "Portugal", code: "PT", flag: "https://flagcdn.com/w320/pt.png" },
+    { name: "Romania", code: "RO", flag: "https://flagcdn.com/w320/ro.png" },
+    { name: "Slovakia", code: "SK", flag: "https://flagcdn.com/w320/sk.png" },
+    { name: "Slovenia", code: "SI", flag: "https://flagcdn.com/w320/si.png" },
+    { name: "Spain", code: "ES", flag: "https://flagcdn.com/w320/es.png" },
+    { name: "Sweden", code: "SE", flag: "https://flagcdn.com/w320/se.png" },
+    { name: "Australia", code: "AU", flag: "https://flagcdn.com/w320/au.png" },
+    { name: "Global", code: "GL", flag: "" },
+  ];
+
+  for (const c of countries) {
+    await prisma.country.upsert({
+      where: { code: c.code },
+      update: c,
+      create: c,
+    });
+  }
+
+  // 6. Seed Specialized Teams
+  console.log("🏢 Architecting Specialized Teams...");
+  const teams = [
+    {
+      name: "Rhine Admissions Cell",
+      vertical: "EDUCATION",
+      targetLocale: "Germany",
+    },
+    {
+      name: "Outback Education Team",
+      vertical: "EDUCATION",
+      targetLocale: "Australia",
+    },
+    {
+      name: "Global Intake Hub",
+      vertical: "EDUCATION",
+      targetLocale: "Global",
+    },
+  ];
+
+  const teamRecords: any = {};
+  for (const t of teams) {
+    const record = await prisma.team.upsert({
+      where: { id: t.name.toLowerCase().replace(/ /g, "_") }, // Temporary ID logic for seed
+      update: t,
+      create: {
+        id: t.name.toLowerCase().replace(/ /g, "_"),
+        ...t,
+      },
+    });
+    teamRecords[t.targetLocale] = record;
+  }
+
+  // 7. Seed Staff Roles (Counselors)
+  const counselorRole = await prisma.systemRole.upsert({
+    where: { code: "counselor" },
+    update: {},
+    create: {
+      name: "Education Counselor",
+      code: "counselor",
+      category: "STAFF",
+      description: "Standard student advisor for specialized cells",
+      isSystem: true,
+    },
+  });
+
+  // 8. Provision Specialized Counselors
+  console.log("🧑‍💻 Deploying specialized counselors...");
+  const counselors = [
+    {
+      email: "hans.miller@unireachbd.com",
+      first: "Hans",
+      last: "Miller",
+      locale: "Germany",
+      specialties: ["DAAD", "Public Universities"],
+    },
+    {
+      email: "sarah.smith@unireachbd.com",
+      first: "Sarah",
+      last: "Smith",
+      locale: "Australia",
+      specialties: ["GTE", "Level 1 Uni"],
+    },
+    {
+      email: "alex.jones@unireachbd.com",
+      first: "Alex",
+      last: "Jones",
+      locale: "Global",
+      specialties: ["General Counseling"],
+    },
+  ];
+
+  for (const c of counselors) {
+    await prisma.user.upsert({
+      where: { email: c.email },
+      update: {
+        roleId: counselorRole.id,
+      },
+      create: {
+        email: c.email,
+        password: password,
+        roleId: counselorRole.id,
+        status: "ACTIVE",
+        staffProfile: {
+          create: {
+            firstName: c.first,
+            lastName: c.last,
+            specialties: c.specialties,
+            department: "Admissions",
+            position: "Senior Counselor",
+            teamId: teamRecords[c.locale]?.id,
+            isAutoAssignEnabled: true,
+          },
+        },
+      },
+    });
+  }
+
   console.log("\n✅ Intelligence Core Scaled Successfully!");
-  console.log(`- Role: ${superAdminRole.name}`);
-  console.log(`- Permissions Assigned: ${allPermissions.length}`);
+  console.log(`- Countries Seeded: ${countries.length}`);
+  console.log(`- Teams provisioned: ${teams.length}`);
   console.log(`- Master User: ${devUser.email}`);
+  console.log(`- Staff Accounts:Hans, Sarah, Alex (Password: admin123)`);
 }
 
 main()
