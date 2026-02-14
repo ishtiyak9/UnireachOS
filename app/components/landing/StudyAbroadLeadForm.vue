@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, computed } from "vue";
 
 // Form state
 const formSubmitted = ref(false);
@@ -8,6 +8,36 @@ const isSubmitting = ref(false);
 // Dynamic Countries
 const { data: countriesRes } = await useFetch("/api/countries");
 const countries = computed(() => (countriesRes.value as any)?.data || []);
+
+// Options
+const studyLevels = [
+  { label: "Undergraduate (Bachelor's)", value: "Undergraduate" },
+  { label: "Postgraduate (Master's)", value: "Postgraduate" },
+  { label: "PhD / Doctorate", value: "PhD" },
+  { label: "Diploma / Certificate", value: "Diploma" },
+];
+
+const passingYears = [
+  "2026",
+  "2025",
+  "2024",
+  "2023",
+  "2022",
+  "2021",
+  "2020",
+  "2019",
+  "2018",
+  "Before 2018",
+].map((y) => ({ label: y, value: y }));
+
+const englishTests = [
+  { label: "IELTS (with score)", value: "IELTS" },
+  { label: "TOEFL (with score)", value: "TOEFL" },
+  { label: "PTE (with score)", value: "PTE" },
+  { label: "Duolingo English Test", value: "Duolingo" },
+  { label: "Planning to take test", value: "Planning" },
+  { label: "No test yet", value: "None" },
+];
 
 // Form data
 const formData = reactive({
@@ -28,7 +58,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   try {
-    const response = await $fetch("/api/leads/apply", {
+    const response: any = await $fetch("/api/leads/apply", {
       method: "POST",
       body: formData,
     });
@@ -52,419 +82,408 @@ const handleSubmit = async () => {
 
 // Reset form
 const resetForm = () => {
-  formData.fullName = "";
-  formData.email = "";
-  formData.whatsapp = "";
-  formData.destination = "";
-  formData.studyLevel = "";
-  formData.fieldOfStudy = "";
-  formData.academicResults = "";
-  formData.passingYear = "";
-  formData.englishProficiency = "";
-  formData.message = "";
+  Object.keys(formData).forEach((key) => {
+    (formData as any)[key] = "";
+  });
   formSubmitted.value = false;
 };
 </script>
 
 <template>
-  <section class="relative py-20 overflow-hidden bg-surface-950">
-    <!-- Background Effects -->
+  <section class="relative py-24 overflow-hidden bg-surface-950 font-outfit">
+    <!-- Intelligence OS Background -->
     <div class="absolute inset-0 z-0">
       <div
-        class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.04)_1px,transparent_1px)] bg-size-[60px_60px] opacity-30"
+        class="absolute inset-0 bg-[linear-gradient(to_right,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--p-primary-500-rgb),0.03)_1px,transparent_1px)] bg-size-[40px_40px] opacity-40"
+      />
+      <!-- Dynamic Orbs -->
+      <div
+        class="absolute top-1/4 -left-32 w-96 h-96 bg-primary-600/10 blur-[120px] rounded-full animate-pulse-slow"
       />
       <div
-        class="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary-500/10 blur-[150px] rounded-full animate-pulse-slow"
+        class="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-primary-500/5 blur-[150px] rounded-full"
       />
     </div>
 
     <div class="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
-      <!-- Form Header -->
-      <div class="text-center mb-12">
+      <!-- Form Header: Tactical Aesthetic -->
+      <div class="text-center mb-16">
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-xl mb-6"
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-3xl mb-8 shadow-[0_0_20px_rgba(var(--p-primary-500-rgb),0.1)]"
         >
-          <i class="pi pi-graduation-cap text-primary-400 text-xs" />
+          <div class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
           <span
-            class="text-[9px] font-black uppercase tracking-[0.5em] text-primary-400"
-            >Start Your Journey</span
+            class="text-[9px] font-black uppercase tracking-[0.6em] text-primary-400"
+            >Inquiry Protocol v1.0</span
           >
         </div>
 
         <h2
-          class="text-3xl md:text-5xl font-black tracking-tight leading-[1.1] mb-4"
+          class="text-4xl md:text-6xl font-black tracking-tighter leading-none mb-6"
         >
-          <span class="block text-white">Study Abroad</span>
+          <span class="block text-white uppercase italic">Strategic</span>
           <span
-            class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 italic"
-            >Enquiry Form</span
+            class="block text-transparent bg-clip-text bg-linear-to-r from-primary-400 via-primary-500 to-primary-600"
+            >Admissions Enquery</span
           >
         </h2>
 
-        <p class="text-sm text-surface-300 max-w-2xl mx-auto">
-          Take the first step towards your international education. Fill out the
-          form below and our expert counselors will contact you within 24 hours.
-        </p>
+        <div class="flex items-center justify-center gap-12 mt-8">
+          <div class="flex flex-col items-center">
+            <span class="text-white font-black text-xl leading-none"
+              >98.5%</span
+            >
+            <span
+              class="text-[8px] text-surface-500 uppercase tracking-widest mt-1"
+              >Success Rate</span
+            >
+          </div>
+          <div class="w-px h-8 bg-white/10" />
+          <div class="flex flex-col items-center">
+            <span class="text-white font-black text-xl leading-none">350+</span>
+            <span
+              class="text-[8px] text-surface-500 uppercase tracking-widest mt-1"
+              >Global Partners</span
+            >
+          </div>
+        </div>
       </div>
 
-      <!-- Lead Collection Form -->
+      <!-- Lead Collection Container: Neural Glass -->
       <div
-        class="relative bg-surface-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 md:p-10 shadow-2xl"
+        class="relative bg-surface-900/40 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] p-8 md:p-14 shadow-2xl overflow-hidden group/form"
       >
+        <!-- Decorative Corners -->
+        <div
+          class="absolute top-0 left-0 w-24 h-24 bg-linear-to-br from-primary-500/10 to-transparent opacity-50"
+        />
+        <div
+          class="absolute bottom-0 right-0 w-24 h-24 bg-linear-to-tl from-primary-500/10 to-transparent opacity-50"
+        />
+
         <!-- Success Message -->
-        <div v-if="formSubmitted" class="text-center py-12">
-          <div
-            class="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <i class="pi pi-check text-primary-400 text-2xl" />
-          </div>
-          <h3 class="text-2xl font-black text-white mb-3">
-            Application Received!
-          </h3>
-          <p class="text-surface-300 mb-6">
-            Thank you for your interest. Our counselor will contact you on
-            WhatsApp within 24 hours.
-          </p>
-          <button
-            class="px-6 py-3 bg-primary-500 text-black text-xs font-black uppercase tracking-widest rounded-lg hover:bg-primary-400 transition-all"
-            @click="resetForm"
-          >
-            Submit Another Application
-          </button>
-        </div>
-
-        <!-- Form Fields -->
-        <form v-else class="space-y-6" @submit.prevent="handleSubmit">
-          <!-- Full Name -->
-          <div>
-            <label
-              for="fullName"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
+        <Transition
+          enter-active-class="transition duration-500 ease-out"
+          enter-from-class="opacity-0 translate-y-8"
+          enter-to-class="opacity-100 translate-y-0"
+        >
+          <div v-if="formSubmitted" class="text-center py-20 relative z-10">
+            <div
+              class="w-24 h-24 bg-primary-500/20 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-primary-500/30 shadow-[0_0_40px_rgba(var(--p-primary-500-rgb),0.2)]"
             >
-              Full Name <span class="text-red-400">*</span>
-            </label>
-            <input
-              id="fullName"
-              v-model="formData.fullName"
-              type="text"
-              required
-              placeholder="Enter your full name"
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+              <i class="pi pi-check text-primary-400 text-4xl" />
+            </div>
+            <h3
+              class="text-3xl font-black text-white uppercase tracking-tighter mb-4"
+            >
+              Transmission Complete
+            </h3>
+            <p
+              class="text-surface-400 text-sm max-w-sm mx-auto mb-10 leading-relaxed font-medium"
+            >
+              Your inquiry has been logged into our Intelligence OS. A senior
+              advisor will initiate contact via WhatsApp within 24 operational
+              hours.
+            </p>
+            <Button
+              label="Submit New Inquiry"
+              class="bg-linear-to-r! from-primary-500! to-primary-600! border-0! text-black! text-xs font-black uppercase tracking-widest px-10 py-4 rounded-2xl shadow-xl shadow-primary-500/20 hover:scale-105 transition-all"
+              @click="resetForm"
             />
           </div>
 
-          <!-- Email -->
-          <div>
-            <label
-              for="email"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              Email Address <span class="text-red-400">*</span>
-            </label>
-            <input
-              id="email"
-              v-model="formData.email"
-              type="email"
-              required
-              placeholder="your.email@example.com"
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            />
-          </div>
-
-          <!-- WhatsApp Number -->
-          <div>
-            <label
-              for="whatsapp"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              WhatsApp Number <span class="text-red-400">*</span>
-            </label>
-            <div class="relative">
-              <div
-                class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-surface-400"
+          <!-- Tactical Form Interface -->
+          <form
+            v-else
+            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8"
+            @submit.prevent="handleSubmit"
+          >
+            <!-- Full Name -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
               >
-                <i class="pi pi-whatsapp text-green-400" />
-                <span class="text-sm">+</span>
-              </div>
-              <input
-                id="whatsapp"
-                v-model="formData.whatsapp"
-                type="tel"
+                Full Identity
+              </label>
+              <InputText
+                v-model="formData.fullName"
                 required
-                placeholder="880 1XXX-XXXXXX"
-                class="w-full pl-16 pr-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                placeholder="Full Name"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner"
               />
             </div>
-            <p class="text-xs text-surface-500 mt-1">
-              Include country code (e.g., 880 for Bangladesh)
-            </p>
-          </div>
 
-          <!-- Preferred Destination -->
-          <div>
-            <label
-              for="destination"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              Preferred Study Destination <span class="text-red-400">*</span>
-            </label>
-            <select
-              id="destination"
-              v-model="formData.destination"
-              required
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all appearance-none cursor-pointer"
-              style="
-                background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27rgb(148, 163, 184)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
-                background-repeat: no-repeat;
-                background-position: right 1rem center;
-                background-size: 1em;
-              "
-            >
-              <option value="" disabled selected>Select a country</option>
-
-              <!-- Dynamic Countries from DB -->
-              <optgroup v-if="countries.length > 0" label="Active Destinations">
-                <option v-for="c in countries" :key="c.code" :value="c.name">
-                  {{ c.name }}
-                </option>
-              </optgroup>
-
-              <!-- Popular Destinations Fallback -->
-              <optgroup v-else label="Popular Destinations">
-                <option value="Australia">Australia</option>
-                <option value="Hungary">Hungary</option>
-                <option value="Italy">Italy</option>
-                <option value="Denmark">Denmark</option>
-              </optgroup>
-
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <!-- Study Level -->
-          <div>
-            <label
-              for="studyLevel"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              Study Level <span class="text-red-400">*</span>
-            </label>
-            <select
-              id="studyLevel"
-              v-model="formData.studyLevel"
-              required
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all appearance-none cursor-pointer"
-              style="
-                background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27rgb(148, 163, 184)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
-                background-repeat: no-repeat;
-                background-position: right 1rem center;
-                background-size: 1em;
-              "
-            >
-              <option value="" disabled selected>Select study level</option>
-              <option value="Undergraduate">Undergraduate (Bachelor's)</option>
-              <option value="Postgraduate">Postgraduate (Master's)</option>
-              <option value="PhD">PhD / Doctorate</option>
-              <option value="Diploma">Diploma / Certificate</option>
-            </select>
-          </div>
-
-          <!-- Field of Study -->
-          <div>
-            <label
-              for="fieldOfStudy"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              Field of Study
-            </label>
-            <input
-              id="fieldOfStudy"
-              v-model="formData.fieldOfStudy"
-              type="text"
-              placeholder="e.g., Computer Science, Business, Medicine"
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
-            />
-          </div>
-
-          <!-- Academic Results & Passing Year (Side by Side) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Academic Results -->
-            <div>
+            <!-- Email -->
+            <div class="space-y-3">
               <label
-                for="academicResults"
-                class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
               >
-                Academic Results <span class="text-red-400">*</span>
+                Secure Email
               </label>
-              <input
-                id="academicResults"
-                v-model="formData.academicResults"
-                type="text"
+              <InputText
+                v-model="formData.email"
+                type="email"
                 required
-                placeholder="e.g., 3.5 GPA or 85%"
-                class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                placeholder="name@provider.com"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner"
               />
-              <p class="text-xs text-surface-500 mt-1">
-                Enter your GPA (out of 4.0) or percentage
-              </p>
+            </div>
+
+            <!-- WhatsApp Number -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                WhatsApp Number
+              </label>
+              <InputText
+                v-model="formData.whatsapp"
+                required
+                placeholder="880 1XXX XXXXXX"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner"
+              />
+            </div>
+
+            <!-- Preferred Destination -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Target Destination
+              </label>
+              <Select
+                v-model="formData.destination"
+                :options="countries"
+                optionLabel="name"
+                optionValue="name"
+                placeholder="Select Destination"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner flex items-center"
+              />
+            </div>
+
+            <!-- Study Level -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Academic Level
+              </label>
+              <Select
+                v-model="formData.studyLevel"
+                :options="studyLevels"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Study Level"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner flex items-center"
+              />
+            </div>
+
+            <!-- Field of Study -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Focus Area
+              </label>
+              <InputText
+                v-model="formData.fieldOfStudy"
+                placeholder="e.g. Data Science"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner"
+              />
+            </div>
+
+            <!-- Academic Results -->
+            <div class="space-y-3">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Performance Score
+              </label>
+              <InputText
+                v-model="formData.academicResults"
+                required
+                placeholder="GPA / Percentage"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner"
+              />
             </div>
 
             <!-- Passing Year -->
-            <div>
+            <div class="space-y-3">
               <label
-                for="passingYear"
-                class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
               >
-                Passing Year <span class="text-red-400">*</span>
+                Graduation Year
               </label>
-              <select
-                id="passingYear"
+              <Select
                 v-model="formData.passingYear"
-                required
-                class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all appearance-none cursor-pointer"
-                style="
-                  background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27rgb(148, 163, 184)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
-                  background-repeat: no-repeat;
-                  background-position: right 1rem center;
-                  background-size: 1em;
-                "
-              >
-                <option value="" disabled selected>Select year</option>
-                <option value="2026">2026</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-                <option value="2020">2020</option>
-                <option value="2019">2019</option>
-                <option value="2018">2018</option>
-                <option value="Before 2018">Before 2018</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- English Proficiency -->
-          <div>
-            <label
-              for="englishProficiency"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              English Proficiency Test <span class="text-red-400">*</span>
-            </label>
-            <select
-              id="englishProficiency"
-              v-model="formData.englishProficiency"
-              required
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all appearance-none cursor-pointer"
-              style="
-                background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27rgb(148, 163, 184)%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e');
-                background-repeat: no-repeat;
-                background-position: right 1rem center;
-                background-size: 1em;
-              "
-            >
-              <option value="" disabled selected>Select test</option>
-              <option value="IELTS">IELTS (with score)</option>
-              <option value="TOEFL">TOEFL (with score)</option>
-              <option value="PTE">PTE (with score)</option>
-              <option value="Duolingo">Duolingo English Test</option>
-              <option value="Planning">Planning to take test</option>
-              <option value="None">No test yet</option>
-            </select>
-            <p class="text-xs text-surface-500 mt-1">
-              If you have a score, please mention it in the additional
-              information below
-            </p>
-          </div>
-
-          <!-- Additional Message -->
-          <div>
-            <label
-              for="message"
-              class="block text-xs font-bold text-surface-200 uppercase tracking-wider mb-2"
-            >
-              Additional Information
-            </label>
-            <textarea
-              id="message"
-              v-model="formData.message"
-              rows="4"
-              placeholder="Tell us about your academic background, goals, or any questions you have..."
-              class="w-full px-4 py-3 bg-surface-800/50 border border-white/10 rounded-lg text-white placeholder-surface-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all resize-none"
-            />
-          </div>
-
-          <!-- Submit Button -->
-          <div class="pt-4">
-            <button
-              type="submit"
-              :disabled="isSubmitting"
-              class="w-full group px-8 py-4 bg-primary-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary-400 transition-all shadow-2xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-            >
-              <span v-if="!isSubmitting">Submit Application</span>
-              <span v-else>Submitting...</span>
-              <i
-                v-if="!isSubmitting"
-                class="pi pi-arrow-right transform group-hover:translate-x-1 transition-transform"
+                :options="passingYears"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Graduation Year"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner flex items-center"
               />
-            </button>
-          </div>
+            </div>
 
-          <!-- Privacy Notice -->
-          <p class="text-xs text-surface-500 text-center pt-4">
-            By submitting this form, you agree to our
-            <NuxtLink
-              to="/privacy"
-              class="text-primary-400 hover:text-primary-300 underline"
-              >Privacy Policy</NuxtLink
-            >. We'll contact you via WhatsApp within 24 hours.
-          </p>
-        </form>
+            <!-- English Proficiency -->
+            <div class="space-y-3 md:col-span-2">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Lingual Assessment
+              </label>
+              <Select
+                v-model="formData.englishProficiency"
+                :options="englishTests"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select English Test Status"
+                class="w-full! bg-surface-950/50! h-14! px-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner flex items-center"
+              />
+            </div>
+
+            <!-- Message -->
+            <div class="space-y-3 md:col-span-2">
+              <label
+                class="block text-[10px] font-black text-primary-500 uppercase tracking-[0.3em] ml-1"
+              >
+                Objective Insights
+              </label>
+              <Textarea
+                v-model="formData.message"
+                rows="4"
+                placeholder="Provide additional details regarding your academic goals..."
+                class="w-full! bg-surface-950/50! p-6! rounded-2xl! border-white/5! text-sm font-bold shadow-inner resize-none transition-all focus:h-40!"
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="md:col-span-2 pt-10">
+              <button
+                type="submit"
+                :disabled="isSubmitting"
+                class="w-full relative h-16 bg-linear-to-r from-primary-500 to-primary-600 rounded-2xl overflow-hidden group/btn shadow-[0_0_50px_rgba(var(--p-primary-500-rgb),0.2)] hover:shadow-[0_0_80px_rgba(var(--p-primary-500-rgb),0.3)] transition-all duration-500 transform hover:scale-[1.01] active:scale-100 disabled:opacity-50"
+              >
+                <!-- Shine Effect -->
+                <div
+                  class="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:animate-shine"
+                />
+
+                <div
+                  class="relative flex items-center justify-center gap-4 text-black font-black uppercase tracking-[0.25em] text-[11px]"
+                >
+                  <span v-if="!isSubmitting">Initiate Admission Enquiry</span>
+                  <span v-else>Processing Data...</span>
+                  <i
+                    v-if="!isSubmitting"
+                    class="pi pi-bolt text-xs group-hover/btn:animate-bounce"
+                  />
+                </div>
+              </button>
+            </div>
+
+            <!-- Privacy/Security -->
+            <div
+              class="md:col-span-2 flex items-center justify-center gap-6 pt-4"
+            >
+              <div class="flex items-center gap-2">
+                <i class="pi pi-shield text-[10px] text-primary-500" />
+                <span
+                  class="text-[9px] font-bold text-surface-500 uppercase tracking-widest"
+                  >AES-256 Encrypted</span
+                >
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-lock text-[10px] text-primary-500" />
+                <NuxtLink
+                  to="/privacy"
+                  class="text-[9px] font-bold text-surface-400 hover:text-white transition-colors uppercase tracking-widest underline underline-offset-4 decoration-primary-500/30"
+                  >Privacy Matrix</NuxtLink
+                >
+              </div>
+            </div>
+          </form>
+        </Transition>
       </div>
     </div>
   </section>
 </template>
 
-<style scoped>
-.animate-pulse-slow {
-  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+<style>
+/* PrimeVue Select Component Overrides to ensure consistency in Landing Page context */
+.p-select {
+  font-family: "Outfit", sans-serif !important;
 }
 
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.p-select-overlay {
+  background: rgba(14, 14, 16, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  padding: 0.5rem !important;
 }
 
-/* Custom select arrow */
-select option {
-  background-color: rgb(var(--p-surface-800));
-  color: white;
+.p-select-option {
+  padding: 0.75rem 1rem !important;
+  margin: 0.25rem 0 !important;
+  border-radius: 0.75rem !important;
+  color: var(--p-surface-300) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  transition: all 0.2s !important;
+}
+
+.p-select-option:hover,
+.p-select-option.p-focus {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: white !important;
+}
+
+.p-select-option.p-highlight {
+  background: rgba(var(--p-primary-500-rgb), 0.1) !important;
+  color: var(--p-primary-400) !important;
 }
 </style>
+
 <style scoped>
+.font-outfit {
+  font-family: "Outfit", sans-serif;
+}
+
 .animate-pulse-slow {
-  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse-slow {
   0%,
   100% {
-    opacity: 1;
+    opacity: 0.3;
+    transform: scale(1);
   }
   50% {
     opacity: 0.5;
+    transform: scale(1.1);
   }
 }
 
-/* Custom select arrow */
-select option {
-  background-color: rgb(var(--p-surface-800));
-  color: white;
+@keyframes shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 1.5s infinite;
+}
+
+/* Scrollbar Hide */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>

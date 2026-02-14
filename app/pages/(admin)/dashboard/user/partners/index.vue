@@ -17,27 +17,105 @@ const confirm = useConfirm();
 
 // Menu State
 const menu = ref();
+// Partner Selection State
 const selectedUser = ref();
 
-const menuItems = [
+const { user: sessionUser } = useUserSession();
+
+const canResetPassword = computed(() => {
+  return (
+    sessionUser.value?.roleCode === "super_admin" ||
+    sessionUser.value?.permissions?.includes("user:manage")
+  );
+});
+
+// --- Password Reset ---
+const passwordDialogVisible = ref(false);
+const newPassword = ref("");
+
+const handleResetPassword = async () => {
+  if (newPassword.value.length < 8) {
+    toast.add({
+      severity: "warn",
+      summary: "Weak Password",
+      detail: "Password must be at least 8 characters.",
+      life: 3000,
+    });
+    return;
+  }
+
+  try {
+    await $fetch(`/api/admin/users/${selectedUser.value.id}/reset-password`, {
+      method: "POST",
+      body: { password: newPassword.value },
+    });
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Password reset successfully",
+      life: 3000,
+    });
+    passwordDialogVisible.value = false;
+    newPassword.value = "";
+  } catch (err: any) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: err.statusMessage || "Failed to reset password",
+      life: 3000,
+    });
+  }
+};
+
+const menuItems = computed(() => [
   {
-    label: "View Agency Profile",
+    label: "Executive Intelligence",
     icon: "pi pi-building",
     command: () => viewUser(selectedUser.value),
   },
   {
     label: "Update Credentials",
     icon: "pi pi-file-edit",
-    command: () => editUser(selectedUser.value),
+    command: () => viewUser(selectedUser.value),
   },
+  ...(canResetPassword.value
+    ? [
+        {
+          label: "Reset Password",
+          icon: "pi pi-key",
+          command: () => {
+            passwordDialogVisible.value = true;
+            newPassword.value = "";
+          },
+        },
+      ]
+    : []),
   { separator: true },
   {
-    label: "Terminate Partnership",
-    icon: "pi pi-ban",
-    class: "text-red-400",
-    command: () => deleteUser(selectedUser.value),
+    label: "Status Management",
+    icon: "pi pi-shield-check",
+    items: [
+      {
+        label: "Set Active",
+        icon: "pi pi-check-circle",
+        class: "text-emerald-400",
+        command: () => updateUserStatus(selectedUser.value, "ACTIVE"),
+      },
+      {
+        label: "Set Inactive",
+        icon: "pi pi-pause-circle",
+        class: "text-surface-400",
+        command: () => updateUserStatus(selectedUser.value, "INACTIVE"),
+      },
+      {
+        label: "Suspend Portfolio",
+        icon: "pi pi-ban",
+        class: "text-rose-400",
+        command: () => updateUserStatus(selectedUser.value, "SUSPENDED"),
+      },
+    ],
   },
-];
+]);
 
 // Actions
 const toggleMenu = (event: any, user: any) => {
@@ -46,50 +124,41 @@ const toggleMenu = (event: any, user: any) => {
 };
 
 const viewUser = (user: any) => {
-  toast.add({
-    severity: "info",
-    summary: "Agency Profile",
-    detail: `Inspecting ${user.firstName}`,
-    life: 3000,
-  });
+  navigateTo(`/dashboard/user/partners/${user.id}`);
 };
 
-const editUser = (user: any) => {
-  toast.add({
-    severity: "info",
-    summary: "Update",
-    detail: "Credential update protocol initiated",
-    life: 3000,
-  });
-};
-
-const deleteUser = (user: any) => {
+const updateUserStatus = (user: any, newStatus: string) => {
   confirm.require({
-    message: `Are you sure you want to terminate partnership with ${user.firstName}?`,
-    header: "Confirm Termination",
-    icon: "pi pi-exclamation-triangle",
-    rejectProps: { label: "Cancel", severity: "secondary", outlined: true },
-    acceptProps: { label: "Terminate", severity: "danger" },
+    message: `Transition institutional node status to ${newStatus}?`,
+    header: "Strategic Status Shift",
+    icon: "pi pi-shield",
+    rejectProps: { label: "Abort", severity: "secondary", outlined: true },
+    acceptProps: {
+      label: "Confirm Transition",
+      severity:
+        newStatus === "ACTIVE"
+          ? "success"
+          : newStatus === "INACTIVE"
+          ? "secondary"
+          : "danger",
+    },
     accept: async () => {
-      const previousUsers = [...(users.value || [])];
-      users.value = users.value?.filter((u: any) => u.id !== user.id);
       try {
-        await $fetch("/api/admin/users/delete", {
-          method: "DELETE",
-          query: { id: user.id },
+        await $fetch(`/api/admin/users/${user.id}`, {
+          method: "PATCH",
+          body: { status: newStatus },
         });
         toast.add({
           severity: "success",
-          summary: "Terminated",
-          detail: "Partner node removed.",
+          summary: "Status Synchronized",
+          detail: `Institutional node is now ${newStatus}.`,
         });
         refreshUsers();
       } catch (error: any) {
-        users.value = previousUsers;
         toast.add({
           severity: "error",
-          summary: "Error",
-          detail: error.message || "Failed to remove node.",
+          summary: "Sync Error",
+          detail: error.message || "Failed to update node status.",
         });
       }
     },
@@ -211,9 +280,13 @@ const getStatusBadge = (status: string) => {
     case "ACTIVE":
       return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
     case "PENDING":
+    case "PENDING_VERIFICATION":
       return "bg-amber-500/10 text-amber-400 border-amber-500/20";
     case "SUSPENDED":
       return "bg-red-500/10 text-red-400 border-red-500/20";
+    case "INACTIVE":
+    case "DEACTIVATED":
+      return "bg-surface-500/10 text-surface-400 border-surface-500/20";
     default:
       return "bg-surface-500/10 text-surface-400 border-surface-500/20";
   }
@@ -300,16 +373,21 @@ const getStatusBadge = (status: string) => {
               />
             </div>
           </div>
-          <div v-else class="flex items-center gap-3">
+          <div
+            v-else
+            class="flex items-center gap-3 cursor-pointer group"
+            @click="viewUser(data)"
+          >
             <Avatar
-              :label="data.avatar"
+              :label="data.firstName?.[0] || 'A'"
               shape="circle"
-              class="bg-surface-800 text-surface-300 border border-white/10 font-bold"
+              class="bg-surface-800 text-surface-300 border border-white/10 font-bold group-hover:border-primary-500/50"
             />
             <div class="flex flex-col">
-              <span class="text-white font-bold text-sm">{{
-                data.firstName
-              }}</span>
+              <span
+                class="text-white font-bold text-sm group-hover:text-primary-400 transition-colors"
+                >{{ data.firstName }}</span
+              >
               <span class="text-[10px] text-surface-500">{{ data.email }}</span>
             </div>
           </div>
@@ -428,6 +506,46 @@ const getStatusBadge = (status: string) => {
             icon="pi pi-check"
             :loading="creatingUser"
             @click="addUser"
+          />
+        </div>
+      </template>
+    </Dialog>
+
+    <!-- Reset Password Dialog -->
+    <Dialog
+      v-model:visible="passwordDialogVisible"
+      header="Reset User Password"
+      modal
+      class="w-full max-w-md backdrop-blur-xl bg-surface-900/90 border border-white/10"
+      :draggable="false"
+    >
+      <div class="flex flex-col gap-4 py-4 mt-2">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-bold text-surface-400">New Password</label>
+          <Password
+            v-model="newPassword"
+            toggleMask
+            class="w-full"
+            inputClass="w-full bg-surface-950/50 border-white/10"
+            placeholder="Enter new strong password"
+          />
+          <small class="text-surface-500">Minimum 8 characters required.</small>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex justify-end gap-2 mt-4">
+          <Button
+            label="Cancel"
+            icon="pi pi-times"
+            text
+            @click="passwordDialogVisible = false"
+            severity="secondary"
+          />
+          <Button
+            label="Reset Now"
+            icon="pi pi-key"
+            severity="warn"
+            @click="handleResetPassword"
           />
         </div>
       </template>

@@ -30,10 +30,10 @@ const handleLogin = async () => {
       await fetchSession(); // Refresh session data
 
       const category = response.user.roleCategory;
-      if (category === "SYSTEM") {
+      if (category === "SYSTEM" || category === "STAFF") {
         await navigateTo("/dashboard");
       } else if (category === "AGENT") {
-        await navigateTo("/agent/dashboard");
+        await navigateTo("/partner-portal");
       } else if (category === "APPLICANT") {
         await navigateTo("/applicant-portal");
       } else {

@@ -129,12 +129,17 @@ const recentApplications = [
           </NuxtLink>
         </div>
 
-        <Button
-          icon="pi pi-download"
+        <DashboardIntelligenceExport
+          :data="recentApplications"
+          :columns="[
+            { field: 'name', header: 'Candidate' },
+            { field: 'type', header: 'Entity Type' },
+            { field: 'status', header: 'Status' },
+            { field: 'date', header: 'Submission Time' },
+          ]"
+          file-name="unireach-executive-summary"
           label="Export Report"
-          outlined
-          severity="secondary"
-          class="border-white/10! text-surface-300! hover:bg-white/5! text-xs font-bold uppercase tracking-wider px-4 rounded-xl"
+          report-title="Executive Intelligence Summary"
         />
         <Button
           icon="pi pi-plus"

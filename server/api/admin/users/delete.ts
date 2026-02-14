@@ -52,6 +52,15 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    // 3. Cannot delete institutional partners (Strategic Requirement)
+    if (user.role.category === "AGENT") {
+      throw createError({
+        statusCode: 403,
+        message:
+          "Institutional nodes cannot be dismantled. Deactivate or Suspend instead.",
+      });
+    }
+
     // Proceed with deletion (Cascading deletes handles profiles)
     await prisma.user.delete({
       where: { id },

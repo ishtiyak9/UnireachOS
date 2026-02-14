@@ -1,32 +1,45 @@
 import { prisma } from "../utils/db";
 
+// Global cache to avoid heavy DB hits on every request
+let cachedMaintenance: any = null;
+let lastCheck = 0;
+const CACHE_TTL = 5000; // 5 seconds
+
 export default defineEventHandler(async (event) => {
   // 1. Skip for public assets/internal h3 routes
   if (
     event.path.startsWith("/_nuxt") ||
     event.path.startsWith("/api/_") ||
-    event.path.startsWith("/__")
+    event.path.startsWith("/__") ||
+    event.path.startsWith("/icon.png") ||
+    event.path.startsWith("/logo.png")
   ) {
     return;
   }
 
-  // 2. Skip for non-API routes if you want to allow the frontend to load (Nuxt will handle error.vue)
-  // But wait, server middleware runs for everything.
-  // We only want to block if maintenance is ACTIVE.
+  // 3. Check for active maintenance (with cache)
+  let activeMaintenance = null;
+  const now = Date.now();
 
-  // 3. Check for active maintenance
-  const activeMaintenance = await prisma.maintenanceWindow.findFirst({
-    where: {
-      OR: [
-        { status: "ACTIVE" },
-        {
-          status: "SCHEDULED",
-          startTime: { lte: new Date() },
-          OR: [{ endTime: { gte: new Date() } }, { endTime: null }],
-        },
-      ],
-    },
-  });
+  if (cachedMaintenance && now - lastCheck < CACHE_TTL) {
+    activeMaintenance = cachedMaintenance;
+  } else {
+    const dbStart = Date.now();
+    activeMaintenance = await prisma.maintenanceWindow.findFirst({
+      where: {
+        OR: [
+          { status: "ACTIVE" },
+          {
+            status: "SCHEDULED",
+            startTime: { lte: new Date() },
+            OR: [{ endTime: { gte: new Date() } }, { endTime: null }],
+          },
+        ],
+      },
+    });
+    cachedMaintenance = activeMaintenance;
+    lastCheck = now;
+  }
 
   if (activeMaintenance) {
     // 4. Bypass: Super Admin
@@ -35,6 +48,8 @@ export default defineEventHandler(async (event) => {
 
     // 5. Bypass: Whitelisted IP
     const ip = getRequestIP(event, { xForwardedFor: true }) || "127.0.0.1";
+    // We don't cache whitelist checks as much because they are IP-specific,
+    // but in a team environment, we could.
     const isWhitelisted = await prisma.systemAccessControl.findFirst({
       where: {
         ipAddress: ip,

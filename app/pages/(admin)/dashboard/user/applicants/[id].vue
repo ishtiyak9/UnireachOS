@@ -12,7 +12,15 @@ definePageMeta({
 
 const route = useRoute();
 const toast = useToast();
+const { user: sessionUser } = useUserSession();
 const userId = route.params.id as string;
+
+const canResetPassword = computed(() => {
+  return (
+    sessionUser.value?.roleCode === "super_admin" ||
+    sessionUser.value?.permissions?.includes("user:manage")
+  );
+});
 
 interface User {
   id: string;
@@ -301,6 +309,7 @@ const items = ref([
       </div>
       <div class="flex items-center gap-3">
         <Button
+          v-if="canResetPassword"
           label="Reset Password"
           icon="pi pi-key"
           severity="warn"

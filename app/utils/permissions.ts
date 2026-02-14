@@ -9,7 +9,7 @@ export const Permissions = {
   SYSTEM_SETTINGS: "system:settings", // Environment & Config
   SYSTEM_AUDIT: "system:audit", // View security logs/trails
   SYSTEM_METRICS: "system:metrics", // View telemetry & load
-
+  SYSTEM_NOTIFY: "system:notify", // View telemetry & load
   // --- IDENTITY & ACCESS (USER) ---
   USER_VIEW: "user:view",
   USER_CREATE: "user:create",
@@ -60,6 +60,9 @@ export const Permissions = {
   // --- CLIENT/PORTAL SPECIFIC ---
   PORTAL_ACCESS: "portal:access",
   PORTAL_APPLY: "portal:apply",
+
+  // --- NOTIFICATION & ALERTS ---
+  LEAD_NOTIFY: "lead:notify", // Receive alerts for new inbound leads
 } as const;
 
 export type PermissionCode = (typeof Permissions)[keyof typeof Permissions];

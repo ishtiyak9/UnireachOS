@@ -5,8 +5,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (to.path === "/login") {
     if (loggedIn.value && user.value) {
       const category = user.value.roleCategory;
-      if (category === "SYSTEM") return navigateTo("/dashboard");
-      if (category === "AGENT") return navigateTo("/agent/dashboard");
+      if (category === "SYSTEM" || category === "STAFF")
+        return navigateTo("/dashboard");
+      if (category === "AGENT") return navigateTo("/partner-portal");
       if (category === "APPLICANT") return navigateTo("/applicant-portal");
       return navigateTo("/");
     }
@@ -17,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const protectedRoutes = [
     "/dashboard",
     "/applicant-portal",
-    "/agent",
+    "/partner-portal",
     "/profile",
   ];
   const isProtected = protectedRoutes.some((route) =>
@@ -36,7 +37,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const category = user.value?.roleCategory;
 
     // System Dashboard Protection
-    if (to.path.startsWith("/dashboard") && category !== "SYSTEM") {
+    if (
+      to.path.startsWith("/dashboard") &&
+      category !== "SYSTEM" &&
+      category !== "STAFF"
+    ) {
       return navigateTo("/");
     }
 
@@ -51,7 +56,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     // Agent Portal Protection
     if (
-      to.path.startsWith("/agent") &&
+      to.path.startsWith("/partner-portal") &&
       category !== "AGENT" &&
       category !== "SYSTEM"
     ) {

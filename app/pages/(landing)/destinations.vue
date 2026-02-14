@@ -79,7 +79,7 @@ const allDestinations = [
     tag: "Research",
     category: "Scandinavia",
     image:
-      "https://images.unsplash.com/photo-1490718720475-399e223b113a?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1657272178903-7036605d3fd6?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Finland",
@@ -87,7 +87,7 @@ const allDestinations = [
     tag: "Edu-Standard",
     category: "Scandinavia",
     image:
-      "https://images.unsplash.com/photo-1527447816320-c08d9894e6da?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1706109298653-c9c8baca190b?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Austria",
@@ -103,7 +103,7 @@ const allDestinations = [
     tag: "Diplomacy",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1559113513-d5e09c88b9dd?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1711904290469-12d7dcafe4b2?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Spain",
@@ -111,7 +111,7 @@ const allDestinations = [
     tag: "Vibrant",
     category: "Southern Europe",
     image:
-      "https://images.unsplash.com/photo-1583422409516-2895a77efedd?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1727989995184-e4bb0620e373?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Portugal",
@@ -135,7 +135,7 @@ const allDestinations = [
     tag: "Growth Hub",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1607427299692-427749469141?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1671717361666-a17e64b292bf?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Hungary",
@@ -151,7 +151,7 @@ const allDestinations = [
     tag: "Success-Rate",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1519677100203-ad03822efadd?auto=format&fit=crop&q=80&w=1200",
+      "https://plus.unsplash.com/premium_photo-1661963139522-22525f644234?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Estonia",
@@ -159,7 +159,7 @@ const allDestinations = [
     tag: "Digital Hub",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1594916885367-71708892d592?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1760695891990-5cb07dbd2bba?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Latvia",
@@ -167,7 +167,7 @@ const allDestinations = [
     tag: "Strategic",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1563829035-649033324d29?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1573591562172-a75e3379f21c?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Lithuania",
@@ -175,7 +175,7 @@ const allDestinations = [
     tag: "Academic",
     category: "Central Europe",
     image:
-      "https://images.unsplash.com/photo-1533256671071-f92523295914?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1747672355553-77391d2609d2?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Greece",
@@ -191,7 +191,7 @@ const allDestinations = [
     tag: "English Prep",
     category: "Southern Europe",
     image:
-      "https://images.unsplash.com/photo-1528657672283-75c3fd5a782a?auto=format&fit=crop&q=80&w=1200",
+      "https://plus.unsplash.com/premium_photo-1697729748864-4e2d548a48e1?auto=format&fit=crop&q=80&w=1200",
   },
   {
     country: "Iceland",
@@ -230,7 +230,7 @@ const filteredDestinations = computed(() => {
           <h1
             class="text-3xl sm:text-5xl md:text-6xl font-black text-surface-900 dark:text-surface-0 tracking-tight leading-[1.05]"
           >
-            Mapped for Success: <br >
+            Mapped for Success: <br />
             <NuxtLink
               to="/destinations"
               class="italic font-light text-primary-600 dark:text-primary-400"
@@ -278,7 +278,7 @@ const filteredDestinations = computed(() => {
               :src="dest.image"
               :alt="dest.country"
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            >
+            />
             <div
               class="absolute inset-0 bg-linear-to-t from-surface-950 via-surface-950/20 to-transparent opacity-80"
             />

@@ -21,7 +21,7 @@ const prismaClientSingleton = () => {
   // Create Prisma adapter with the pool
   const adapter = new PrismaPg(pool);
 
-  // Create Prisma Client with the adapter
+  // Create Prisma Client with the adapter (Tactical Alignment)
   const client = new PrismaClient({ adapter });
 
   // Extend Prisma Client to handle specialized IDs

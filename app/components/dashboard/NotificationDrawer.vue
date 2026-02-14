@@ -153,7 +153,13 @@ const getIcon = (type: string) => {
           :key="n.id"
           class="group relative px-4 py-3 transition-all duration-300 hover:bg-white/[0.03] cursor-pointer border-b border-white/[0.03]"
           :class="[!n.isRead ? 'bg-primary-500/[0.01]' : 'opacity-60']"
-          @click="!n.isRead && markAsRead(n.id)"
+          @click="
+            !n.isRead && markAsRead(n.id);
+            if (n.metadata?.link) {
+              navigateTo(n.metadata.link);
+              innerVisible = false;
+            }
+          "
         >
           <!-- Unread Dot -->
           <div

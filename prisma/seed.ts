@@ -66,6 +66,7 @@ async function main() {
     { code: "user:create", name: "Provision New Users", group: "USER" },
     { code: "user:update", name: "Edit User Accounts", group: "USER" },
     { code: "user:delete", name: "Deactivate/Delete Users", group: "USER" },
+    { code: "user:manage", name: "Manage User Accounts", group: "USER" },
 
     // --- CATEGORY: APPLICANTS (Student/Expat Profiles) ---
     {
@@ -435,7 +436,103 @@ async function main() {
     });
   }
 
-  // 6. Seed Specialized Teams
+  // 6. Seed Academic Hierarchy (Program Levels)
+  console.log("🎓 Provisioning Program Levels...");
+  const programLevels = [
+    {
+      name: "High School (11th - 12th)",
+      code: "HIGH_SCHOOL",
+      rank: 1,
+      category: "SCHOOL",
+    },
+    {
+      name: "UG Diploma/ Certificate/ Associate Degree",
+      code: "UG_DIP",
+      rank: 2,
+      category: "UNDERGRADUATE",
+    },
+    { name: "UG", code: "UG", rank: 3, category: "UNDERGRADUATE" },
+    {
+      name: "PG Diploma/Certificate",
+      code: "PG_DIP",
+      rank: 4,
+      category: "POSTGRADUATE",
+    },
+    { name: "PG", code: "PG", rank: 5, category: "POSTGRADUATE" },
+    {
+      name: "UG+PG (Accelerated) Degree",
+      code: "UG_PG_ACC",
+      rank: 6,
+      category: "DEGREE",
+    },
+    { name: "PhD", code: "PHD", rank: 7, category: "DOCTORATE" },
+    {
+      name: "Short-term/Summer Programs",
+      code: "SHORT_TERM",
+      rank: 8,
+      category: "SHORT_TERM",
+    },
+    {
+      name: "Pathway Programs (UG)",
+      code: "PATHWAY_UG",
+      rank: 9,
+      category: "PATHWAY",
+    },
+    {
+      name: "Pathway Programs (PG)",
+      code: "PATHWAY_PG",
+      rank: 10,
+      category: "PATHWAY",
+    },
+    {
+      name: "Semester Study Abroad",
+      code: "STUDY_ABROAD",
+      rank: 11,
+      category: "EXCHANGE",
+    },
+    {
+      name: "Twinning Programmes (UG)",
+      code: "TWINNING_UG",
+      rank: 12,
+      category: "DEGREE",
+    },
+    {
+      name: "Twinning Programmes (PG)",
+      code: "TWINNING_PG",
+      rank: 13,
+      category: "DEGREE",
+    },
+    {
+      name: "English Language Program",
+      code: "ENGLISH_LANG",
+      rank: 14,
+      category: "LANGUAGE",
+    },
+    {
+      name: "Online Programmes / Distance Learning",
+      code: "ONLINE",
+      rank: 15,
+      category: "DIGITAL",
+    },
+    { name: "Hybrid", code: "HYBRID", rank: 16, category: "GENERAL" },
+  ];
+
+  for (const level of programLevels) {
+    await prisma.programLevel.upsert({
+      where: { code: level.code },
+      update: {
+        ...level,
+        updatedById: devUser.id,
+      },
+      create: {
+        ...level,
+        createdById: devUser.id,
+        updatedById: devUser.id,
+      },
+    });
+  }
+
+  // 7. Seed Specialized Teams
   console.log("🏢 Architecting Specialized Teams...");
   const teams = [
     {

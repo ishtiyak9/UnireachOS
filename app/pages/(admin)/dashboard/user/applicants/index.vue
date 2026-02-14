@@ -301,22 +301,37 @@ const getStatusBadge = (status: string) => {
         </template>
       </Column>
 
-      <Column header="Partner / Agent" sortable field="agentName">
+      <Column header="Identity Source / Owner" sortable field="ownerName">
         <template #body="{ data }">
           <div v-if="pending" class="text-xs text-surface-500 font-mono">
             <Skeleton width="6rem" height="1rem" />
           </div>
-          <div
-            v-else-if="!data.agentName"
-            class="text-[10px] text-surface-600 font-black tracking-widest uppercase"
-          >
-            Direct
-          </div>
-          <div v-else class="flex items-center gap-2">
-            <i class="pi pi-briefcase text-primary-400 text-xs" />
-            <span class="text-xs text-white font-medium">{{
-              data.agentName
-            }}</span>
+          <div v-else class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <i
+                :class="[
+                  data.ownerType === 'Partner'
+                    ? 'pi pi-briefcase text-emerald-400'
+                    : 'pi pi-server text-primary-400',
+                  'text-[10px]',
+                ]"
+              />
+              <span
+                class="text-[9px] font-black uppercase tracking-[0.2em]"
+                :class="
+                  data.ownerType === 'Partner'
+                    ? 'text-emerald-500'
+                    : 'text-primary-500'
+                "
+              >
+                {{ data.ownerType }}
+              </span>
+            </div>
+            <span
+              class="text-xs text-white font-black mt-1 uppercase tracking-tighter truncate max-w-[150px]"
+            >
+              {{ data.ownerName }}
+            </span>
           </div>
         </template>
       </Column>

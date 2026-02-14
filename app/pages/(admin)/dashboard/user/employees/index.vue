@@ -19,6 +19,53 @@ const confirm = useConfirm();
 const menu = ref();
 const selectedUser = ref();
 
+const { user: sessionUser } = useUserSession();
+
+const canResetPassword = computed(() => {
+  return (
+    sessionUser.value?.roleCode === "super_admin" ||
+    sessionUser.value?.permissions?.includes("user:manage")
+  );
+});
+
+// --- Password Reset ---
+const passwordDialogVisible = ref(false);
+const newPassword = ref("");
+
+const handleResetPassword = async () => {
+  if (newPassword.value.length < 8) {
+    toast.add({
+      severity: "warn",
+      summary: "Weak Password",
+      detail: "Password must be at least 8 characters.",
+      life: 3000,
+    });
+    return;
+  }
+
+  try {
+    await $fetch(`/api/admin/users/${selectedUser.value.id}/reset-password`, {
+      method: "POST",
+      body: { password: newPassword.value },
+    });
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Password reset successfully",
+      life: 3000,
+    });
+    passwordDialogVisible.value = false;
+    newPassword.value = "";
+  } catch (err: any) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: err.statusMessage || "Failed to reset password",
+      life: 3000,
+    });
+  }
+};
+
 const menuItems = [
   {
     label: "View Profile",
@@ -30,6 +77,18 @@ const menuItems = [
     icon: "pi pi-file-edit",
     command: () => editUser(selectedUser.value),
   },
+  ...(canResetPassword.value
+    ? [
+        {
+          label: "Reset Password",
+          icon: "pi pi-key",
+          command: () => {
+            passwordDialogVisible.value = true;
+            newPassword.value = "";
+          },
+        },
+      ]
+    : []),
   {
     separator: true,
   },
@@ -495,6 +554,46 @@ const getRoleBadge = (category: string) => {
             icon="pi pi-check"
             :loading="creatingUser"
             @click="addUser"
+          />
+        </div>
+      </template>
+    </Dialog>
+
+    <!-- Reset Password Dialog -->
+    <Dialog
+      v-model:visible="passwordDialogVisible"
+      header="Reset User Password"
+      modal
+      class="w-full max-w-md backdrop-blur-xl bg-surface-900/90 border border-white/10"
+      :draggable="false"
+    >
+      <div class="flex flex-col gap-4 py-4 mt-2">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-bold text-surface-400">New Password</label>
+          <Password
+            v-model="newPassword"
+            toggleMask
+            class="w-full"
+            inputClass="w-full bg-surface-950/50 border-white/10"
+            placeholder="Enter new strong password"
+          />
+          <small class="text-surface-500">Minimum 8 characters required.</small>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex justify-end gap-2 mt-4">
+          <Button
+            label="Cancel"
+            icon="pi pi-times"
+            text
+            @click="passwordDialogVisible = false"
+            severity="secondary"
+          />
+          <Button
+            label="Reset Now"
+            icon="pi pi-key"
+            severity="warn"
+            @click="handleResetPassword"
           />
         </div>
       </template>

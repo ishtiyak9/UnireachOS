@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
           lead.lastName || ""
         } has been promoted to an Applicant profile.`,
         type: "SUCCESS",
-        metadata: { link: `/dashboard/user/applicants` }, // Link to applicants directory
+        metadata: { link: `/dashboard/user/applicants/${result.id}` },
       });
     }
   }

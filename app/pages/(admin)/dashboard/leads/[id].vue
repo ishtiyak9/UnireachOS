@@ -53,6 +53,34 @@ const { data: staffRes, refresh: refreshStaff } = await useFetch(
 );
 const staffOptions = computed(() => (staffRes.value as any)?.data || []);
 
+// Course Suggestion Intelligence
+const { data: levelsRes } = await useFetch("/api/public/program-levels");
+const levels = computed(() => (levelsRes.value as any)?.data || []);
+
+const { data: areasRes } = await useFetch("/api/public/study-areas");
+const areas = computed(() => (areasRes.value as any)?.data || []);
+
+const leadFilters = computed(() => {
+  if (!lead.value) return {};
+
+  const level = levels.value.find(
+    (l: any) =>
+      l.name.toLowerCase().includes(lead.value.studyLevel?.toLowerCase()) ||
+      l.code.toLowerCase().includes(lead.value.studyLevel?.toLowerCase())
+  );
+
+  const area = areas.value.find((a: any) =>
+    a.name.toLowerCase().includes(lead.value.fieldOfStudy?.toLowerCase())
+  );
+
+  return {
+    country: lead.value.preferredCountry,
+    levelId: level?.id || "",
+    studyAreaId: area?.id || "",
+    search: lead.value.fieldOfStudy || "",
+  };
+});
+
 const handleRefresh = async () => {
   isUpdating.value = true;
   try {
@@ -710,6 +738,33 @@ const reassignLead = async (selection: any) => {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Recommended Program Matrix -->
+    <div
+      class="mt-12 p-8 rounded-[40px] bg-surface-900/20 border border-white/5 backdrop-blur-3xl space-y-8"
+    >
+      <div class="flex items-center justify-between">
+        <div class="space-y-1">
+          <h2
+            class="text-2xl font-black text-white uppercase italic tracking-tighter"
+          >
+            NEURAL <span class="text-primary-500">RECOMMENDATIONS.</span>
+          </h2>
+          <p
+            class="text-[10px] text-surface-500 font-bold uppercase tracking-[0.3em]"
+          >
+            Programs matched to {{ lead.firstName }}'s inbound intelligence
+          </p>
+        </div>
+      </div>
+
+      <DiscoveryProgramDiscovery
+        :initial-filters="leadFilters"
+        mode="suggestions"
+        :lead-id="leadId"
+        :show-title="false"
+      />
     </div>
   </div>
 </template>

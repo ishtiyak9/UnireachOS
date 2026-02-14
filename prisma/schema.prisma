@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+  binaryTargets   = ["native"]
 }
 
 datasource db {
@@ -36,11 +38,20 @@ model User {
   notifications          Notification[]
   notificationPreference NotificationPreference?
 
+  programLevelsCreated ProgramLevel[] @relation("ProgramLevelCreator")
+  programLevelsUpdated ProgramLevel[] @relation("ProgramLevelUpdater")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Ownership Mapping (Lineage)
+  createdById String?
+  createdBy   User?   @relation("UserLineage", fields: [createdById], references: [id])
+  createdUsers User[] @relation("UserLineage")
+
   @@index([roleId])
   @@index([status])
+  @@index([createdById])
 }
 
 // --- AUTHORIZATION ENGINE (RBAC v2: Neural Clusters) ---
@@ -223,18 +234,49 @@ enum AccessControlType {
 
 // --- AGENT PROFILES ---
 model AgentProfile {
-  id         String             @id @default(uuid())
-  userId     String             @unique
-  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  agencyName String
-  licenseNo  String?            @unique
-  phone      String?
-  commission Float              @default(0.0)
-  applicants ApplicantProfile[]
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  enquiries Enquiry[]
+  // Personal Details
+  firstName    String?
+  lastName     String?
+  address      String?
+  country      String?
+  primaryEmail String?
+  primaryPhone String?
+
+  // Company Details
+  agencyName     String  // Used as Company Name
+  companyAddress String?
+  licenseNo      String? @unique // Used as Registration Number
+
+  // Operational Settings (Commission Clusters)
+  showCommissionInSearch      Boolean @default(true)
+  sendCommissionNotifications Boolean @default(true)
+  showCommissionPaymentTab    Boolean @default(true)
+
+  // Bank Account Details (Financial Nodes)
+  beneficiaryName   String?
+  bankAccountNumber String?
+  bankName          String?
+  bankBranch        String?
+  bankLocation      String? // Physical Address
+  bankCountry       String?
+  bankState         String?
+  bankCity          String?
+  bankSwiftCode     String?
+  bankIban          String?
+
+  phone      String? // Legacy / General Phone
+  commission Float   @default(0.0)
+
+  // Relations
+  applicants ApplicantProfile[]
+  enquiries  Enquiry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // --- APPLICANT PROFILES (Students/Expatriates) ---
@@ -452,6 +494,7 @@ enum AccountStatus {
   SUSPENDED
   PENDING_VERIFICATION
   DEACTIVATED
+  INACTIVE
 }
 
 enum ApplicantType {
@@ -556,7 +599,7 @@ enum Vertical {
   LEGAL
 }
 
-// --- GLOBAL CONFIGURATION (Geo-Registry) ---
+// --- GLOBAL CONFIGURATION (Geo-Registry & Academic Hierarchy) ---
 model Country {
   id        String  @id @default(uuid())
   name      String  @unique // e.g. "Germany"
@@ -567,6 +610,52 @@ model Country {
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ProgramLevel {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g. "UG Diploma/ Certificate/ Associate Degree"
+  code        String   @unique // e.g. "UG_DIP"
+  rank        Int      @default(0) // Tactical ordering for UI
+  category    String?  @default("GENERAL") // e.g. "DEGREE", "PATHWAY", "SHORT_TERM"
+  isActive    Boolean  @default(true)
+
+  courses     Course[]
+
+  // Audit Layer
+  createdById String?
+  createdBy   User?    @relation("ProgramLevelCreator", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?    @relation("ProgramLevelUpdater", fields: [updatedById], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StudyArea {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g. "Engineering & Technology"
+  isActive    Boolean  @default(true)
+  
+  disciplines Discipline[]
+  courses     Course[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Discipline {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g. "Computer Science"
+  
+  studyAreaId String
+  studyArea   StudyArea @relation(fields: [studyAreaId], references: [id])
+  
+  isActive    Boolean  @default(true)
+  courses     Course[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // --- INVENTORY (Universities & Courses) ---
@@ -580,6 +669,20 @@ model University {
   website     String?
 
   courses Course[]
+  
+  // Partnership Intelligence (Internal Metrics)
+  strategicRank      Int      @default(0)    // Internal priority (higher = promoted)
+  commissionSpeed    Int      @default(3)    // 1-5 Scale: 1 (Slow) to 5 (Instant)
+  offerTATIndex      Int      @default(3)    // 1-5 Scale (Turnaround Time)
+  visaSuccessRate    Float    @default(0)    // Percentage (0-100)
+  
+  // Performance Hooks
+  isPremiumPartner   Boolean  @default(false)
+  hasDirectContract  Boolean  @default(true)
+  
+  // Tactical Assets
+  bannerImage        String?
+  strategicTags      String[] // e.g. ["Research Intensive", "High Employment", "Low Cost of Living"]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -592,16 +695,72 @@ model Course {
 
   name         String
   code         String? // e.g. "CS_101"
-  level        String // e.g. "Undergraduate", "Postgraduate"
-  duration     String // e.g. "3 Years"
-  tuitionFee   Float
-  currency     String   @default("USD")
-  intakeMonths String[] // e.g. ["September", "January"]
+  
+  levelId      String
+  level        ProgramLevel @relation(fields: [levelId], references: [id])
+  
+  // Tactical Operational Fields
+  duration     String 
+  campus       String?
+  courseUrl    String?
+  intakeMonths String[] 
+  
+  // Financial Intelligence
+  tuitionFee          Float    @default(0) // Yearly Tuition Fee
+  applicationFee      Float    @default(0)
+  currency            String   @default("USD")
+  expectedCommission  String?  // Amount or Percentage
+  
+  // Deadlines & Availability
+  applicationDeadline String?
+  isActive            Boolean  @default(true)
+  
+  // Tactical Intelligence Flags (Admission)
+  isFastTrack         Boolean  @default(false) // Faster Offer TAT
+  hasScholarship      Boolean  @default(false) // Scholarship Available
+  highAcceptanceRate  Boolean  @default(false) // High Offer Acceptance Rate
+  isStem              Boolean  @default(false) // STEM Programs
+  isInterviewOptional Boolean  @default(false) // No Interview Required
+  hasEnglishWaiver    Boolean  @default(false) // English Proficiency Exam Waiver
+  
+  // Tactical Intelligence Flags (Financial)
+  hasAppFeeWaiver     Boolean  @default(false) // Application Fee Waiver
+  lowTuitionDeposit   Boolean  @default(false) // Low Tuition Deposit
+  hasLoanSupport      Boolean  @default(false) // Eligible Non Collateral Loan
+  isAffordable        Boolean  @default(false) // Affordable University
+  
+  // Tactical Intelligence Flags (Regional & Career)
+  isMajorCity         Boolean  @default(false)
+  isRegional          Boolean  @default(false) // Regional University
+  hasCoop             Boolean  @default(false) // Co-op & Built-in Internships
+  highJobDemand       Boolean  @default(false) // High Job Demand
+  
+  // Academic & Requirement Flags
+  hasMathsWaiver      Boolean  @default(false) // Without Maths
+  hasGreGmatWaiver    Boolean  @default(false) // Without GRE/GMAT
+  requiresWorkExp     Boolean  @default(false) // Work Experience Required
+  
+  // Strategic Attributes (Dynamic Tags e.g. ["Russel Group", "MBA", "Higher Backlog"])
+  strategicFlags      String[]
+
+  // Academic Core
+  studyAreaId         String?
+  studyArea           StudyArea? @relation(fields: [studyAreaId], references: [id])
+  disciplineId        String?
+  discipline          Discipline? @relation(fields: [disciplineId], references: [id])
+  entryRequirements   String?  @db.Text
+  englishRequirements String?  @db.Text
+  moiAccepted         Boolean  @default(false)
+  standardizedTests   String?  @db.Text
+  
+  // Additional Intelligence
+  remarks             String?  @db.Text
+  extraNotes          String?  @db.Text
+  additionalRequirements Json?  // Flexible metadata for edge cases
 
   applications Application[]
   enquiries    Enquiry[]
 
-  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -888,4 +1047,31 @@ enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+// --- SUCCESS STORIES (Client Victories) ---
+model SuccessStory {
+  id          String   @id @default(uuid())
+  type        String   @default("image") // image, video
+  category    String   @default("student") // student, business, job
+  
+  name        String
+  destination String
+  university  String?
+  program     String?
+  visaType    String?
+  year        String
+  
+  thumbnail   String
+  image       String?   // For image type
+  videoUrl    String?   // For video type (YouTube/Vimeo embed)
+  
+  quote       String   @db.Text
+  isFeatured  Boolean  @default(false)
+  
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([isFeatured])
 }

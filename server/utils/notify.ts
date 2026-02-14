@@ -164,15 +164,74 @@ export const notify = {
    */
   async broadcastToTeam(
     teamId: string,
-    payload: Omit<NotificationPayload, "userId">
+    payload: Omit<NotificationPayload, "userId">,
+    excludeUserIds: string[] = []
   ) {
     const members = await prisma.staffProfile.findMany({
-      where: { teamId },
+      where: {
+        teamId,
+        NOT: { userId: { in: excludeUserIds } },
+      },
       select: { userId: true },
     });
 
     const notifications = await Promise.all(
-      members.map((member) => this.send({ ...payload, userId: member.userId }))
+      members.map((member: any) =>
+        this.send({ ...payload, userId: member.userId })
+      )
+    );
+
+    return notifications;
+  },
+
+  /**
+   * Broadcast a notification to all users who possess a specific capability/permission.
+   * This allows for 'Authority-Level' targeting without role-hardcoding.
+   */
+  async broadcastByPermission(
+    permissionCode: string,
+    payload: Omit<NotificationPayload, "userId">
+  ) {
+    // Find all users who have this permission directly or via role/group
+    // Logic: Users with a role that has the permission OR users in a group that has it.
+    const eligibleUsers = await prisma.user.findMany({
+      where: {
+        OR: [
+          {
+            role: {
+              permissions: {
+                some: {
+                  permission: {
+                    code: permissionCode,
+                  },
+                },
+              },
+            },
+          },
+          {
+            groups: {
+              some: {
+                group: {
+                  permissions: {
+                    some: {
+                      permission: {
+                        code: permissionCode,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+      select: { id: true },
+    });
+
+    const notifications = await Promise.all(
+      eligibleUsers.map((user: any) =>
+        this.send({ ...payload, userId: user.id })
+      )
     );
 
     return notifications;

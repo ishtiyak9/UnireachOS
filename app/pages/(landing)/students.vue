@@ -85,6 +85,50 @@ const services = ref([
   },
   {
     id: "05",
+    title: "Education Loan",
+    subtitle: "Financial leverage for your global ambition",
+    description:
+      "Availing an education loan to study in your dream university has never been easier! Our financial aid partners help students secure competitive rates and flexible repayment options.",
+    icon: "pi pi-percentage",
+    features: [
+      {
+        label: "Competitive Rates",
+        desc: "Access low-interest loan products tailored for international education",
+      },
+      {
+        label: "Flexible Repayment",
+        desc: "Structured payment plans that accommodate your career start",
+      },
+      {
+        label: "Quick Sanctioning",
+        desc: "Accelerated approval process to meet university fee deadlines",
+      },
+    ],
+  },
+  {
+    id: "06",
+    title: "Internships",
+    subtitle: "Bridging the gap between study and career",
+    description:
+      "We know how important internships are to your profile and thus our course recommendations are full of options with inbuilt internships. Gain real-world experience while you study.",
+    icon: "pi pi-briefcase",
+    features: [
+      {
+        label: "Inbuilt Work Terms",
+        desc: "Courses specifically selected for their integrated professional placements",
+      },
+      {
+        label: "Industry Connections",
+        desc: "Universities with established corporate and research partnerships",
+      },
+      {
+        label: "Career Readiness",
+        desc: "Guidance on utilizing internships to build a global professional network",
+      },
+    ],
+  },
+  {
+    id: "07",
     title: "Pre-Departure Briefing",
     subtitle: "Prepare for your exciting new journey",
     description:
@@ -106,6 +150,28 @@ const services = ref([
       {
         label: "Cultural adjustment",
         desc: "Living essentials and adapting to your new environment",
+      },
+    ],
+  },
+  {
+    id: "08",
+    title: "Allied Services",
+    subtitle: "360-degree support for your international journey",
+    description:
+      "Allied services play an important role in helping international students to have a successful study abroad experience and we made it more easier by providing services like booking an accommodation, Remittance process, Education Loan and Forex to make transactions in foreign currencies.",
+    icon: "pi pi-verified",
+    features: [
+      {
+        label: "Forex & Remittance",
+        desc: "Hassle-free currency exchange and international money transfers",
+      },
+      {
+        label: "Seamless Logistics",
+        desc: "End-to-end coordination of all essential travel and living services",
+      },
+      {
+        label: "Transaction Support",
+        desc: "Assistance with foreign currency transactions and global banking",
       },
     ],
   },
@@ -256,6 +322,9 @@ const stats = ref([
 
     <!-- Document Checklist -->
     <LandingDocumentChecklist />
+
+    <!-- Financial Intelligence Support Section -->
+    <LandingFinancialIntelNote />
 
     <!-- Services Grid with Asymmetric Layout -->
     <section

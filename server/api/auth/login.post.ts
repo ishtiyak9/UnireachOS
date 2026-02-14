@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
 
     // Fetch Profile based on role category
     let profileData = null;
-    if (user.roleCategory === "SYSTEM") {
+    if (user.roleCategory === "SYSTEM" || user.roleCategory === "STAFF") {
       profileData = await prisma.staffProfile.findUnique({
         where: { userId: user.id },
       });

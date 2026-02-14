@@ -7,39 +7,40 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
   try {
-    // 1. Fetch deep session details (Role & Team)
-    const dbUser = await prisma.user.findUnique({
-      where: { id: (session.user as any).id },
-      include: {
-        role: true,
-        staffProfile: true, // Needed for counselor assignment filtering
-      },
-    });
-
-    if (!dbUser)
-      throw createError({ statusCode: 403, message: "User not found." });
+    // Highly Optimized: Use session data directly to avoid the redundant DB roundtrip.
+    // The roleCode and profile are already persisted in the encrypted session.
+    const userRole = session.user.roleCode;
+    const staffProfile = (session.user as any).profile;
 
     // 2. Build Filter Logic (Neural Shield)
     const where: any = {};
+    const isSuperAdmin = userRole === "super_admin";
 
-    // If not a Super Admin, restrict to their own assignments or team
-    if (dbUser.role.code !== "super_admin") {
-      if (dbUser.staffProfile) {
-        where.assignedCounselorId = dbUser.staffProfile.id;
+    // If not a Super Admin, restrict to their own assignments
+    if (!isSuperAdmin) {
+      if (staffProfile && staffProfile.id) {
+        where.assignedCounselorId = staffProfile.id;
       } else {
-        // Fallback for non-staff who somehow reached here
         where.id = "none";
       }
     }
 
+    // Parallelize if we have complex dashboard needs, but for now single findMany is fine
     const leads = await prisma.lead.findMany({
       where,
       include: {
-        assignedCounselor: true,
+        assignedCounselor: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
+      take: 100, // Safety limit
     });
 
     return {

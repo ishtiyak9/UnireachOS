@@ -88,14 +88,49 @@ export const leadRouter = {
           }),
         ]);
 
-        // 4. Dispatch Realtime Notification
+        // 4. Dispatch Realtime Notification (Individual Specialist)
         await notify.send({
           userId: memberToAssign.userId,
           title: "🎯 New Lead Assigned",
           message: `${lead.firstName} from ${lead.preferredCountry} has been assigned to you.`,
           type: "SUCCESS",
-          metadata: { leadId: lead.id, action: "VIEW_LEAD" },
+          metadata: {
+            leadId: lead.id,
+            action: "VIEW_LEAD",
+            link: `/dashboard/leads/${lead.id}`,
+          },
         });
+
+        // [SITUATIONAL AWARENESS] Broadcast to Managers/Admins with notification clearance
+        // This ensures the 'Admin Panel' (authorized users) gets the alert without bothering the Super Admin hierarchy.
+        await notify.broadcastByPermission("lead:notify", {
+          title: "📢 Inbound Lead Alert",
+          message: `New intelligence received: ${lead.firstName} (${lead.preferredCountry}) has entered the ecosystem.`,
+          type: "INFO",
+          metadata: {
+            leadId: lead.id,
+            action: "VIEW_LEAD",
+            link: `/dashboard/leads/${lead.id}`,
+          },
+        });
+
+        // 5. Dispatch Team Cluster Notification (Visibility Layer)
+        if (teamToUse) {
+          await notify.broadcastToTeam(
+            teamToUse.id,
+            {
+              title: `📣 Team Update: ${teamToUse.name}`,
+              message: `New ${lead.preferredCountry} lead [${lead.firstName}] assigned to ${memberToAssign.firstName}.`,
+              type: "INFO",
+              metadata: {
+                leadId: lead.id,
+                action: "VIEW_LEAD",
+                link: `/dashboard/leads/${lead.id}`,
+              },
+            },
+            [memberToAssign.userId]
+          );
+        }
 
         return memberToAssign;
       }
@@ -145,7 +180,11 @@ export const leadRouter = {
         title: "📲 Lead Transferred to You",
         message: `Lead ${lead.firstName} has been manually assigned to your portfolio.`,
         type: "INFO",
-        metadata: { leadId, action: "VIEW_LEAD" },
+        metadata: {
+          leadId,
+          action: "VIEW_LEAD",
+          link: `/dashboard/leads/${leadId}`,
+        },
       });
     });
   },
@@ -200,7 +239,11 @@ export const leadRouter = {
         title: "🎯 Team Forward: New Lead",
         message: `Lead has been forwarded to the ${team.name} cell and assigned to you.`,
         type: "SUCCESS",
-        metadata: { leadId, action: "VIEW_LEAD" },
+        metadata: {
+          leadId,
+          action: "VIEW_LEAD",
+          link: `/dashboard/leads/${leadId}`,
+        },
       });
 
       return memberToAssign;

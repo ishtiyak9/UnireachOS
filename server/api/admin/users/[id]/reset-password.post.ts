@@ -4,11 +4,15 @@ import { prisma } from "../../../../utils/db";
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
 
-  // Guard: Only Super Admin can reset passwords for others
-  if (!session?.user || session.user.roleCode !== "super_admin") {
+  // Guard: Super Admin OR users with password reset permission
+  const user = session?.user as any;
+  const hasPermission = user?.permissions?.includes("user:manage");
+  const isSuperAdmin = user?.roleCode === "super_admin";
+
+  if (!user || (!isSuperAdmin && !hasPermission)) {
     throw createError({
       statusCode: 403,
-      message: "Restricted Access. Admin credentials required.",
+      message: "Restricted Access. Sufficient authority protocols required.",
     });
   }
 
@@ -38,7 +42,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Protection for other Super Admins
-    if (user.role.code === "super_admin" && user.id !== session.user.id) {
+    if (
+      user.role.code === "super_admin" &&
+      user.id !== (session.user as any).id
+    ) {
       throw createError({
         statusCode: 403,
         message: "You cannot reset the password of another Super Admin.",
@@ -55,7 +62,7 @@ export default defineEventHandler(async (event) => {
     // Log Action
     await prisma.auditLog.create({
       data: {
-        performedById: session.user.id,
+        performedById: (session.user as any).id,
         action: "RESET_PASSWORD",
         entityType: "User",
         entityId: id,

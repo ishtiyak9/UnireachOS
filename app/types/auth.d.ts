@@ -4,7 +4,7 @@ declare module "#auth-utils" {
     email: string;
     roleName: string; // e.g. "Supreme Administrator"
     roleCode: string; // e.g. "super_admin"
-    roleCategory: "SYSTEM" | "AGENT" | "APPLICANT";
+    roleCategory: "SYSTEM" | "STAFF" | "AGENT" | "APPLICANT";
     permissions: string[]; // e.g. ["system:control", "user:manage"]
     status: string;
     profile: {

@@ -38,6 +38,13 @@ export default defineEventHandler(async (event) => {
         applicantProfile: {
           include: {
             agent: true,
+            assignedStaff: true,
+          },
+        },
+        createdBy: {
+          include: {
+            staffProfile: true,
+            agentProfile: true,
           },
         },
       },
@@ -47,6 +54,8 @@ export default defineEventHandler(async (event) => {
     });
 
     return users.map((user) => {
+      let ownerName = "Direct Enrollment";
+      let ownerType = "System";
       let firstName = "Unknown";
       let lastName = "";
       let agentName = null;
@@ -56,12 +65,29 @@ export default defineEventHandler(async (event) => {
         lastName = user.staffProfile.lastName;
       } else if (user.agentProfile) {
         firstName = user.agentProfile.agencyName;
-        // lastName = user.agentProfile.licenseNo || "";
       } else if (user.applicantProfile) {
         firstName = user.applicantProfile.firstName;
         lastName = user.applicantProfile.lastName;
+
+        // HIGH-PRECISION OWNERSHIP RESOLUTION
         if ((user.applicantProfile as any).agent) {
           agentName = (user.applicantProfile as any).agent.agencyName;
+          ownerType = "Partner";
+          ownerName = agentName;
+        } else if ((user.applicantProfile as any).assignedStaff) {
+          const staff = (user.applicantProfile as any).assignedStaff;
+          ownerType = "System";
+          ownerName = `${staff.firstName} ${staff.lastName}`;
+        } else if (user.createdBy) {
+          // FALLBACK TO CREATOR IDENTITY
+          if (user.createdBy.agentProfile) {
+            ownerType = "Partner";
+            ownerName = user.createdBy.agentProfile.agencyName;
+            agentName = ownerName;
+          } else if (user.createdBy.staffProfile) {
+            ownerType = "System";
+            ownerName = `${user.createdBy.staffProfile.firstName} ${user.createdBy.staffProfile.lastName}`;
+          }
         }
       }
 
@@ -75,6 +101,8 @@ export default defineEventHandler(async (event) => {
         firstName,
         lastName,
         agentName,
+        ownerName,
+        ownerType,
         avatar: firstName[0]?.toUpperCase() || user.email[0].toUpperCase(),
         createdAt: user.createdAt,
         lastLogin: user.lastLogin,

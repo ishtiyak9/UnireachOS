@@ -15,6 +15,61 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   try {
+    // Direct User Model Updates (Status, Email, etc.)
+    if (body.status || body.email) {
+      const updateData: any = {};
+      if (body.status) updateData.status = body.status;
+      if (body.email) updateData.email = body.email;
+
+      const updatedUser = await prisma.user.update({
+        where: { id },
+        data: updateData,
+        include: { role: true },
+      });
+
+      // SYNC: If user is an AGENT, update their primaryEmail in the profile
+      if (body.email && updatedUser.role.category === "AGENT") {
+        await prisma.agentProfile.update({
+          where: { userId: id },
+          data: { primaryEmail: body.email },
+        });
+      }
+    }
+
+    // If updating agent profile specifically
+    if (body.agentProfile) {
+      const {
+        id: profileId,
+        userId: profileUserId,
+        user: profileUser,
+        applicants,
+        enquiries,
+        createdAt,
+        updatedAt,
+        ...profileData
+      } = body.agentProfile;
+
+      await prisma.agentProfile.upsert({
+        where: { userId: id },
+        create: {
+          ...profileData,
+          userId: id,
+          agencyName: profileData.agencyName || "New Agency",
+        },
+        update: {
+          ...profileData,
+        },
+      });
+
+      // SYNC: Registered email should be the primary email for partner case
+      if (profileData.primaryEmail) {
+        await prisma.user.update({
+          where: { id },
+          data: { email: profileData.primaryEmail },
+        });
+      }
+    }
+
     // If updating applicant profile specifically
     if (body.applicantProfile) {
       const {
@@ -162,6 +217,7 @@ export default defineEventHandler(async (event) => {
     const updatedUser = await prisma.user.findUnique({
       where: { id },
       include: {
+        agentProfile: true,
         applicantProfile: {
           include: {
             addresses: true,

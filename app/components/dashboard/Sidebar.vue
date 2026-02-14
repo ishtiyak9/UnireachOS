@@ -11,6 +11,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["toggle"]);
 
 const route = useRoute();
+const { user } = useUserSession();
 
 interface NavigationItem {
   label: string;
@@ -24,16 +25,12 @@ interface NavigationSection {
   items: NavigationItem[];
 }
 
-// Navigation menu structure: Intelligence Clusters
+// Navigation menu structure: Intelligence Clusters (Admin Mode)
 const menuItems: NavigationSection[] = [
   {
     label: "Tactical Hub",
     items: [
-      {
-        label: "Operational Overview",
-        icon: "pi pi-bolt",
-        to: "/dashboard",
-      },
+      { label: "Operational Overview", icon: "pi pi-bolt", to: "/dashboard" },
       {
         label: "Lead Intelligence",
         icon: "pi pi-database",
@@ -43,6 +40,52 @@ const menuItems: NavigationSection[] = [
         label: "Cell Organization",
         icon: "pi pi-sitemap",
         to: "/dashboard/teams",
+      },
+      {
+        label: "Victory Management",
+        icon: "pi pi-star",
+        to: "/dashboard/success-stories",
+      },
+      {
+        label: "Intelligence Alerts",
+        icon: "pi pi-bell",
+        to: "/dashboard/alerts",
+      },
+    ],
+  },
+  {
+    label: "Inventory Assets",
+    items: [
+      {
+        label: "University Registry",
+        icon: "pi pi-building",
+        to: "/dashboard/inventory/universities",
+      },
+      {
+        label: "Course Catalog",
+        icon: "pi pi-book",
+        to: "/dashboard/inventory/courses",
+      },
+      {
+        label: "Academic Taxonomy",
+        icon: "pi pi-tags",
+        children: [
+          {
+            label: "Study Areas",
+            to: "/dashboard/maintenance/study-areas",
+            icon: "pi pi-folder",
+          },
+          {
+            label: "Disciplines",
+            to: "/dashboard/maintenance/disciplines",
+            icon: "pi pi-list",
+          },
+          {
+            label: "Program Levels",
+            to: "/dashboard/maintenance/program-levels",
+            icon: "pi pi-sort-amount-up",
+          },
+        ],
       },
     ],
   },
@@ -116,10 +159,8 @@ const menuItems: NavigationSection[] = [
   },
 ];
 
-// Track expanded items
 const expandedItems = ref<string[]>([]);
 
-// Initialize expanded items based on current route
 onMounted(() => {
   menuItems.forEach((section) => {
     section.items.forEach((item) => {
@@ -137,11 +178,8 @@ onMounted(() => {
 
 const toggleExpand = (label: string) => {
   const index = expandedItems.value.indexOf(label);
-  if (index > -1) {
-    expandedItems.value.splice(index, 1);
-  } else {
-    expandedItems.value.push(label);
-  }
+  if (index > -1) expandedItems.value.splice(index, 1);
+  else expandedItems.value.push(label);
 };
 
 const isExpanded = (label: string) => expandedItems.value.includes(label);
@@ -155,13 +193,9 @@ const isActive = (path?: string) => {
 
 const isSectionActive = (item: NavigationItem) => {
   if (item.to && isActive(item.to)) return true;
-  if (item.children) {
-    return item.children.some((child) => isActive(child.to));
-  }
+  if (item.children) return item.children.some((child) => isActive(child.to));
   return false;
 };
-
-const { user } = useUserSession();
 
 const userInitials = computed(() => {
   if (!user.value?.profile?.firstName || !user.value?.profile?.lastName) {
@@ -186,7 +220,6 @@ const userInitials = computed(() => {
       <div
         class="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary-500/20 to-transparent"
       />
-
       <NuxtLink to="/dashboard" class="flex items-center gap-3">
         <div
           class="w-9 h-9 rounded-xl bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)] group-hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all duration-500"
@@ -216,7 +249,6 @@ const userInitials = computed(() => {
           <span class="w-1 h-1 rounded-full bg-surface-800"></span>
           {{ section.label }}
         </h3>
-
         <div class="space-y-1">
           <div v-for="item in section.items" :key="item.label">
             <!-- Terminal Node -->
@@ -244,7 +276,6 @@ const userInitials = computed(() => {
               />
               <span class="uppercase tracking-[0.15em]">{{ item.label }}</span>
             </NuxtLink>
-
             <!-- Composite Cluster -->
             <div v-else class="space-y-1">
               <button
@@ -277,8 +308,6 @@ const userInitials = computed(() => {
                   }"
                 />
               </button>
-
-              <!-- Node Branches -->
               <Transition
                 enter-active-class="transition-all duration-300 ease-out"
                 leave-active-class="transition-all duration-200 ease-in"

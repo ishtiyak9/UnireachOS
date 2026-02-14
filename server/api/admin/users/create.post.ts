@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
 
   // Guard: Only Super Admin
-  if (!session?.user || session.user.roleCode !== "super_admin") {
+  if (!session?.user || (session.user as any).roleCode !== "super_admin") {
     throw createError({ statusCode: 403, message: "Restricted Access" });
   }
 
@@ -61,6 +61,7 @@ export default defineEventHandler(async (event) => {
       password: hashedPassword,
       roleId: targetRoleId,
       status: "ACTIVE", // Admin-created users are pre-verified
+      createdById: (session.user as any).id,
 
       // Conditional Profile Creation
       ...(data.role === "STUDENT" && {
@@ -68,6 +69,11 @@ export default defineEventHandler(async (event) => {
           create: {
             firstName: data.firstName,
             lastName: data.lastName,
+            // AUTO-ASSIGN: If a staff/admin creates a student, they become the responsible owner
+            ...((session.user as any).roleCategory === "SYSTEM" ||
+            (session.user as any).roleCategory === "STAFF"
+              ? { assignedStaffId: (session.user as any).profile?.id }
+              : {}),
           },
         },
       }),
@@ -77,6 +83,7 @@ export default defineEventHandler(async (event) => {
           create: {
             id: randomUUID(),
             agencyName: data.firstName,
+            primaryEmail: data.email,
           },
         },
       }),
@@ -105,7 +112,7 @@ export default defineEventHandler(async (event) => {
   // Log Action
   await prisma.auditLog.create({
     data: {
-      performedById: session.user.id,
+      performedById: (session.user as any).id,
       action: "CREATE_USER",
       entityType: "User",
       entityId: user.id,
