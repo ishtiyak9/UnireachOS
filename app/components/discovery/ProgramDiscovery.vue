@@ -17,6 +17,8 @@ const props = withDefaults(defineProps<Props>(), {
   leadId: "",
 });
 
+const emit = defineEmits(["apply"]);
+
 // Registry Intelligence
 const { data: countriesRes } = await useFetch("/api/countries");
 const countries = computed(() => (countriesRes.value as any)?.data || []);
@@ -90,11 +92,26 @@ const { data: results, pending } = await useFetch("/api/programs/search", {
   watch: [filters],
 });
 
+const hasActiveProfiling = computed(() => {
+  return (
+    filters.value.search.trim() !== "" ||
+    filters.value.country !== "" ||
+    filters.value.levelId !== "" ||
+    filters.value.studyAreaId !== "" ||
+    filters.value.disciplineId !== "" ||
+    quickFilters.some((f) => (filters.value as any)[f.key]) ||
+    props.mode === "suggestions" ||
+    !!props.leadId
+  );
+});
+
 const courses = computed(() => {
   const raw = (results.value as any)?.data || [];
   return raw.map((c: any) => ({
     ...c,
-    matchScore: Math.floor(Math.random() * (99 - 75 + 1) + 75), // Simulated Intelligence
+    matchScore: hasActiveProfiling.value
+      ? Math.floor(Math.random() * (99 - 75 + 1) + 75)
+      : null, // Only engage Neural Engine if profiling is active
   }));
 });
 
@@ -130,6 +147,26 @@ const clearAll = () => {
 const toggleFilter = (key: string) => {
   (filters.value as any)[key] = !(filters.value as any)[key];
 };
+
+const detailRoute = computed(() => {
+  const path = useRoute().path;
+  if (path.includes("/dashboard")) {
+    return "/dashboard/inventory/courses";
+  }
+  return "/partner-portal/courses";
+});
+
+const handleApply = (course: any) => {
+  emit("apply", course);
+  const isHandled = !!useAttrs().onApply;
+  if (!isHandled && props.mode !== "suggestions") {
+    navigateTo(
+      props.leadId
+        ? `/apply?courseId=${course.id}&leadId=${props.leadId}`
+        : `/apply?courseId=${course.id}`
+    );
+  }
+};
 </script>
 
 <template>
@@ -145,7 +182,7 @@ const toggleFilter = (key: string) => {
           <span
             class="text-[9px] font-black text-primary-500 uppercase tracking-[0.4em]"
             >{{
-              mode === "suggestions"
+              props.mode === "suggestions"
                 ? "Neural Suggestions"
                 : "Intelligence Matrix"
             }}</span
@@ -154,10 +191,12 @@ const toggleFilter = (key: string) => {
         <h1
           class="text-4xl font-black text-white tracking-tighter uppercase italic leading-none"
         >
-          {{ mode === "suggestions" ? "Curated" : "Program" }}
+          {{ props.mode === "suggestions" ? "Curated" : "Program" }}
           <span
-            class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent"
-            >{{ mode === "suggestions" ? "Matches." : "Discovery." }}</span
+            class="bg-linear-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent"
+            >{{
+              props.mode === "suggestions" ? "Matches." : "Discovery."
+            }}</span
           >
         </h1>
       </div>
@@ -179,78 +218,88 @@ const toggleFilter = (key: string) => {
     <!-- Neural Tactical HUD (Filter Console) -->
     <div class="relative group">
       <div
-        class="absolute -inset-1 bg-gradient-to-r from-primary-500/10 via-transparent to-primary-600/10 rounded-[40px] blur-2xl opacity-50 group-hover:opacity-100 transition duration-1000"
+        class="absolute -inset-1 bg-linear-to-r from-primary-500/10 via-transparent to-primary-600/10 rounded-[40px] blur-3xl opacity-50 group-hover:opacity-100 transition duration-1000"
       ></div>
       <div
-        class="relative bg-surface-900/60 border border-white/5 rounded-[32px] md:rounded-[40px] p-6 md:p-8 backdrop-blur-3xl space-y-6 md:space-y-8 shadow-2xl"
+        class="relative bg-surface-950/40 border border-white/5 rounded-[32px] md:rounded-[40px] p-8 md:p-10 backdrop-blur-3xl space-y-10 shadow-2xl"
       >
         <!-- Discovery Grid -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-6"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
           <div class="lg:col-span-12 relative">
-            <label
-              class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em] mb-3 block px-1"
-              >Deep Search Payload</label
-            >
+            <div class="flex items-center gap-2 mb-3 px-1">
+              <i class="pi pi-bolt text-primary-500 text-[10px]" />
+              <label
+                class="text-[9px] font-black text-surface-400 uppercase tracking-[0.3em]"
+                >Deep Search Payload</label
+              >
+            </div>
             <div class="relative">
               <i
-                class="pi pi-search absolute left-5 top-1/2 -translate-y-1/2 text-primary-500/50 text-sm"
+                class="pi pi-search absolute left-5 top-1/2 -translate-y-1/2 text-primary-500/50 text-base"
               />
               <InputText
                 v-model="filters.search"
                 placeholder="Search Programs, Uni IDs, or Key Missions..."
-                class="w-full! bg-white/5! border-white/5! pl-14! h-14! text-sm font-bold rounded-[20px] focus:border-primary-500/50! focus:bg-white/10! transition-all placeholder:text-surface-600! shadow-inner"
+                class="w-full! bg-black/40! border-white/5! pl-14! h-16! text-sm font-bold rounded-2xl focus:border-primary-500/30! focus:bg-black/60! transition-all placeholder:text-surface-700! shadow-inner"
               />
             </div>
           </div>
 
           <div class="lg:col-span-3">
-            <label
-              class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em] mb-3 block px-1"
-              >Global Target</label
-            >
+            <div class="flex items-center gap-2 mb-3 px-1">
+              <i class="pi pi-globe text-primary-500 text-[10px]" />
+              <label
+                class="text-[9px] font-black text-surface-400 uppercase tracking-[0.3em]"
+                >Global Target</label
+              >
+            </div>
             <Select
               v-model="filters.country"
               :options="countries"
               optionLabel="name"
               optionValue="name"
               placeholder="Target Nation"
-              class="neural-select !h-14 !rounded-[20px] !text-xs !bg-white/5! !border-white/5!"
+              class="neural-select !h-14 !rounded-2xl !text-xs !bg-black/40! !border-white/5!"
               filter
               showClear
             />
           </div>
 
           <div class="lg:col-span-3">
-            <label
-              class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em] mb-3 block px-1"
-              >Academic Level</label
-            >
+            <div class="flex items-center gap-2 mb-3 px-1">
+              <i class="pi pi-shield text-primary-500 text-[10px]" />
+              <label
+                class="text-[9px] font-black text-surface-400 uppercase tracking-[0.3em]"
+                >Academic Level</label
+              >
+            </div>
             <Select
               v-model="filters.levelId"
               :options="levels"
               optionLabel="name"
               optionValue="id"
               placeholder="Level"
-              class="neural-select !h-14 !rounded-[20px] !text-xs !bg-white/5! !border-white/5!"
+              class="neural-select !h-14 !rounded-2xl !text-xs !bg-black/40! !border-white/5!"
               filter
               showClear
             />
           </div>
 
           <div class="lg:col-span-3">
-            <label
-              class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em] mb-3 block px-1"
-              >Study Domain</label
-            >
+            <div class="flex items-center gap-2 mb-3 px-1">
+              <i class="pi pi-th-large text-primary-500 text-[10px]" />
+              <label
+                class="text-[9px] font-black text-surface-400 uppercase tracking-[0.3em]"
+                >Study Domain</label
+              >
+            </div>
             <Select
               v-model="filters.studyAreaId"
               :options="studyAreas"
               optionLabel="name"
               optionValue="id"
               placeholder="Domain"
-              class="neural-select !h-14 !rounded-[20px] !text-xs !bg-white/5! !border-white/5!"
+              class="neural-select !h-14 !rounded-2xl !text-xs !bg-black/40! !border-white/5!"
               filter
               showClear
               @change="filters.disciplineId = ''"
@@ -258,17 +307,20 @@ const toggleFilter = (key: string) => {
           </div>
 
           <div class="lg:col-span-3">
-            <label
-              class="text-[9px] font-black text-surface-500 uppercase tracking-[0.2em] mb-3 block px-1"
-              >Refinement</label
-            >
+            <div class="flex items-center gap-2 mb-3 px-1">
+              <i class="pi pi-sliders-h text-primary-500 text-[10px]" />
+              <label
+                class="text-[9px] font-black text-surface-400 uppercase tracking-[0.3em]"
+                >Refinement</label
+              >
+            </div>
             <Select
               v-model="filters.disciplineId"
               :options="filteredDisciplines"
               optionLabel="name"
               optionValue="id"
               placeholder="Discipline"
-              class="neural-select !h-14 !rounded-[20px] !text-xs !bg-white/5! !border-white/5!"
+              class="neural-select !h-14 !rounded-2xl !text-xs !bg-black/40! !border-white/5!"
               filter
               showClear
               :disabled="!filters.studyAreaId"
@@ -277,35 +329,37 @@ const toggleFilter = (key: string) => {
         </div>
 
         <!-- Quick Filters -->
-        <div class="pt-6 border-t border-white/5 space-y-4">
+        <div class="pt-8 border-t border-white/5 space-y-6">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-1 h-4 bg-primary-500 rounded-full"></div>
+            <div class="flex items-center gap-3">
+              <div
+                class="w-1.5 h-6 bg-linear-to-b from-primary-400 to-primary-600 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.4)]"
+              ></div>
               <span
-                class="text-[10px] font-black text-white uppercase tracking-[0.3em]"
-                >Tactical Flushes</span
+                class="text-[11px] font-black text-white uppercase tracking-[0.4em]"
+                >Tactical Pulse Toggles</span
               >
             </div>
             <button
               @click="clearAll"
-              class="text-[8px] font-black text-primary-500 hover:text-white uppercase tracking-widest flex items-center gap-2"
+              class="px-4 py-2 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black text-primary-500 hover:text-white hover:bg-white/10 uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95"
             >
-              <i class="pi pi-refresh" /> Reset Protocol
+              <i class="pi pi-refresh" /> Reset Systems
             </button>
           </div>
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-3">
             <button
               v-for="f in quickFilters"
               :key="f.key"
               @click="toggleFilter(f.key)"
               :class="[
-                'flex items-center gap-2.5 px-3.5 md:px-4 py-2.5 rounded-xl border transition-all text-[9.5px] md:text-[10px] font-bold',
+                'flex items-center gap-3 px-5 py-3 rounded-2xl border transition-all text-[10px] font-black uppercase tracking-tight',
                 (filters as any)[f.key]
-                  ? 'bg-primary-500 border-primary-400 text-black shadow-lg scale-105'
-                  : 'bg-white/5 border-white/5 text-surface-400 hover:bg-white/10',
+                  ? 'bg-linear-to-r from-primary-500 to-primary-600 border-primary-400 text-black shadow-[0_0_25px_rgba(212,175,55,0.2)] scale-105'
+                  : 'bg-black/40 border-white/5 text-surface-500 hover:text-white hover:border-white/10 hover:bg-black/60',
               ]"
             >
-              <i :class="f.icon" class="text-[9px]" /> {{ f.label }}
+              <i :class="f.icon" class="text-[10px]" /> {{ f.label }}
             </button>
           </div>
         </div>
@@ -359,21 +413,35 @@ const toggleFilter = (key: string) => {
                   stroke="currentColor"
                   stroke-width="4"
                   stroke-dasharray="176"
-                  :stroke-dashoffset="176 - (176 * course.matchScore) / 100"
+                  :stroke-dashoffset="
+                    course.matchScore
+                      ? 176 - (176 * course.matchScore) / 100
+                      : 176
+                  "
                   class="text-primary-500 transition-all duration-1000"
+                  :class="{ 'opacity-0': !course.matchScore }"
                 />
               </svg>
               <div
                 class="absolute inset-0 flex flex-col items-center justify-center"
               >
-                <span
-                  class="text-[10px] md:text-xs font-black text-white italic"
-                  >{{ course.matchScore }}%</span
-                >
-                <span
-                  class="text-[5px] md:text-[6px] font-black text-surface-500 uppercase tracking-tighter"
-                  >Match</span
-                >
+                <template v-if="course.matchScore">
+                  <span
+                    class="text-[10px] md:text-xs font-black text-white italic"
+                    >{{ course.matchScore }}%</span
+                  >
+                  <span
+                    class="text-[5px] md:text-[6px] font-black text-surface-500 uppercase tracking-tighter"
+                    >Match</span
+                  >
+                </template>
+                <template v-else>
+                  <i class="pi pi-shield text-surface-700 text-[10px]" />
+                  <span
+                    class="text-[5px] md:text-[6px] font-black text-surface-600 uppercase tracking-tighter mt-0.5"
+                    >Static</span
+                  >
+                </template>
               </div>
             </div>
             <div
@@ -392,11 +460,13 @@ const toggleFilter = (key: string) => {
           <div class="flex-1 space-y-3">
             <div class="space-y-1">
               <div class="flex items-center flex-wrap gap-2">
-                <h2
-                  class="text-base md:text-lg font-black text-white leading-tight uppercase tracking-tight group-hover:text-primary-400 transition-colors"
-                >
-                  {{ course.name }}
-                </h2>
+                <NuxtLink :to="`${detailRoute}/${course.id}`">
+                  <h2
+                    class="text-base md:text-lg font-black text-white leading-tight uppercase tracking-tight group-hover:text-primary-400 transition-colors"
+                  >
+                    {{ course.name }}
+                  </h2>
+                </NuxtLink>
                 <div
                   v-if="course.university.isPremiumPartner"
                   class="px-2 py-0.5 rounded-md bg-primary-500/10 border border-primary-500/20"
@@ -492,13 +562,13 @@ const toggleFilter = (key: string) => {
                   }}
                 </p>
               </div>
-              <div v-if="course.expectedCommission" class="space-y-0.5">
+              <div v-if="course.partnerCommission" class="space-y-0.5">
                 <span
                   class="text-[6px] font-black text-emerald-500/60 uppercase tracking-widest"
                   >Yield</span
                 >
                 <p class="text-[9px] font-black text-emerald-400 italic">
-                  {{ course.expectedCommission }}
+                  {{ course.partnerCommission }}
                 </p>
               </div>
             </div>
@@ -508,21 +578,24 @@ const toggleFilter = (key: string) => {
           <div
             class="flex flex-row md:flex-col justify-end gap-2 md:w-[120px] md:border-l border-white/5 md:pl-6"
           >
-            <NuxtLink
-              v-if="mode !== 'suggestions'"
-              :to="
-                leadId
-                  ? `/apply?courseId=${course.id}&leadId=${leadId}`
-                  : `/apply?courseId=${course.id}`
-              "
-              class="flex-1"
+            <div
+              v-if="props.mode !== 'suggestions'"
+              class="flex flex-col gap-2 flex-1"
             >
               <button
-                class="w-full h-10 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-black shadow-lg transition-all active:scale-95"
+                @click="handleApply(course)"
+                class="w-full h-10 rounded-xl bg-linear-to-r from-primary-500 to-primary-600 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-black shadow-lg transition-all active:scale-95"
               >
-                {{ leadId ? "Register" : "Apply" }}
+                {{ props.leadId ? "Register" : "Apply" }}
               </button>
-            </NuxtLink>
+              <NuxtLink :to="`${detailRoute}/${course.id}`" class="w-full">
+                <button
+                  class="w-full h-9 rounded-xl bg-white/5 border border-white/5 text-[8px] font-black uppercase tracking-widest text-surface-400 hover:text-white hover:bg-white/10 transition-all"
+                >
+                  Deep Intelligence
+                </button>
+              </NuxtLink>
+            </div>
             <button
               v-if="course.courseUrl"
               @click="window.open(course.courseUrl, '_blank')"
@@ -539,18 +612,56 @@ const toggleFilter = (key: string) => {
 
 <style scoped>
 .neural-select {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
   border: 1px solid rgba(255, 255, 255, 0.05) !important;
   color: white !important;
+  box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.4);
+}
+.neural-select:hover {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 :deep(.p-select-label) {
-  font-size: 11px !important;
-  font-weight: 700 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   padding: 0 1.25rem !important;
   color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  letter-spacing: 0.02em !important;
+}
+:deep(.p-select-placeholder) {
+  color: var(--p-surface-600) !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
 }
 :deep(.p-select-dropdown) {
-  width: 2.5rem !important;
+  width: 3rem !important;
+  color: var(--p-primary-500) !important;
+}
+:deep(.p-select-overlay) {
+  background: var(--p-surface-950) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+  border-radius: 20px !important;
+  margin-top: 8px !important;
+}
+:deep(.p-select-option) {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 12px 20px !important;
+  color: var(--p-surface-400) !important;
+  transition: all 0.2s !important;
+}
+:deep(.p-select-option.p-highlight) {
+  background: rgba(var(--p-primary-500-rgb), 0.1) !important;
+  color: var(--p-primary-400) !important;
+}
+:deep(.p-select-option:hover:not(.p-highlight)) {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #fff !important;
 }
 @keyframes pulse-soft {
   0%,

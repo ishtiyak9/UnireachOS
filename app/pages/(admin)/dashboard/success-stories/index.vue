@@ -40,16 +40,16 @@ const story = ref({
   isActive: true,
 });
 
-const categories = [
+const categories = ref([
   { label: "Student", value: "student" },
   { label: "Business", value: "business" },
   { label: "Job", value: "job" },
-];
+]);
 
-const types = [
+const types = ref([
   { label: "Image", value: "image" },
   { label: "Video", value: "video" },
-];
+]);
 
 const fetchStories = async () => {
   loading.value = true;

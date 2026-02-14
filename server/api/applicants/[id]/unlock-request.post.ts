@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
 
-  const userId = getRouterParam(event, "userId");
+  const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
   // 1. Validate Input
@@ -24,10 +24,10 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Security Check (Only the applicant themselves can request unlock)
-  if (session.user.id !== userId) {
+  if (session.user.id !== id) {
     // Check if they are the owner of the profile
     const profile = await prisma.applicantProfile.findUnique({
-      where: { userId },
+      where: { userId: id },
       select: { userId: true, id: true, isLocked: true },
     });
 
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
 
   // 3. Get Applicant ID
   const applicant = await prisma.applicantProfile.findUnique({
-    where: { userId },
+    where: { userId: id },
     select: { id: true, isLocked: true },
   });
 

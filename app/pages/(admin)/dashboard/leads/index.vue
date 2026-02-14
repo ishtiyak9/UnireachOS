@@ -226,6 +226,14 @@ const resetFilters = () => {
           label="Export"
           report-title="Prospect Registry Intelligence"
         />
+
+        <NuxtLink to="/dashboard/inventory/courses/recommendations">
+          <Button
+            label="Neural Discovery"
+            icon="pi pi-bolt"
+            class="p-button-primary! h-10! rounded-xl! font-black! text-[9px]! uppercase! tracking-widest! px-4!"
+          />
+        </NuxtLink>
       </template>
     </DashboardPageHeader>
 

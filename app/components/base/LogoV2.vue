@@ -9,10 +9,10 @@
     >
       <!-- Full Logo Image -->
       <img
-        src="/logo.png"
+        src="/icon.png"
         alt="Unireach"
         class="h-full w-auto object-contain"
-      >
+      />
     </div>
   </NuxtLink>
 </template>

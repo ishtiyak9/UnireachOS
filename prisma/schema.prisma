@@ -709,7 +709,8 @@ model Course {
   tuitionFee          Float    @default(0) // Yearly Tuition Fee
   applicationFee      Float    @default(0)
   currency            String   @default("USD")
-  expectedCommission  String?  // Amount or Percentage
+  unireachCommission  String?  // Gross yield received from Institution
+  partnerCommission   String?  // Net yield distributed to Partners/Agents
   
   // Deadlines & Availability
   applicationDeadline String?
@@ -805,16 +806,39 @@ model Application {
   assignedStaffId String?
   assignedStaff   StaffProfile? @relation(fields: [assignedStaffId], references: [id])
 
-  status ApplicationStatus @default(DRAFT)
+  // --- STATE INTELLIGENCE (Dual-Track) ---
+  status         String @default("New Inquiry") // Internal (Detailed)
+  externalStatus String @default("Pending")      // External (Summary)
+  priority       ApplicationPriority @default(MEDIUM)
+
+  // --- IMMUTABILITY (Clinical Snapshots) ---
+  profileSnapshot Json? // Freezes Applicant details at submission
+  courseSnapshot  Json? // Freezes Fees, Currency, and Requirements
 
   // Timeline/Notes
-  notes     ApplicationNote[]
-  documents Document[]
+  notes          ApplicationNote[]
+  statusHistory  ApplicationStatusHistory[]
+  documents      Document[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([applicantId, courseId]) // Prevent duplicate applications to same course
+  @@index([status])
+  @@index([priority])
+}
+
+model ApplicationStatusHistory {
+  id            String      @id @default(uuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  fromStatus String
+  toStatus   String
+  reason     String?
+  performedBy String // User ID or System
+
+  createdAt DateTime @default(now())
 }
 
 model ApplicationNote {
@@ -823,9 +847,9 @@ model ApplicationNote {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   content    String
-  isInternal Boolean @default(true) // If true, only visible to Unireach Staff
+  visibility NoteVisibility @default(INTERNAL)
 
-  createdBy String // User ID or Name snapshot
+  createdBy String // User ID snapshot
   createdAt DateTime @default(now())
 }
 
@@ -870,17 +894,17 @@ enum EnquiryStatus {
   CLOSED
 }
 
-enum ApplicationStatus {
-  DRAFT
-  SUBMITTED_TO_UNIREACH
-  UNDER_REVIEW
-  SUBMITTED_TO_UNIVERSITY
-  OFFER_CONDITIONAL
-  OFFER_UNCONDITIONAL
-  REJECTED
-  VISA_PROCESSING
-  ENROLLED
-  WITHDRAWN
+enum ApplicationPriority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum NoteVisibility {
+  PUBLIC   // Applicant, Agent, Staff
+  PARTNER  // Agent, Staff
+  INTERNAL // Staff only
 }
 
 enum NotificationType {
@@ -1074,4 +1098,27 @@ model SuccessStory {
 
   @@index([category])
   @@index([isFeatured])
+}
+
+// --- MARKETING REPOSITORY ---
+model MarketingAsset {
+  id          String   @id @default(uuid())
+  title       String
+  description String?  @db.Text
+  fileUrl     String
+  fileType    String?  // e.g. "IMAGE", "PDF", "ZIP", "VIDEO"
+  thumbnail   String?
+  
+  visibility  MarketingAssetVisibility @default(ALL)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([visibility])
+}
+
+enum MarketingAssetVisibility {
+  INTERNAL
+  PARTNERS
+  ALL
 }

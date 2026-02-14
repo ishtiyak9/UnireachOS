@@ -93,7 +93,8 @@ const form = ref({
   tuitionFee: 0,
   applicationFee: 0,
   currency: "USD",
-  expectedCommission: "",
+  unireachCommission: "",
+  partnerCommission: "",
   applicationDeadline: "",
   isActive: true,
 
@@ -522,14 +523,25 @@ const handleSave = async () => {
               />
             </div>
 
-            <div class="flex flex-col gap-2 md:col-span-2">
+            <div class="flex flex-col gap-2">
               <label
                 class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
-                >Expected Commission</label
+                >Unireach Yield (Gross)</label
               >
               <InputText
-                v-model="form.expectedCommission"
-                placeholder="e.g. 10% or 500 USD per intake"
+                v-model="form.unireachCommission"
+                placeholder="e.g. 15% or 750 USD"
+                class="neural-input"
+              />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label
+                class="text-[10px] font-black text-emerald-500 uppercase tracking-widest"
+                >Partner Yield (Net)</label
+              >
+              <InputText
+                v-model="form.partnerCommission"
+                placeholder="e.g. 10% or 500 USD"
                 class="neural-input"
               />
             </div>

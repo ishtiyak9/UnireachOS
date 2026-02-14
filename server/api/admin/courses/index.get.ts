@@ -7,14 +7,33 @@ export default defineEventHandler(async (event) => {
   }
 
   const query = getQuery(event);
-  const { country, studyAreaId, disciplineId } = query;
+  const { country, universityId, levelId, search, studyAreaId, disciplineId } =
+    query;
 
   const where: any = {};
 
-  if (country) {
+  if (universityId) {
+    where.universityId = universityId as string;
+  } else if (country) {
     where.university = {
       country: country as string,
     };
+  }
+
+  if (levelId) {
+    where.levelId = levelId as string;
+  }
+
+  if (search) {
+    where.OR = [
+      { name: { contains: search as string, mode: "insensitive" } },
+      { code: { contains: search as string, mode: "insensitive" } },
+      {
+        university: {
+          name: { contains: search as string, mode: "insensitive" },
+        },
+      },
+    ];
   }
 
   if (studyAreaId) {
@@ -37,6 +56,7 @@ export default defineEventHandler(async (event) => {
           name: true,
           logo: true,
           country: true,
+          isPremiumPartner: true,
         },
       },
       level: {

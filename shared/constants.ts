@@ -92,3 +92,68 @@ export const LEAD_STATUSES = {
 export const ALL_LEAD_STATUSES = Object.values(LEAD_STATUSES).flat();
 
 export const DEFAULT_LEAD_STATUS = "New Inquiry";
+
+// --- APPLICATION ENGINE CONSTANTS (AEC) ---
+
+export const APPLICATION_PRIORITIES = {
+  URGENT: {
+    label: "Urgent",
+    code: "URGENT",
+    color: "text-rose-500",
+    icon: "pi pi-fire",
+  },
+  HIGH: {
+    label: "High",
+    code: "HIGH",
+    color: "text-orange-500",
+    icon: "pi pi-bolt",
+  },
+  MEDIUM: {
+    label: "Medium",
+    code: "MEDIUM",
+    color: "text-blue-500",
+    icon: "pi pi-gauge",
+  },
+  LOW: {
+    label: "Low",
+    code: "LOW",
+    color: "text-slate-500",
+    icon: "pi pi-snowflake",
+  },
+};
+
+/**
+ * STATUS_VISIBILITY_MAP
+ * Maps granular Internal Statuses to simplified External (Applicant/Agent) Statuses.
+ * Ensures institutional privacy while maintaining applicant transparency.
+ */
+export const STATUS_VISIBILITY_MAP: Record<string, string> = {
+  // PRE_APPLICATION -> Pending
+  "New Inquiry": "Pending",
+  "Interested – Not Ready": "Pending",
+  "Eligible to Apply": "Ready to Apply",
+  "Awaiting Documents": "Action Required",
+  "Documents Partially Received": "Action Required",
+  "Documents Complete – Ready to Apply": "Ready to Apply",
+
+  // SUBMISSION -> Under Review
+  "Application Submitted to University": "Application Submitted",
+  "Application Submitted – Awaiting Acknowledgment": "Processing",
+  "Acknowledged by University": "Processing",
+  "Application Paid – University Fees": "Processing",
+  "Application Under Initial Review": "Under Review",
+  "Application Under Academic Review": "Under Review",
+  "Application Under Department Review": "Under Review",
+  "Additional Documents Requested": "Action Required",
+  "Documents Resubmitted": "Under Review",
+
+  // INTERNAL -> Under Review (Masked)
+  "Awaiting Partner Feedback": "Under Review",
+  "Ready for Compliance Audit": "Finalizing",
+};
+
+export const NOTE_VISIBILITY = {
+  PUBLIC: "PUBLIC", // Everyone (Applicant, Agent, Staff)
+  PARTNER: "PARTNER", // Agent & Staff only
+  INTERNAL: "INTERNAL", // Staff only
+};

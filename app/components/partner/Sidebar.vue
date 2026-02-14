@@ -41,9 +41,9 @@ const menuItems: NavigationSection[] = [
         to: "/partner-portal/applicants",
       },
       {
-        label: "Search Program",
+        label: "Courses Finder",
         icon: "pi pi-compass",
-        to: "/partner-portal/search-program",
+        to: "/partner-portal/courses-finder",
       },
     ],
   },
@@ -111,9 +111,12 @@ const isExpanded = (label: string) => expandedItems.value.includes(label);
 
 const isActive = (path?: string) => {
   if (!path) return false;
-  if (route.path === path) return true;
-  if (path !== "/partners" && route.path.startsWith(path)) return true;
-  return false;
+  // Special case for dashboard root to prevent it being active on sub-routes
+  if (path === "/partner-portal") {
+    return route.path === "/partner-portal";
+  }
+  // Standard strict matching for other routes
+  return route.path.startsWith(path);
 };
 
 const isSectionActive = (item: NavigationItem) => {
@@ -137,9 +140,13 @@ const isSectionActive = (item: NavigationItem) => {
       />
       <NuxtLink to="/partner-portal" class="flex items-center gap-3">
         <div
-          class="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all duration-500"
+          class="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all duration-500"
         >
-          <i class="pi pi-briefcase text-black font-black" />
+          <img
+            src="/icon.png"
+            alt="UniReach"
+            class="w-full h-full object-contain"
+          />
         </div>
         <div class="flex flex-col">
           <span

@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
 
-  const userId = getRouterParam(event, "userId");
+  const id = getRouterParam(event, "id");
   const body = await readMultipartFormData(event);
 
   if (!body) {
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
   // 1. Get Applicant Profile
   const applicant = await prisma.applicantProfile.findUnique({
-    where: { userId },
+    where: { userId: id },
     select: { id: true, isLocked: true },
   });
 

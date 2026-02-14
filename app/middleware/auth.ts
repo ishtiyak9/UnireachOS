@@ -14,53 +14,56 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   }
 
-  // 2. Protect all internal routes
-  const protectedRoutes = [
-    "/dashboard",
-    "/applicant-portal",
-    "/partner-portal",
-    "/profile",
-  ];
-  const isProtected = protectedRoutes.some((route) =>
-    to.path.startsWith(route)
-  );
+  // 2. Protect all internal routes (Expanded list for maximum security)
+  const isProtectedRoute =
+    to.path.startsWith("/dashboard") ||
+    to.path.startsWith("/applicant-portal") ||
+    to.path.startsWith("/partner-portal") ||
+    to.path.startsWith("/profile");
 
-  if (isProtected) {
-    if (!loggedIn.value) {
-      await fetch();
-      if (!loggedIn.value) {
+  if (isProtectedRoute) {
+    // ALWAYS force a refresh check on navigation to a protected route
+    // This ensures if the session was killed on the server, the client knows immediately
+    await fetch();
+
+    if (!loggedIn.value || !user.value) {
+      return navigateTo("/login");
+    }
+
+    // 3. Portal Isolation Enforcement (Strict Role Checks)
+    const category = user.value?.roleCategory;
+
+    // System Dashboard Protection: STAFF/SYSTEM Only
+    if (to.path.startsWith("/dashboard")) {
+      if (category !== "SYSTEM" && category !== "STAFF") {
+        console.warn(
+          "Unauthorized access attempt to Dashboard by:",
+          user.value.id
+        );
+        return navigateTo("/login"); // Force login if attempting to jump roles
+      }
+    }
+
+    // Applicant Portal Protection: APPLICANT/SYSTEM Only
+    if (to.path.startsWith("/applicant-portal")) {
+      if (category !== "APPLICANT" && category !== "SYSTEM") {
+        console.warn(
+          "Unauthorized access attempt to Applicant Portal by:",
+          user.value.id
+        );
         return navigateTo("/login");
       }
     }
 
-    // 3. Portal Isolation Enforcement
-    const category = user.value?.roleCategory;
-
-    // System Dashboard Protection
-    if (
-      to.path.startsWith("/dashboard") &&
-      category !== "SYSTEM" &&
-      category !== "STAFF"
-    ) {
-      return navigateTo("/");
-    }
-
-    // Applicant Portal Protection
-    if (
-      to.path.startsWith("/applicant-portal") &&
-      category !== "APPLICANT" &&
-      category !== "SYSTEM"
-    ) {
-      return navigateTo("/");
-    }
-
-    // Agent Portal Protection
-    if (
-      to.path.startsWith("/partner-portal") &&
-      category !== "AGENT" &&
-      category !== "SYSTEM"
-    ) {
-      return navigateTo("/");
+    // Agent Portal Protection: AGENT/SYSTEM Only
+    if (to.path.startsWith("/partner-portal")) {
+      if (category !== "AGENT" && category !== "SYSTEM") {
+        console.warn(
+          "Unauthorized access attempt to Partner Portal by:",
+          user.value.id
+        );
+        return navigateTo("/login");
+      }
     }
   }
 });

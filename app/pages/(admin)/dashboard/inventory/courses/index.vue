@@ -303,11 +303,16 @@ const stats = computed(() => {
               height="1rem"
             />
             <div v-else class="flex flex-col">
-              <span
-                class="text-[11px] font-black text-white uppercase tracking-wider"
+              <NuxtLink
+                :to="`/dashboard/inventory/courses/${slotProps.data.id}`"
+                class="hover:text-primary-400 transition-colors"
               >
-                {{ slotProps.data.name }}
-              </span>
+                <span
+                  class="text-[11px] font-black uppercase tracking-wider block"
+                >
+                  {{ slotProps.data.name }}
+                </span>
+              </NuxtLink>
               <span
                 class="text-[9px] text-surface-500 font-bold uppercase tracking-widest"
               >
@@ -395,6 +400,16 @@ const stats = computed(() => {
               >
                 <i class="pi pi-external-link text-[10px]" />
               </a>
+              <NuxtLink
+                :to="`/dashboard/inventory/courses/${slotProps.data.id}`"
+              >
+                <button
+                  class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-500/10 text-primary-400 hover:text-primary-300 hover:bg-primary-500/20 transition-all border border-primary-500/20"
+                  title="View Deep Intelligence"
+                >
+                  <i class="pi pi-eye text-[10px]" />
+                </button>
+              </NuxtLink>
               <NuxtLink
                 :to="`/dashboard/inventory/courses/provision?id=${slotProps.data.id}`"
               >

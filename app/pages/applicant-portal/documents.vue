@@ -23,13 +23,17 @@ const {
   data: documents,
   refresh,
   pending: docsPending,
-} = useFetch<Document[]>(
-  () => `/api/applicants/${sessionUser.value?.id}/documents`
+} = useFetch<Document[]>(() =>
+  sessionUser.value?.id
+    ? `/api/applicants/${sessionUser.value.id}/documents`
+    : null
 );
 
 // Fetch Profile for Education History logic
-const { data: profileResponse, pending: profilePending } = useFetch(
-  () => `/api/applicants/${sessionUser.value?.id}/profile`
+const { data: profileResponse, pending: profilePending } = useFetch(() =>
+  sessionUser.value?.id
+    ? `/api/applicants/${sessionUser.value.id}/profile`
+    : null
 );
 
 const profile = computed(() => profileResponse.value?.data || {});

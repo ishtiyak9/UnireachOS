@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
       tuitionFee: parseFloat(body.tuitionFee) || 0,
       applicationFee: parseFloat(body.applicationFee) || 0,
       currency: body.currency || "USD",
-      expectedCommission: body.expectedCommission,
+      unireachCommission: body.unireachCommission,
+      partnerCommission: body.partnerCommission,
       applicationDeadline: body.applicationDeadline,
       isActive: body.isActive ?? true,
 

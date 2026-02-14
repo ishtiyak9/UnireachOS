@@ -88,11 +88,26 @@ defineOptions({
 <style>
 /* Custom overrides for FileUpload buttons */
 .file-upload-wrapper .p-fileupload-choose {
-  @apply !rounded-xl !bg-primary !border-none transition-transform active:scale-95;
+  border-radius: 0.75rem !important;
+  background-color: var(--p-primary-500) !important;
+  border: none !important;
+  transition: transform 0.2s;
+}
+.file-upload-wrapper .p-fileupload-choose:active {
+  transform: scale(0.95);
 }
 
 .file-upload-wrapper .p-fileupload-upload-button,
 .file-upload-wrapper .p-fileupload-cancel-button {
-  @apply !rounded-xl !bg-surface-200 dark:!bg-surface-800 !border-none !text-surface-700 dark:!text-surface-300;
+  border-radius: 0.75rem !important;
+  background-color: var(--p-surface-200) !important;
+  border: none !important;
+  color: var(--p-surface-700) !important;
+}
+
+:is(.dark .file-upload-wrapper) .p-fileupload-upload-button,
+:is(.dark .file-upload-wrapper) .p-fileupload-cancel-button {
+  background-color: var(--p-surface-800) !important;
+  color: var(--p-surface-300) !important;
 }
 </style>

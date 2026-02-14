@@ -13,13 +13,13 @@ const defaultForm = {
   isActive: true,
 };
 
-const categoryOptions = [
+const categoryOptions = ref([
   { label: "GENERAL", value: "GENERAL" },
   { label: "DEGREE", value: "DEGREE" },
   { label: "PATHWAY", value: "PATHWAY" },
   { label: "SHORT_TERM", value: "SHORT_TERM" },
   { label: "VOCATIONAL", value: "VOCATIONAL" },
-];
+]);
 </script>
 
 <template>

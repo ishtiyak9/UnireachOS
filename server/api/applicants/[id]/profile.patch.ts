@@ -49,13 +49,16 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
 
-  const userId = getRouterParam(event, "userId");
-  if (!userId) {
-    throw createError({ statusCode: 400, message: "Missing User ID in route" });
+  const id = getRouterParam(event, "id");
+  if (!id) {
+    throw createError({
+      statusCode: 400,
+      message: "Missing Identifier in route",
+    });
   }
 
   // --- PERMISSIONS ---
-  const isSelf = session.user.id === userId;
+  const isSelf = session.user.id === id;
   const isAdmin = ["super_admin", "admin", "official"].includes(
     (session.user as any).roleCode || (session.user as any).role || ""
   );
@@ -70,7 +73,7 @@ export default defineEventHandler(async (event) => {
 
     if (agentProfile) {
       const applicant = await prisma.applicantProfile.findUnique({
-        where: { userId },
+        where: { userId: id },
         select: { agentId: true, isLocked: true },
       });
       if (applicant?.agentId === agentProfile.id) {
@@ -89,7 +92,7 @@ export default defineEventHandler(async (event) => {
 
   if (isSelf) {
     const currentProfile = await prisma.applicantProfile.findUnique({
-      where: { userId },
+      where: { userId: id },
       select: { isLocked: true },
     });
     if (currentProfile?.isLocked) {
@@ -133,12 +136,12 @@ export default defineEventHandler(async (event) => {
   // --- TRANSACTION ---
   return await prisma.$transaction(async (tx) => {
     // 1. Upsert Main Profile
-    console.log("Upserting ApplicantProfile for userId:", userId);
+    console.log("Upserting ApplicantProfile for userId:", id);
     const profile = await tx.applicantProfile.upsert({
-      where: { userId },
+      where: { userId: id },
       update: mainProfile,
       create: {
-        userId,
+        userId: id,
         firstName: mainProfile.firstName || "",
         lastName: mainProfile.lastName || "",
         ...mainProfile,

@@ -6,13 +6,13 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
 
-  const userId = getRouterParam(event, "userId"); // "users" or "applicants" route param
-  if (!userId) {
-    throw createError({ statusCode: 400, message: "Missing User ID" });
+  const id = getRouterParam(event, "id");
+  if (!id) {
+    throw createError({ statusCode: 400, message: "Missing Identifier" });
   }
 
   // --- PERMISSIONS ---
-  const isSelf = session.user.id === userId;
+  const isSelf = session.user.id === id;
   const isAdmin = ["super_admin", "admin", "official"].includes(
     session.user.roleCode || session.user.role || ""
   );
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     });
     if (agentProfile) {
       const applicant = await prisma.applicantProfile.findUnique({
-        where: { userId },
+        where: { userId: id },
         select: { agentId: true },
       });
       if (applicant?.agentId === agentProfile.id) {
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
 
   // --- FETCH DATA ---
   const profile = await prisma.applicantProfile.findUnique({
-    where: { userId },
+    where: { userId: id },
     include: {
       addresses: true,
       educationHistory: { orderBy: { endDate: "desc" } },

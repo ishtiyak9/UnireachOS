@@ -25,7 +25,6 @@ interface NavigationSection {
   items: NavigationItem[];
 }
 
-// Navigation menu structure: Intelligence Clusters (Admin Mode)
 const menuItems: NavigationSection[] = [
   {
     label: "Tactical Hub",
@@ -35,6 +34,16 @@ const menuItems: NavigationSection[] = [
         label: "Lead Intelligence",
         icon: "pi pi-database",
         to: "/dashboard/leads",
+      },
+      {
+        label: "Application Lifecycle",
+        icon: "pi pi-folder-open",
+        to: "/dashboard/applications",
+      },
+      {
+        label: "Marketing Toolkit",
+        icon: "pi pi-megaphone",
+        to: "/dashboard/marketing",
       },
       {
         label: "Cell Organization",
@@ -65,6 +74,11 @@ const menuItems: NavigationSection[] = [
         label: "Course Catalog",
         icon: "pi pi-book",
         to: "/dashboard/inventory/courses",
+      },
+      {
+        label: "Neural Discovery",
+        icon: "pi pi-bolt",
+        to: "/dashboard/inventory/courses/recommendations",
       },
       {
         label: "Academic Taxonomy",
@@ -137,6 +151,11 @@ const menuItems: NavigationSection[] = [
             to: "/dashboard/authority/groups",
             icon: "pi pi-clone",
           },
+          {
+            label: "Audit Intelligence",
+            to: "/dashboard/authority/audit",
+            icon: "pi pi-history",
+          },
         ],
       },
       {
@@ -152,6 +171,11 @@ const menuItems: NavigationSection[] = [
             label: "Geospatial Data",
             to: "/dashboard/settings/countries",
             icon: "pi pi-map",
+          },
+          {
+            label: "Maintenance Control",
+            to: "/dashboard/settings/maintenance",
+            icon: "pi pi-calendar-plus",
           },
         ],
       },
@@ -184,7 +208,7 @@ const toggleExpand = (label: string) => {
 
 const isExpanded = (label: string) => expandedItems.value.includes(label);
 
-const isActive = (path?: string) => {
+const isItemActive = (path?: string) => {
   if (!path) return false;
   if (route.path === path) return true;
   if (path !== "/dashboard" && route.path.startsWith(path)) return true;
@@ -192,8 +216,9 @@ const isActive = (path?: string) => {
 };
 
 const isSectionActive = (item: NavigationItem) => {
-  if (item.to && isActive(item.to)) return true;
-  if (item.children) return item.children.some((child) => isActive(child.to));
+  if (item.to && isItemActive(item.to)) return true;
+  if (item.children)
+    return item.children.some((child) => isItemActive(child.to));
   return false;
 };
 
@@ -211,7 +236,7 @@ const userInitials = computed(() => {
 <template>
   <aside
     class="fixed top-0 left-0 h-full w-64 bg-surface-950 border-r border-white/5 transition-all duration-500 ease-in-out z-50 flex flex-col shadow-[10px_0_30px_rgba(0,0,0,0.5)]"
-    :class="[props.visible ? 'translate-x-0' : '-translate-x-full']"
+    :class="[visible ? 'translate-x-0' : '-translate-x-full']"
   >
     <!-- Neural Brand Hub -->
     <div
@@ -222,9 +247,13 @@ const userInitials = computed(() => {
       />
       <NuxtLink to="/dashboard" class="flex items-center gap-3">
         <div
-          class="w-9 h-9 rounded-xl bg-linear-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)] group-hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all duration-500"
+          class="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)] group-hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all duration-500"
         >
-          <i class="pi pi-shield text-black font-black" />
+          <img
+            src="/icon.png"
+            alt="UniReach"
+            class="w-full h-full object-contain"
+          />
         </div>
         <div class="flex flex-col">
           <span
@@ -251,32 +280,33 @@ const userInitials = computed(() => {
         </h3>
         <div class="space-y-1">
           <div v-for="item in section.items" :key="item.label">
-            <!-- Terminal Node -->
             <NuxtLink
               v-if="!item.children"
               :to="item.to"
               class="group flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black transition-all duration-300 relative overflow-hidden"
               :class="[
-                isActive(item.to)
+                isItemActive(item.to)
                   ? 'bg-primary-500/10 text-primary-400'
                   : 'text-surface-400 hover:text-white hover:bg-white/5',
               ]"
-              @click="props.isMobile && emit('toggle')"
+              @click="isMobile && emit('toggle')"
             >
               <div
-                v-if="isActive(item.to)"
+                v-if="isItemActive(item.to)"
                 class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-primary-500 rounded-r-full shadow-[0_0_8px_rgba(212,175,55,0.8)]"
               />
               <i
                 :class="[
                   item.icon,
                   'text-[13px] transition-all group-hover:scale-110',
-                  isActive(item.to) ? 'text-primary-400' : 'text-surface-500',
+                  isItemActive(item.to)
+                    ? 'text-primary-400'
+                    : 'text-surface-500',
                 ]"
               />
               <span class="uppercase tracking-[0.15em]">{{ item.label }}</span>
             </NuxtLink>
-            <!-- Composite Cluster -->
+
             <div v-else class="space-y-1">
               <button
                 @click="toggleExpand(item.label)"
@@ -326,11 +356,11 @@ const userInitials = computed(() => {
                     :to="child.to"
                     class="flex items-center gap-3 px-3 py-1.5 rounded-lg text-[9px] font-bold transition-all duration-300"
                     :class="[
-                      isActive(child.to)
+                      isItemActive(child.to)
                         ? 'text-primary-400 bg-primary-500/5'
                         : 'text-surface-500 hover:text-white hover:bg-white/5',
                     ]"
-                    @click="props.isMobile && emit('toggle')"
+                    @click="isMobile && emit('toggle')"
                   >
                     <i :class="[child.icon, 'text-[10px]']" />
                     <span class="uppercase tracking-[0.2em]">{{

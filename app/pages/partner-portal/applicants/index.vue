@@ -153,6 +153,11 @@ const viewDetails = (id: string) => {
                 text
                 class="p-2! text-surface-500! hover:text-blue-500!"
                 v-tooltip.top="'Initiate Application'"
+                @click="
+                  navigateTo(
+                    `/partner-portal/courses-finder?applicantId=${data.id}`
+                  )
+                "
               />
             </div>
           </template>

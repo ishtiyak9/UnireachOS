@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed, watch } from "vue";
 import { useToast } from "primevue/usetoast";
 
 definePageMeta({
@@ -14,15 +15,17 @@ useHead({
 const toast = useToast();
 const { user: sessionUser } = useUserSession();
 
-// 1. Fetch Detailed Profile
+// 1. Unified Profile Intelligence
 const {
-  data: profileResponse,
+  profile,
   pending,
   error,
   refresh,
-} = useFetch(() => `/api/applicants/${sessionUser.value?.id}/profile`);
+  completionPercentage,
+  tabStatus,
+  nextAction,
+} = useProfile();
 
-const profile = computed(() => profileResponse.value?.data || {});
 const user = computed(() => sessionUser.value || {});
 
 // -- Computed Helpers --
@@ -94,9 +97,6 @@ const syncFormData = () => {
 watch(
   profile,
   (newVal) => {
-    // Only sync if we're not actively editing (to avoid overwriting work in progress if background refresh happens)
-    // However, since refresh() is manual mostly, we usually want to sync.
-    // Let's safe-guard: if keys are missing (initial load) or just after save.
     if (newVal) {
       syncFormData();
     }
@@ -140,7 +140,6 @@ const openEditDialog = (section: string) => {
   if (section === "Contacts" && formData.value.emergencyContacts.length === 0) {
     formData.value.emergencyContacts.push({
       name: "",
-      // phone/relation/email added by user via UI usually, but we can seed one
       phone: "",
       relation: "",
       email: "",
@@ -249,13 +248,7 @@ const submitUnlockRequest = async () => {
 };
 
 // Tabs
-const activeTab = ref(0);
-const tabs = [
-  { label: "Personal Information", icon: "pi pi-user" },
-  { label: "Academic Qualifications", icon: "pi pi-book" },
-  { label: "Work Experience", icon: "pi pi-briefcase" },
-  { label: "Tests", icon: "pi pi-check-square" },
-];
+const activeTab = useState("activeProfileTab", () => 0);
 </script>
 
 <template>
@@ -284,8 +277,9 @@ const tabs = [
           Scholar
           <span
             class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 italic"
-            >Identity</span
           >
+            Identity
+          </span>
         </h1>
       </div>
 
@@ -307,8 +301,9 @@ const tabs = [
               <i class="pi pi-lock text-xs text-emerald-400"></i>
               <span
                 class="text-[11px] font-black text-emerald-400 uppercase tracking-widest"
-                >Profile Verified & Locked</span
               >
+                Profile Verified & Locked
+              </span>
             </div>
             <Button
               icon="pi pi-unlock"
@@ -381,33 +376,30 @@ const tabs = [
       </div>
     </div>
 
-    <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="bg-red-500/5 border border-red-500/20 rounded-3xl p-12 text-center backdrop-blur-xl"
-    >
-      <div
-        class="w-16 h-16 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center mx-auto mb-6"
-      >
-        <i class="pi pi-exclamation-triangle text-2xl"></i>
-      </div>
-      <h2 class="text-xl font-black text-white uppercase tracking-widest mb-2">
-        Access Interrupted
-      </h2>
-      <p class="text-red-400/60 text-sm max-w-sm mx-auto mb-8 leading-relaxed">
-        We encountered an error while synthesizing your institutional identity.
-        This could be a temporal sync issue.
-      </p>
-      <Button
-        label="Re-Verify Identity"
-        icon="pi pi-refresh"
-        @click="() => refresh()"
-        class="bg-red-500! text-black! border-0! text-[12px]! font-black uppercase tracking-widest px-8 py-3 rounded-xl"
-      />
-    </div>
-
     <!-- Identity Overview Card (Actual Content) -->
     <div v-else class="animate-fade-in-up space-y-8">
+      <div
+        v-if="error"
+        class="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex items-center justify-between mb-2"
+      >
+        <div class="flex items-center gap-3">
+          <i class="pi pi-exclamation-circle text-red-500"></i>
+          <span
+            class="text-[11px] font-black text-red-400 uppercase tracking-widest"
+          >
+            Identity Synthesis Error: Some data might be out of sync.
+          </span>
+        </div>
+        <Button
+          icon="pi pi-refresh"
+          size="small"
+          text
+          class="text-red-400! text-[10px]! font-bold uppercase"
+          label="Retry Sync"
+          @click="() => refresh()"
+        />
+      </div>
+
       <div
         class="bg-surface-900/40 border border-white/5 rounded-3xl p-8 backdrop-blur-xl flex flex-col md:flex-row items-center gap-8 group"
       >
@@ -422,8 +414,10 @@ const tabs = [
             class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full border-4 border-surface-950 flex items-center justify-center shadow-lg"
             :class="isLocked ? 'bg-emerald-500' : 'bg-amber-500'"
           >
-            <i :class="isLocked ? 'pi pi-check' : 'pi pi-pencil'"
-              class="text-[10px] text-black font-black"></i>
+            <i
+              :class="isLocked ? 'pi pi-check' : 'pi pi-pencil'"
+              class="text-[10px] text-black font-black"
+            ></i>
           </div>
         </div>
 
@@ -451,7 +445,7 @@ const tabs = [
             <p
               class="text-surface-400 text-sm font-bold opacity-60 uppercase tracking-tighter"
             >
-              {{ user.email }}
+              {{ sessionUser?.email }}
             </p>
           </div>
 
@@ -480,59 +474,18 @@ const tabs = [
               <span
                 >Joined:
                 <span class="text-white">{{
-                  formatDate(user.createdAt)
+                  formatDate((sessionUser as any)?.createdAt)
                 }}</span></span
               >
             </div>
           </div>
         </div>
 
-        <!-- Institutional Progress Tracker -->
+        <!-- Neural Completion Gauge (Replaces Institutional Progress Tracker) -->
         <div
-          class="hidden lg:flex flex-1 max-w-sm items-center justify-between px-8 relative h-16 border-l border-white/5"
+          class="hidden lg:flex flex-1 max-w-[320px] items-center gap-6 px-10 border-l border-white/5 relative group/guage"
         >
-          <div
-            class="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-[1px] bg-white/10"
-          ></div>
-
-          <div class="flex flex-col items-center gap-2 relative z-10">
-            <div
-              class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ring-4 ring-surface-950"
-              :class="
-                isLocked
-                  ? 'bg-primary-500 text-black'
-                  : 'bg-surface-800 text-surface-400 border border-white/10'
-              "
-            >
-              1
-            </div>
-            <span
-              class="text-[10px] font-black text-white uppercase tracking-widest"
-              >Profile</span
-            >
-          </div>
-          <div class="flex flex-col items-center gap-2 relative z-10">
-            <div
-              class="w-7 h-7 rounded-full bg-surface-800 text-surface-500 flex items-center justify-center text-[10px] font-black ring-4 ring-surface-950 border border-white/10 uppercase italic"
-            >
-              2
-            </div>
-            <span
-              class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
-              >Apps</span
-            >
-          </div>
-          <div class="flex flex-col items-center gap-2 relative z-10">
-            <div
-              class="w-7 h-7 rounded-full bg-surface-800 text-surface-500 flex items-center justify-center text-[10px] font-black ring-4 ring-surface-950 border border-white/10 uppercase italic"
-            >
-              3
-            </div>
-            <span
-              class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
-              >Docs</span
-            >
-          </div>
+          <ProfileCompletionGauge />
         </div>
       </div>
 
@@ -545,7 +498,7 @@ const tabs = [
           class="flex border-b border-white/5 overflow-x-auto bg-white/[0.01]"
         >
           <button
-            v-for="(tab, idx) in tabs"
+            v-for="(tab, idx) in tabStatus"
             :key="idx"
             @click="activeTab = idx"
             class="px-10 py-6 text-[12px] font-black uppercase tracking-widest flex items-center gap-3 border-b-2 transition-all outline-none"
@@ -556,9 +509,19 @@ const tabs = [
             "
           >
             <div class="flex flex-col items-start gap-1">
-              <span class="flex items-center gap-2">
-                <i :class="tab.icon" class="text-xs"></i>
+              <span class="flex items-center gap-3">
+                <i
+                  :class="[
+                    tab.icon,
+                    tab.complete ? 'text-emerald-400' : 'text-surface-500',
+                  ]"
+                  class="text-xs"
+                ></i>
                 {{ tab.label }}
+                <i
+                  v-if="tab.complete"
+                  class="pi pi-check-circle text-[10px] text-emerald-500"
+                ></i>
               </span>
               <span
                 v-if="activeTab === idx"
