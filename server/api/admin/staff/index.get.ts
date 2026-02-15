@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
   // Fetch all staff profiles (excluding super_admin)
   const staff = await prisma.staffProfile.findMany({
     where: {
+      // Ensure the user has a staff profile (implicit by querying staffProfile)
+      // We removed the restriction on super_admin to allow admins to also be counselors
       user: {
-        role: {
-          code: { not: "super_admin" },
-        },
+        status: "ACTIVE",
       },
     },
     orderBy: {

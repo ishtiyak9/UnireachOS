@@ -7,8 +7,9 @@ const props = defineProps<{
 const emit = defineEmits(["toggleSidebar"]);
 
 const route = useRoute();
-const { user } = useUserSession();
+const { user, clear } = useUserSession();
 const { state } = useThemeConfig();
+const toast = useToast();
 
 const { unreadCount } = useNotifications();
 const notificationDrawerVisible = ref(false);
@@ -55,9 +56,23 @@ onUnmounted(() => {
   window.removeEventListener("click", closeUserMenu);
 });
 
+const isLoggingOut = ref(false);
 const handleLogout = async () => {
-  await $fetch("/api/auth/logout", { method: "POST" });
-  await navigateTo("/login");
+  isLoggingOut.value = true;
+  // toast.add({
+  //   severity: "info",
+  //   summary: "Termination Initiated",
+  //   detail: "Securing data and closing connection nodes...",
+  //   life: 2000,
+  // });
+
+  try {
+    await $fetch("/api/auth/logout", { method: "POST" });
+    await clear();
+    location.href = "/login"; // Force clear everything and redirect
+  } catch (e) {
+    isLoggingOut.value = false;
+  }
 };
 
 const userInitials = computed(() => {
@@ -212,11 +227,17 @@ const fullName = computed(() => {
               <div class="h-px bg-white/5 my-1" />
 
               <button
-                class="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-black text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all uppercase tracking-wider"
+                class="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-black text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all uppercase tracking-wider disabled:opacity-50"
+                :disabled="isLoggingOut"
                 @click="handleLogout"
               >
-                <i class="pi pi-power-off text-xs" />
-                Terminate Session
+                <i
+                  :class="
+                    isLoggingOut ? 'pi pi-spin pi-spinner' : 'pi pi-power-off'
+                  "
+                  class="text-xs"
+                />
+                {{ isLoggingOut ? "Closing Nodes..." : "Terminate Session" }}
               </button>
             </div>
           </Transition>

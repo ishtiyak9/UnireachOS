@@ -7,6 +7,7 @@ const createUserSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
+  phone: z.string().min(1),
   role: z.enum(["STUDENT", "AGENT", "STAFF"]),
   roleId: z.string().uuid().optional(),
   groupIds: z.array(z.string().uuid()).optional(),
@@ -34,10 +35,21 @@ export default defineEventHandler(async (event) => {
   // Resolve Role ID
   let targetRoleId = data.roleId;
 
-  if (!targetRoleId) {
+  if (targetRoleId) {
+    const roleCheck = await prisma.systemRole.findUnique({
+      where: { id: targetRoleId },
+    });
+    if (roleCheck?.code === "super_admin") {
+      throw createError({
+        statusCode: 403,
+        message:
+          "GOD MODE VIOLATION: There can be only one. You cannot clone the Architect.",
+      });
+    }
+  } else {
     let roleCode = "applicant_standard";
     if (data.role === "AGENT") roleCode = "agent_standard";
-    if (data.role === "STAFF") roleCode = "staff_standard";
+    if (data.role === "STAFF") roleCode = "counselor";
 
     const roleFn = await prisma.systemRole.findUnique({
       where: { code: roleCode },
@@ -54,7 +66,28 @@ export default defineEventHandler(async (event) => {
 
   const hashedPassword = await hash(data.password);
 
+  // corporate ID Generator
+  let corporateId = null;
+  if (data.role === "STAFF") {
+    corporateId = await generateId.generateCorporateId(
+      prisma.staffProfile,
+      "employeeId",
+      "URS"
+    );
+  } else if (data.role === "AGENT") {
+    corporateId = await generateId.generateCorporateId(
+      prisma.agentProfile,
+      "agentCode",
+      "URP"
+    );
+  }
+
   // Create User with appropriate profile
+  // Note: Prisma create is atomic but ID generation is a separate query.
+  // In high concurrency, duplicates might occur (rare for this admin-only endpoint).
+  // A robust solution would use a sequence table or retry logic.
+  // For now, simple pre-fetch is acceptable.
+
   const user = await prisma.user.create({
     data: {
       email: data.email,
@@ -63,49 +96,59 @@ export default defineEventHandler(async (event) => {
       status: "ACTIVE", // Admin-created users are pre-verified
       createdById: (session.user as any).id,
 
-      // Conditional Profile Creation
-      ...(data.role === "STUDENT" && {
-        applicantProfile: {
-          create: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            // AUTO-ASSIGN: If a staff/admin creates a student, they become the responsible owner
-            ...((session.user as any).roleCategory === "SYSTEM" ||
-            (session.user as any).roleCategory === "STAFF"
-              ? { assignedStaffId: (session.user as any).profile?.id }
-              : {}),
-          },
-        },
-      }),
+      applicantProfile:
+        data.role === "STUDENT"
+          ? {
+              create: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                phone: data.phone,
+                userId: undefined, // Prisma handles relation
+                createdById: (session.user as any).id,
+                // AUTO-ASSIGN: If a staff/admin creates a student, they become the responsible owner
+                ...(((session.user as any).roleCategory === "SYSTEM" ||
+                  (session.user as any).roleCategory === "STAFF") &&
+                (session.user as any).profile?.id
+                  ? { assignedStaffId: (session.user as any).profile?.id }
+                  : {}),
+              },
+            }
+          : undefined,
 
-      ...(data.role === "AGENT" && {
-        agentProfile: {
-          create: {
-            id: randomUUID(),
-            agencyName: data.firstName,
-            primaryEmail: data.email,
-          },
-        },
-      }),
+      agentProfile:
+        data.role === "AGENT"
+          ? {
+              create: {
+                // id: randomUUID(), // Let Prisma default uuid() handle ID
+                agencyName: `${data.firstName} ${data.lastName}`, // Default Agency Name
+                primaryEmail: data.email,
+                agentCode: corporateId,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                primaryPhone: data.phone,
+                phone: data.phone,
+              },
+            }
+          : undefined,
 
-      ...(data.role === "STAFF" && {
-        staffProfile: {
-          create: {
-            firstName: data.firstName,
-            lastName: data.lastName,
-          },
-        },
-      }),
+      staffProfile:
+        data.role === "STAFF"
+          ? {
+              create: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                employeeId: corporateId,
+              },
+            }
+          : undefined,
 
       // Instance Permissions (Neural Add-ons)
-      ...(data.groupIds &&
-        data.groupIds.length > 0 && {
-          groups: {
-            createMany: {
-              data: data.groupIds.map((gid) => ({ groupId: gid })),
-            },
-          },
-        }),
+      groups:
+        data.groupIds && data.groupIds.length > 0
+          ? {
+              create: data.groupIds.map((gid) => ({ groupId: gid })),
+            }
+          : undefined,
     },
   });
 

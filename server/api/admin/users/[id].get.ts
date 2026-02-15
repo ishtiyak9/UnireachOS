@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
       applicantProfile: {
         include: {
           agent: true,
+          assignedStaff: true,
           addresses: true,
           emergencyContacts: true,
           educationHistory: true,

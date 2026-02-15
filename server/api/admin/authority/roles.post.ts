@@ -20,6 +20,14 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const data = roleSchema.parse(body);
 
+    // Guard: Absolutely no one can use the 'super_admin' code
+    if (data.code === "super_admin") {
+      throw createError({
+        statusCode: 403,
+        message: "GOD MODE VIOLATION: The 'super_admin' archetype is reserved.",
+      });
+    }
+
     if (data.id) {
       // Guard: Super Admin is Immutable
       const roleToEdit = await prisma.systemRole.findUnique({
@@ -33,7 +41,7 @@ export default defineEventHandler(async (event) => {
       }
 
       // Update with transaction to sync groups
-      return await prisma.$transaction(async (tx) => {
+      return await prisma.$transaction(async (tx: any) => {
         const updated = await tx.systemRole.update({
           where: { id: data.id },
           data: {

@@ -1,7 +1,13 @@
 import { computed } from "vue";
 
-export const useProfile = () => {
+export const useProfile = (targetUserId?: any) => {
   const { user: sessionUser } = useUserSession();
+
+  // Resolve ID: explicit target or current session
+  const userId = computed(() => {
+    if (targetUserId) return toValue(targetUserId);
+    return sessionUser.value?.id;
+  });
 
   // Shared state for the profile
   const {
@@ -10,11 +16,8 @@ export const useProfile = () => {
     error,
     refresh,
   } = useFetch(
-    () =>
-      sessionUser.value?.id
-        ? `/api/applicants/${sessionUser.value.id}/profile`
-        : null,
-    { key: "applicant-profile" } // Shared key for application-wide state
+    () => (userId.value ? `/api/applicants/${userId.value}/profile` : null),
+    { key: computed(() => `applicant-profile-${userId.value || "guest"}`) }
   );
 
   const profile = computed(() => profileResponse.value?.data || {});

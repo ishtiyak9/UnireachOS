@@ -7,6 +7,7 @@ const registerSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
+  phone: z.string().min(1),
   type: z.enum(["STUDENT", "EXPATRIATE", "AGENT"]).optional(),
 });
 
@@ -59,6 +60,7 @@ export default defineEventHandler(async (event) => {
           create: {
             firstName: validated.firstName,
             lastName: validated.lastName,
+            phone: validated.phone,
             type: "STUDENT", // Enforcing Student-First policy
           },
         },

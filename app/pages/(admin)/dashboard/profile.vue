@@ -26,6 +26,17 @@ const form = reactive({
   agencyName: user.value?.profile?.agencyName || "",
   department: user.value?.profile?.department || "",
   position: user.value?.profile?.position || "",
+  notificationPreferences: {
+    emailEnabled: user.value?.notificationPreferences?.emailEnabled ?? true,
+    pushEnabled: user.value?.notificationPreferences?.pushEnabled ?? true,
+    systemEnabled: user.value?.notificationPreferences?.systemEnabled ?? true,
+    agentEnabled: user.value?.notificationPreferences?.agentEnabled ?? true,
+    applicantEnabled:
+      user.value?.notificationPreferences?.applicantEnabled ?? true,
+    leadEnabled: user.value?.notificationPreferences?.leadEnabled ?? true,
+    marketingEnabled:
+      user.value?.notificationPreferences?.marketingEnabled ?? false,
+  },
 });
 
 const saveProfile = async () => {
@@ -95,6 +106,27 @@ const userInitials = computed(() => {
             >
               {{ user?.roleName }}
             </span>
+
+            <!-- Corporate / Identity ID -->
+            <span
+              v-if="user?.profile?.employeeId"
+              class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-black text-blue-400 uppercase tracking-widest"
+            >
+              ID: {{ user.profile.employeeId }}
+            </span>
+            <span
+              v-else-if="user?.profile?.agentCode"
+              class="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-black text-purple-400 uppercase tracking-widest"
+            >
+              CODE: {{ user.profile.agentCode }}
+            </span>
+            <span
+              v-else-if="user?.profile?.passportNo"
+              class="px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-[10px] font-black text-orange-400 uppercase tracking-widest"
+            >
+              PPT: {{ user.profile.passportNo }}
+            </span>
+
             <span
               class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-surface-400 uppercase tracking-widest"
             >
@@ -266,6 +298,144 @@ const userInitials = computed(() => {
           :disabled="isSaving"
           @click="saveProfile"
           class="bg-primary-500! text-black! border-0! text-[10px]! font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl shadow-lg shadow-primary-500/20"
+        />
+      </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div
+      class="bg-surface-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 space-y-8"
+    >
+      <div class="flex items-center gap-3 border-b border-white/5 pb-4">
+        <i class="pi pi-bell text-primary-500" />
+        <h2 class="text-lg font-black text-white uppercase tracking-wider">
+          Notification Preferences
+        </h2>
+      </div>
+
+      <div class="md:col-span-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+          <!-- Channels -->
+          <div class="space-y-4">
+            <h3
+              class="text-xs font-black text-surface-400 uppercase tracking-widest mb-4"
+            >
+              Channels
+            </h3>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">
+                  Email Notifications
+                </div>
+                <div class="text-xs text-surface-400">
+                  Receive copy via email
+                </div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.emailEnabled"
+              />
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">
+                  Push Notifications
+                </div>
+                <div class="text-xs text-surface-400">
+                  Receive in-app alerts
+                </div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.pushEnabled"
+              />
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">
+                  Marketing & Promos
+                </div>
+                <div class="text-xs text-surface-400">
+                  Receive feature updates
+                </div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.marketingEnabled"
+              />
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="space-y-4">
+            <h3
+              class="text-xs font-black text-surface-400 uppercase tracking-widest mb-4"
+            >
+              Categories
+            </h3>
+            <div
+              v-if="user?.permissions?.includes('notification:view_system')"
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">System Alerts</div>
+                <div class="text-xs text-surface-400">
+                  Maintenance & Security
+                </div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.systemEnabled"
+              />
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Agent Updates</div>
+                <div class="text-xs text-surface-400">Partner activities</div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.agentEnabled"
+              />
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">
+                  Applicant Updates
+                </div>
+                <div class="text-xs text-surface-400">Student applications</div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.applicantEnabled"
+              />
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-surface-950/50 rounded-xl border border-white/5"
+            >
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Lead Updates</div>
+                <div class="text-xs text-surface-400">New inquiries</div>
+              </div>
+              <ToggleSwitch
+                v-model="form.notificationPreferences.leadEnabled"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-6 border-t border-white/5">
+        <Button
+          :label="isSaving ? 'Synchronizing...' : 'Update Preferences'"
+          :icon="isSaving ? 'pi pi-spin pi-spinner' : 'pi pi-check-circle'"
+          :disabled="isSaving"
+          @click="saveProfile"
+          class="bg-surface-100! text-surface-950! border-0! text-[10px]! font-black uppercase tracking-[0.2em] px-8 py-4 rounded-2xl shadow-lg hover:bg-white! transition-colors"
         />
       </div>
     </div>

@@ -28,10 +28,28 @@ export default defineEventHandler(async (event) => {
     session.user.roleCode || session.user.role || ""
   );
 
-  // Rule: Must be uploader (applicant) OR a staff member
   const isOwner = doc.uploaderId === session.user.id;
+  let isAssignedAgent = false;
 
-  if (!isOwner && !isStaff) {
+  if (!isStaff && !isOwner) {
+    // Check if uploader is the assigned agent
+    const agentProfile = await prisma.agentProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+
+    if (agentProfile) {
+      const applicant = await prisma.applicantProfile.findUnique({
+        where: { id: doc.applicantId },
+        select: { agentId: true },
+      });
+      if (applicant?.agentId === agentProfile.id) {
+        isAssignedAgent = true;
+      }
+    }
+  }
+
+  if (!isOwner && !isStaff && !isAssignedAgent) {
     throw createError({
       statusCode: 403,
       message: "You don't have permission to view this document.",

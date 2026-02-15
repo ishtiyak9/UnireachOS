@@ -11,22 +11,27 @@ export default defineEventHandler(async (event) => {
     const category = query.category as string | undefined;
     const categories = query.categories as string[] | string | undefined;
 
-    const where: any = { AND: [] };
+    const where: any = {};
+    const andFilters: any[] = [];
 
     if (categories) {
       const categoryList = Array.isArray(categories)
         ? categories
-        : [categories];
-      where.AND.push({ role: { category: { in: categoryList } } });
+        : (categories as string).split(",");
+      andFilters.push({ role: { category: { in: categoryList } } });
     } else if (category) {
-      where.AND.push({ role: { category } });
+      andFilters.push({ role: { category } });
     }
 
     // IMMUNITY: Hide Super Admin ghost node from everyone else
-    if (session.user.roleCode !== "super_admin") {
-      where.AND.push({
+    if ((session.user as any).roleCode !== "super_admin") {
+      andFilters.push({
         role: { NOT: { code: "super_admin" } },
       });
+    }
+
+    if (andFilters.length > 0) {
+      where.AND = andFilters;
     }
 
     const users = await prisma.user.findMany({
@@ -53,7 +58,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    return users.map((user) => {
+    return users.map((user: any) => {
       let ownerName = "Direct Enrollment";
       let ownerType = "System";
       let firstName = "Unknown";
@@ -91,6 +96,11 @@ export default defineEventHandler(async (event) => {
         }
       }
 
+      const applicantProfile = user.applicantProfile as any;
+      const assignedStaffName = applicantProfile?.assignedStaff
+        ? `${applicantProfile.assignedStaff.firstName} ${applicantProfile.assignedStaff.lastName}`
+        : null;
+
       return {
         id: user.id,
         email: user.email,
@@ -103,6 +113,7 @@ export default defineEventHandler(async (event) => {
         agentName,
         ownerName,
         ownerType,
+        assignedStaffName,
         avatar: firstName[0]?.toUpperCase() || user.email[0].toUpperCase(),
         createdAt: user.createdAt,
         lastLogin: user.lastLogin,

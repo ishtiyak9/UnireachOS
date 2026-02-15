@@ -12,6 +12,29 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Missing user ID" });
   }
 
+  // --- GOD MODE PROTECTION START ---
+  const targetUser = await prisma.user.findUnique({
+    where: { id },
+    select: { id: true, role: { select: { code: true } } },
+  });
+
+  if (!targetUser) {
+    throw createError({ statusCode: 404, message: "User node not declared." });
+  }
+
+  if (targetUser.role.code === "super_admin") {
+    // Strict Lock: Even other admins cannot touch this record.
+    // Only the user themselves can edit (if session implies self-edit).
+    // Assuming session.user.id is available.
+    if ((session.user as any).id !== targetUser.id) {
+      throw createError({
+        statusCode: 403,
+        message: "GOD MODE ACTIVE: The Architect cannot be modified.",
+      });
+    }
+  }
+  // --- GOD MODE PROTECTION END ---
+
   const body = await readBody(event);
 
   try {
@@ -36,6 +59,24 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    // Direct Permission Group Assignment
+    if (body.groupIds) {
+      // 1. Clear existing groups
+      await prisma.userPermissionGroup.deleteMany({
+        where: { userId: id },
+      });
+
+      // 2. Assign new groups
+      if (Array.isArray(body.groupIds) && body.groupIds.length > 0) {
+        await prisma.userPermissionGroup.createMany({
+          data: body.groupIds.map((gid: string) => ({
+            userId: id,
+            groupId: gid,
+          })),
+        });
+      }
+    }
+
     // If updating agent profile specifically
     if (body.agentProfile) {
       const {
@@ -46,8 +87,24 @@ export default defineEventHandler(async (event) => {
         enquiries,
         createdAt,
         updatedAt,
+        agentCode: providedCode,
         ...profileData
       } = body.agentProfile;
+
+      // Check if we need to auto-generate code (if not provided and doesn't exist)
+      let finalCode = providedCode;
+      if (!finalCode) {
+        const existing = await prisma.agentProfile.findUnique({
+          where: { userId: id },
+        });
+        if (!existing?.agentCode) {
+          finalCode = await generateId.generateCorporateId(
+            prisma.agentProfile,
+            "agentCode",
+            "URP"
+          );
+        }
+      }
 
       await prisma.agentProfile.upsert({
         where: { userId: id },
@@ -55,9 +112,11 @@ export default defineEventHandler(async (event) => {
           ...profileData,
           userId: id,
           agencyName: profileData.agencyName || "New Agency",
+          agentCode: finalCode,
         },
         update: {
           ...profileData,
+          ...(finalCode ? { agentCode: finalCode } : {}),
         },
       });
 
@@ -68,6 +127,55 @@ export default defineEventHandler(async (event) => {
           data: { email: profileData.primaryEmail },
         });
       }
+    }
+
+    // If updating staff profile specifically
+    if (body.staffProfile) {
+      const {
+        id: profileId,
+        userId: profileUserId,
+        user: profileUser,
+        leads,
+        leadEvents,
+        applications,
+        assignedApplicants,
+        unlockRequests,
+        documentUnlockRequests,
+        createdAt,
+        updatedAt,
+        employeeId: providedId,
+        ...profileData
+      } = body.staffProfile;
+
+      // Check if we need to auto-generate ID (if not provided and doesn't exist)
+      let finalId = providedId;
+      if (!finalId) {
+        const existing = await prisma.staffProfile.findUnique({
+          where: { userId: id },
+        });
+        if (!existing?.employeeId) {
+          finalId = await generateId.generateCorporateId(
+            prisma.staffProfile,
+            "employeeId",
+            "URS"
+          );
+        }
+      }
+
+      await prisma.staffProfile.upsert({
+        where: { userId: id },
+        create: {
+          ...profileData,
+          userId: id,
+          firstName: profileData.firstName || "Staff",
+          lastName: profileData.lastName || "Member",
+          employeeId: finalId,
+        },
+        update: {
+          ...profileData,
+          ...(finalId ? { employeeId: finalId } : {}),
+        },
+      });
     }
 
     // If updating applicant profile specifically
@@ -217,6 +325,7 @@ export default defineEventHandler(async (event) => {
     const updatedUser = await prisma.user.findUnique({
       where: { id },
       include: {
+        staffProfile: true,
         agentProfile: true,
         applicantProfile: {
           include: {

@@ -11,6 +11,29 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Missing user ID" });
   }
 
+  // --- GOD MODE PROTECTION START ---
+  const targetUserCheck = await prisma.user.findUnique({
+    where: { id },
+    select: { id: true, role: { select: { code: true } } },
+  });
+
+  if (!targetUserCheck) {
+    // If user not found, we might proceed to see if downstream handles it, but safer to error early
+    // Or let the logic flow. However, for protection, we need to know the role.
+    throw createError({ statusCode: 404, message: "Node not found." });
+  }
+
+  if (targetUserCheck.role.code === "super_admin") {
+    // Strict Lock: Even other admins cannot touch this record.
+    if ((session.user as any).id !== targetUserCheck.id) {
+      throw createError({
+        statusCode: 403,
+        message: "GOD MODE ACTIVE: The Architect cannot be modified.",
+      });
+    }
+  }
+  // --- GOD MODE PROTECTION END ---
+
   const body = await readBody(event);
   // body should contain partial user or applicantProfile data
 

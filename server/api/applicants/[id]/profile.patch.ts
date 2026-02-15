@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { applicantProfileSchema } from "../../../utils/schemas/applicant";
-// prisma is auto-imported in Nitro if exported from server/utils
-// If explicit import needed: import { prisma } from "../../../utils/db";
+import { notifyApplicantChange } from "../../../utils/notifications";
 
 async function syncRelation(
   tx: any,
@@ -13,32 +12,51 @@ async function syncRelation(
 
   const keepIds = newItems.filter((item) => item.id).map((item) => item.id);
 
-  // Delete items not in the new list
   await model.deleteMany({
     where: {
       applicantId,
-      id: { notIn: keepIds }, // Delete excluded IDs
+      id: { notIn: keepIds },
     },
   });
 
-  // Upsert items
   for (const item of newItems) {
     if (item.id) {
-      // Update
       const { id, applicantId: _aid, ...data } = item;
       await model.update({
         where: { id },
         data: data,
       });
     } else {
-      // Create
-      const { id, ...data } = item; // remove id if undefined/empty
+      const { id, ...data } = item;
       await model.create({
         data: {
           ...data,
           applicantId,
         },
       });
+    }
+  }
+}
+
+async function triggerNotifications(event: any, applicantId: string) {
+  const session = await getUserSession(event);
+  const user = session?.user as any;
+
+  if (user?.roleCategory === "AGENT") {
+    const updaterName =
+      `${user.profile?.firstName || ""} ${
+        user.profile?.lastName || ""
+      }`.trim() || user.email;
+
+    try {
+      await notifyApplicantChange({
+        applicantId,
+        updaterId: user.id,
+        updaterName,
+        type: "PROFILE_UPDATE",
+      });
+    } catch (e) {
+      console.error("Failed to trigger notifications for profile update:", e);
     }
   }
 }
@@ -57,7 +75,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // --- PERMISSIONS ---
   const isSelf = session.user.id === id;
   const isAdmin = ["super_admin", "admin", "official"].includes(
     (session.user as any).roleCode || (session.user as any).role || ""
@@ -65,7 +82,6 @@ export default defineEventHandler(async (event) => {
 
   let isAssignedAgent = false;
   if (!isSelf && !isAdmin) {
-    // Basic Agent Check
     const agentProfile = await prisma.agentProfile.findUnique({
       where: { userId: session.user.id },
       select: { id: true },
@@ -78,10 +94,6 @@ export default defineEventHandler(async (event) => {
       });
       if (applicant?.agentId === agentProfile.id) {
         isAssignedAgent = true;
-        // Agents can't edit locked profiles either?
-        if (applicant.isLocked) {
-          throw createError({ statusCode: 403, message: "Profile is locked." });
-        }
       }
     }
   }
@@ -90,7 +102,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, message: "Forbidden" });
   }
 
-  if (isSelf) {
+  // Block editing if locked (unless Admin/Staff)
+  if (!isAdmin) {
     const currentProfile = await prisma.applicantProfile.findUnique({
       where: { userId: id },
       select: { isLocked: true },
@@ -100,29 +113,16 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // --- VALIDATION ---
   const body = await readBody(event);
-  console.log("RAW BODY RECEIVED:", JSON.stringify(body, null, 2));
-
-  // Zod coerce date handles string->Date conversion automatically
   const result = await applicantProfileSchema.safeParseAsync(body);
 
   if (!result.success) {
-    console.error(
-      "ZOD VALIDATION FAILED for profile update:",
-      JSON.stringify(result.error.issues, null, 2)
-    );
     throw createError({
       statusCode: 400,
       message: "Validation Failed",
       data: result.error.issues,
     });
   }
-
-  console.log(
-    "ZOD VALIDATION SUCCESS. Parsed Data Keys:",
-    Object.keys(result.data)
-  );
 
   const {
     addresses,
@@ -133,11 +133,8 @@ export default defineEventHandler(async (event) => {
     ...mainProfile
   } = result.data;
 
-  // --- TRANSACTION ---
-  return await prisma.$transaction(async (tx) => {
-    // 1. Upsert Main Profile
-    console.log("Upserting ApplicantProfile for userId:", id);
-    const profile = await tx.applicantProfile.upsert({
+  const profile = await prisma.$transaction(async (tx) => {
+    const p = await tx.applicantProfile.upsert({
       where: { userId: id },
       update: mainProfile,
       create: {
@@ -148,40 +145,17 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    console.log("Profile Upserted. ID:", profile.id);
+    await syncRelation(tx, tx.applicantAddress, p.id, addresses);
+    await syncRelation(tx, tx.emergencyContact, p.id, emergencyContacts);
+    await syncRelation(tx, tx.educationHistory, p.id, educationHistory);
+    await syncRelation(tx, tx.workExperience, p.id, workExperience);
+    await syncRelation(tx, tx.englishProficiency, p.id, englishProficiency);
 
-    // 2. Sync Nested Relations
-    console.log("Syncing relations for:", profile.id);
-    console.log("WE Count to sync:", workExperience?.length || 0);
-    console.log("EP Count to sync:", englishProficiency?.length || 0);
-
-    await syncRelation(tx, tx.applicantAddress, profile.id, addresses);
-    await syncRelation(tx, tx.emergencyContact, profile.id, emergencyContacts);
-    await syncRelation(tx, tx.educationHistory, profile.id, educationHistory);
-
-    try {
-      console.log("Running WE sync...");
-      await syncRelation(tx, tx.workExperience, profile.id, workExperience);
-      console.log("WE sync done.");
-    } catch (e) {
-      console.error("WE Sync Error:", e);
-      throw e;
-    }
-
-    try {
-      console.log("Running EP sync...");
-      await syncRelation(
-        tx,
-        tx.englishProficiency,
-        profile.id,
-        englishProficiency
-      );
-      console.log("EP sync done.");
-    } catch (e) {
-      console.error("EP Sync Error:", e);
-      throw e;
-    }
-
-    return profile;
+    return p;
   });
+
+  // Post-Success Notification Trigger
+  await triggerNotifications(event, id);
+
+  return profile;
 });

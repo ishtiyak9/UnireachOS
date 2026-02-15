@@ -48,6 +48,31 @@ const menuItems: NavigationSection[] = [
     ],
   },
   {
+    label: "Allied Services",
+    items: [
+      {
+        label: "Accommodations",
+        icon: "pi pi-home",
+        to: "/partner-portal/services/accommodations",
+      },
+      {
+        label: "Travel Support",
+        icon: "pi pi-globe",
+        to: "/partner-portal/services/travel",
+      },
+      {
+        label: "Health Insurance",
+        icon: "pi pi-heart-fill",
+        to: "/partner-portal/services/health-insurance",
+      },
+      {
+        label: "Bank Loans",
+        icon: "pi pi-money-bill",
+        to: "/partner-portal/services/bank-loans",
+      },
+    ],
+  },
+  {
     label: "Strategic Assets",
     items: [
       {

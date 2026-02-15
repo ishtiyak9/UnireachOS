@@ -27,11 +27,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // Guard: Cannot re-assign someone to be a Super Admin
+  // Guard: Cannot re-assign someone to be a Super Admin
   if (role.code === "super_admin") {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       message:
-        "Neural Core Violation: Only one Super Admin can exist in the matrix.",
+        "GOD MODE VIOLATION: There can be only one. The Architect cannot be replicated.",
     });
   }
 
@@ -49,7 +50,7 @@ export default defineEventHandler(async (event) => {
   if (user.role.code === "super_admin") {
     throw createError({
       statusCode: 403,
-      message: "IMMUNITY ACTIVE: Neural Core cannot be reconfigured.",
+      message: "IMMUNITY ACTIVE: The Architect's role is immutable.",
     });
   }
 

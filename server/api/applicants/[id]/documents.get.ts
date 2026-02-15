@@ -11,13 +11,32 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Missing Identifier" });
   }
 
-  // Permission Check (Self or Staff)
+  // --- PERMISSIONS ---
   const isSelf = session.user.id === id;
   const isAdmin = ["super_admin", "admin", "official"].includes(
     session.user.roleCode || session.user.role || ""
   );
 
+  let isAssignedAgent = false;
+
   if (!isSelf && !isAdmin) {
+    // Agent Check
+    const agentProfile = await prisma.agentProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+    if (agentProfile) {
+      const applicant = await prisma.applicantProfile.findUnique({
+        where: { userId: id },
+        select: { agentId: true },
+      });
+      if (applicant?.agentId === agentProfile.id) {
+        isAssignedAgent = true;
+      }
+    }
+  }
+
+  if (!isSelf && !isAdmin && !isAssignedAgent) {
     throw createError({ statusCode: 403, message: "Forbidden" });
   }
 

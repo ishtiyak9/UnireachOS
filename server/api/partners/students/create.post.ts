@@ -7,6 +7,7 @@ const createStudentSchema = z.object({
   password: z.string().min(8),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
+  phone: z.string().min(1),
 });
 
 export default defineEventHandler(async (event) => {
@@ -68,7 +69,9 @@ export default defineEventHandler(async (event) => {
         create: {
           firstName: data.firstName,
           lastName: data.lastName,
+          phone: data.phone,
           agentId: agentProfileId, // Establish Chain of Custody (Partner Ownership)
+          createdById: (session.user as any).id, // Track who initialized this profile
         },
       },
     },

@@ -30,6 +30,11 @@ const menuItems = [
     icon: "pi pi-file-edit",
     command: () => editUser(selectedUser.value),
   },
+  {
+    label: "Assign Counselor",
+    icon: "pi pi-user-plus",
+    command: () => openAssignDialog(selectedUser.value),
+  },
   { separator: true },
   {
     label: "Eliminate Node",
@@ -100,6 +105,7 @@ const newUser = reactive({
   firstName: "",
   lastName: "",
   email: "",
+  phone: "",
   password: "",
   role: "STUDENT",
 });
@@ -108,13 +114,20 @@ const openCreateDialog = () => {
   newUser.firstName = "";
   newUser.lastName = "";
   newUser.email = "";
+  newUser.phone = "";
   newUser.password = "ChangeMe123!";
   newUser.role = "STUDENT";
   showCreateDialog.value = true;
 };
 
 const addUser = async () => {
-  if (!newUser.email || !newUser.password || !newUser.firstName) return;
+  if (
+    !newUser.email ||
+    !newUser.password ||
+    !newUser.firstName ||
+    !newUser.phone
+  )
+    return;
   creatingUser.value = true;
   try {
     await $fetch("/api/admin/users/create", { method: "POST", body: newUser });
@@ -133,6 +146,57 @@ const addUser = async () => {
     });
   } finally {
     creatingUser.value = false;
+  }
+};
+
+// Assignment Logic
+const showAssignDialog = ref(false);
+const assigning = ref(false);
+const targetStaff = ref(null);
+
+const { data: staffResponse } = useFetch<any>("/api/admin/staff");
+const staffOptions = computed(() => {
+  if (!staffResponse.value?.data) return [];
+  // Only individual staff for now, filtering teams out if needed or handling both
+  return staffResponse.value.data.filter((s: any) => s.type === "INDIVIDUAL");
+});
+
+const openAssignDialog = (user: any) => {
+  selectedUser.value = user;
+  targetStaff.value = null;
+  showAssignDialog.value = true;
+};
+
+const assignCounselor = async () => {
+  if (!targetStaff.value || !selectedUser.value) return;
+
+  assigning.value = true;
+  try {
+    await $fetch("/api/admin/applicants/assign", {
+      method: "POST",
+      body: {
+        applicantId: selectedUser.value.id,
+        staffProfileId: targetStaff.value,
+      },
+    });
+
+    toast.add({
+      severity: "success",
+      summary: "Assignment Synchronized",
+      detail: "Counselor successfully linked to student node.",
+      life: 3000,
+    });
+
+    showAssignDialog.value = false;
+    refreshUsers();
+  } catch (e: any) {
+    toast.add({
+      severity: "error",
+      summary: "Protocol Failed",
+      detail: e.data?.message || e.message,
+    });
+  } finally {
+    assigning.value = false;
   }
 };
 
@@ -345,6 +409,25 @@ const getStatusBadge = (status: string) => {
         </template>
       </Column>
 
+      <Column header="Assigned Official" sortable field="assignedStaffName">
+        <template #body="{ data }">
+          <div v-if="pending" class="text-xs text-surface-500 font-mono">
+            <Skeleton width="6rem" height="1rem" />
+          </div>
+          <div v-else class="flex flex-col">
+            <span
+              v-if="data.assignedStaffName"
+              class="text-xs text-white font-black uppercase tracking-tighter"
+            >
+              {{ data.assignedStaffName }}
+            </span>
+            <span v-else class="text-[9px] text-surface-600 font-bold uppercase"
+              >Unassigned</span
+            >
+          </div>
+        </template>
+      </Column>
+
       <Column field="status" header="Status" sortable>
         <template #body="{ data }">
           <Skeleton v-if="pending" width="4rem" height="1.5rem" />
@@ -421,6 +504,16 @@ const getStatusBadge = (status: string) => {
         </div>
         <div>
           <label class="block text-xs font-bold text-surface-400 mb-1"
+            >WhatsApp Number</label
+          >
+          <InputText
+            v-model="newUser.phone"
+            class="w-full"
+            placeholder="8801XXXXXXXXX (WhatsApp)"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-surface-400 mb-1"
             >Initial Access Key</label
           >
           <InputText v-model="newUser.password" class="w-full" />
@@ -440,6 +533,69 @@ const getStatusBadge = (status: string) => {
             icon="pi pi-check"
             :loading="creatingUser"
             @click="addUser"
+          />
+        </div>
+      </template>
+    </Dialog>
+
+    <!-- Assignment Dialog -->
+    <Dialog
+      v-model:visible="showAssignDialog"
+      header="Assign Strategic Counselor"
+      class="w-full max-w-sm backdrop-blur-xl bg-surface-900/90 border border-white/10"
+      modal
+    >
+      <div class="space-y-4 mt-2">
+        <div
+          class="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center gap-4"
+        >
+          <Avatar
+            :label="selectedUser?.avatar"
+            shape="circle"
+            class="bg-primary-500/10 text-primary-500 font-bold"
+          />
+          <div>
+            <p class="text-xs font-black text-white uppercase italic">
+              {{ selectedUser?.firstName }} {{ selectedUser?.lastName }}
+            </p>
+            <p class="text-[9px] text-surface-500 font-bold tracking-tight">
+              Awaiting Counselor Linkage
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label
+            class="text-[10px] font-black uppercase tracking-widest text-surface-400"
+            >Select Official</label
+          >
+          <Dropdown
+            v-model="targetStaff"
+            :options="staffOptions"
+            optionLabel="label"
+            optionValue="id"
+            placeholder="Search Registry..."
+            class="w-full bg-surface-950/50! border-white/10! rounded-xl!"
+            filter
+          />
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="flex justify-end gap-2 mt-4">
+          <Button
+            label="Abort"
+            text
+            severity="secondary"
+            class="text-[10px]! font-black! uppercase! tracking-widest!"
+            @click="showAssignDialog = false"
+          />
+          <Button
+            label="Establish Link"
+            icon="pi pi-link"
+            class="bg-primary-500! border-primary-500! text-black! font-black! uppercase! tracking-widest! text-[10px]!"
+            :loading="assigning"
+            @click="assignCounselor"
           />
         </div>
       </template>

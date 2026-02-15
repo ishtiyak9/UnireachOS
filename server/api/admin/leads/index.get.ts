@@ -9,25 +9,25 @@ export default defineEventHandler(async (event) => {
   try {
     // Highly Optimized: Use session data directly to avoid the redundant DB roundtrip.
     // The roleCode and profile are already persisted in the encrypted session.
-    const userRole = session.user.roleCode;
+    const userRole = (session.user as any).roleCode;
     const staffProfile = (session.user as any).profile;
 
     // 2. Build Filter Logic (Neural Shield)
-    const where: any = {};
+    const where: any = { AND: [] };
     const isSuperAdmin = userRole === "super_admin";
 
     // If not a Super Admin, restrict to their own assignments
     if (!isSuperAdmin) {
       if (staffProfile && staffProfile.id) {
-        where.assignedCounselorId = staffProfile.id;
+        where.AND.push({ assignedCounselorId: staffProfile.id });
       } else {
-        where.id = "none";
+        where.AND.push({ id: "none" });
       }
     }
 
     // Parallelize if we have complex dashboard needs, but for now single findMany is fine
     const leads = await prisma.lead.findMany({
-      where,
+      where: where.AND.length > 0 ? where : {},
       include: {
         assignedCounselor: {
           select: {

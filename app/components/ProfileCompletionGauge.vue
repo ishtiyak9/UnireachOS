@@ -1,22 +1,35 @@
 <script setup lang="ts">
-const { completionPercentage, nextAction, pending } = useProfile();
+const props = withDefaults(
+  defineProps<{
+    variant?: "compact" | "full";
+    userId?: string;
+    tabStateKey?: string;
+    navigationPath?: string;
+  }>(),
+  {
+    tabStateKey: "activeProfileTab",
+    navigationPath: "/applicant-portal/profile",
+  }
+);
 
-defineProps<{
-  variant?: "compact" | "full";
-}>();
+const { completionPercentage, nextAction, pending } = useProfile(
+  computed(() => props.userId)
+);
 
-const activeTab = useState("activeProfileTab", () => 0);
+const activeTab = useState(props.tabStateKey, () => 0);
 
 const navigateToTab = (tabIndex: number) => {
   activeTab.value = tabIndex;
-  navigateTo("/applicant-portal/profile");
+  if (props.navigationPath) {
+    navigateTo(props.navigationPath);
+  }
 };
 </script>
 
 <template>
   <div v-if="!pending" class="flex items-center gap-6 group/guage">
     <!-- The Gauge Circular UI -->
-    <div class="relative w-16 h-16 flex-shrink-0">
+    <div class="relative w-16 h-16 shrink-0">
       <svg class="w-16 h-16 transform -rotate-90">
         <circle
           cx="32"

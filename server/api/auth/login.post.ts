@@ -112,6 +112,22 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    // Fetch Notification Preferences
+    let notifPrefs = await prisma.notificationPreference.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!notifPrefs) {
+      // Auto-initialize preferences if missing
+      notifPrefs = await prisma.notificationPreference.create({
+        data: {
+          userId: user.id,
+          // Defaults are handled by schema:
+          // email: true, push: true, system: true, agent: true, applicant: true, lead: true, marketing: false
+        },
+      });
+    }
+
     // Assemble dynamic identity object
     const userData = {
       id: user.id,
@@ -122,6 +138,7 @@ export default defineEventHandler(async (event) => {
       permissions: unifiedPermissions,
       status: user.status,
       profile: profileData,
+      notificationPreferences: notifPrefs,
     };
 
     // Set high-authority encrypted session

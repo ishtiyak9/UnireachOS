@@ -19,17 +19,58 @@ const menuItems = [
     to: "/applicant-portal/applications",
     icon: "pi pi-briefcase",
   },
+  {
+    label: "Services",
+    icon: "pi pi-th-large",
+    children: [
+      {
+        label: "Accommodations",
+        to: "/applicant-portal/services/accommodations",
+        icon: "pi pi-home",
+      },
+      {
+        label: "Travel Support",
+        to: "/applicant-portal/services/travel",
+        icon: "pi pi-globe",
+      },
+      {
+        label: "Health Insurance",
+        to: "/applicant-portal/services/health-insurance",
+        icon: "pi pi-heart-fill",
+      },
+      {
+        label: "Bank Loans",
+        to: "/applicant-portal/services/bank-loans",
+        icon: "pi pi-money-bill",
+      },
+    ],
+  },
 ];
 
-const isActive = (path: string) => {
+const isActive = (path?: string) => {
+  if (!path) return false;
   if (path === "/applicant-portal") return route.path === path;
   return route.path.startsWith(path);
 };
 
+const toast = useToast();
+const isLoggingOut = ref(false);
 const handleLogout = async () => {
-  await $fetch("/api/auth/logout", { method: "POST" });
-  await clear();
-  await navigateTo("/login");
+  isLoggingOut.value = true;
+  toast.add({
+    severity: "info",
+    summary: "Initiating Exit",
+    detail: "De-synchronizing from the academic registry...",
+    life: 2000,
+  });
+
+  try {
+    await $fetch("/api/auth/logout", { method: "POST" });
+    await clear();
+    location.href = "/login";
+  } catch (e) {
+    isLoggingOut.value = false;
+  }
 };
 </script>
 
@@ -72,35 +113,84 @@ const handleLogout = async () => {
           </NuxtLink>
         </div>
 
-        <!-- Middle: Zen Navigation -->
+        <!-- Zen Navigation -->
         <div class="hidden md:flex items-center gap-2">
-          <NuxtLink
-            v-for="item in menuItems"
-            :key="item.to"
-            :to="item.to"
-            class="relative px-6 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 group"
-            :class="[
-              isActive(item.to)
-                ? 'text-primary-500'
-                : 'text-surface-500 hover:text-white',
-            ]"
-          >
-            <span class="relative z-10 flex items-center gap-2">
-              <i
-                :class="[
-                  item.icon,
-                  'text-[10px] opacity-40 group-hover:opacity-100 transition-opacity',
-                ]"
-                v-if="isActive(item.to)"
+          <template v-for="item in menuItems" :key="item.label">
+            <!-- Dropdown Menu -->
+            <div v-if="item.children" class="relative group">
+              <button
+                class="px-6 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 text-surface-500 hover:text-white flex items-center gap-2"
+                :class="{
+                  'text-primary-500': isActive('/applicant-portal/services'),
+                }"
+              >
+                <i :class="item.icon" class="text-[10px] opacity-60" />
+                {{ item.label }}
+                <i
+                  class="pi pi-chevron-down text-[8px] opacity-40 group-hover:opacity-100 transition-opacity"
+                />
+              </button>
+
+              <!-- Dropdown Panel -->
+              <div
+                class="absolute top-full right-0 w-64 pt-4 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50"
+              >
+                <div
+                  class="bg-black/95 backdrop-blur-2xl border border-white/10 rounded-xl p-2 shadow-2xl flex flex-col gap-1"
+                >
+                  <NuxtLink
+                    v-for="child in item.children"
+                    :key="child.to"
+                    :to="child.to"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors group/item"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-primary-500/10 flex items-center justify-center group-hover/item:bg-primary-500/20 transition-colors"
+                    >
+                      <i :class="[child.icon, 'text-primary-500 text-xs']" />
+                    </div>
+                    <div class="flex flex-col">
+                      <span
+                        class="text-[10px] font-bold text-white uppercase tracking-wider"
+                        >{{ child.label }}</span
+                      >
+                      <span class="text-[9px] text-surface-500"
+                        >View details</span
+                      >
+                    </div>
+                  </NuxtLink>
+                </div>
+              </div>
+            </div>
+
+            <!-- Standard Link -->
+            <NuxtLink
+              v-else
+              :to="item.to!"
+              class="relative px-6 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 group"
+              :class="[
+                isActive(item.to!)
+                  ? 'text-primary-500'
+                  : 'text-surface-500 hover:text-white',
+              ]"
+            >
+              <span class="relative z-10 flex items-center gap-2">
+                <i
+                  :class="[
+                    item.icon,
+                    'text-[10px] opacity-40 group-hover:opacity-100 transition-opacity',
+                  ]"
+                  v-if="isActive(item.to!)"
+                />
+                {{ item.label }}
+              </span>
+              <!-- Active Indicator (Slick Line) -->
+              <div
+                v-if="isActive(item.to!)"
+                class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-8 h-[2px] bg-primary-500 shadow-[0_0_10px_rgba(212,175,55,0.5)] rounded-full animate-in fade-in zoom-in duration-500"
               />
-              {{ item.label }}
-            </span>
-            <!-- Active Indicator (Slick Line) -->
-            <div
-              v-if="isActive(item.to)"
-              class="absolute bottom-[-10px] left-1/2 -translate-x-1/2 w-8 h-[2px] bg-primary-500 shadow-[0_0_10px_rgba(212,175,55,0.5)] rounded-full animate-in fade-in zoom-in duration-500"
-            />
-          </NuxtLink>
+            </NuxtLink>
+          </template>
         </div>
 
         <!-- Right: Action Matrix -->
@@ -125,15 +215,19 @@ const handleLogout = async () => {
 
           <!-- Logout Action -->
           <button
-            class="group h-10 px-4 md:px-6 rounded-full border border-white/5 hover:border-rose-500/30 bg-white/5 hover:bg-rose-500/5 transition-all duration-500 flex items-center gap-3"
+            class="group h-10 px-4 md:px-6 rounded-full border border-white/5 hover:border-rose-500/30 bg-white/5 hover:bg-rose-500/5 transition-all duration-500 flex items-center gap-3 disabled:opacity-50"
+            :disabled="isLoggingOut"
             @click="handleLogout"
           >
             <span
               class="hidden md:block text-[9px] font-black text-surface-500 group-hover:text-rose-400 uppercase tracking-widest transition-colors"
-              >Terminate</span
+              >{{ isLoggingOut ? "Exiting..." : "Terminate" }}</span
             >
             <i
-              class="pi pi-power-off text-[11px] text-rose-500 group-hover:scale-110 transition-transform"
+              :class="
+                isLoggingOut ? 'pi pi-spin pi-spinner' : 'pi pi-power-off'
+              "
+              class="text-[11px] text-rose-500 group-hover:scale-110 transition-transform"
             />
           </button>
 
@@ -166,23 +260,51 @@ const handleLogout = async () => {
         v-if="mobileMenuOpen"
         class="fixed inset-x-0 top-16 md:top-20 bg-black/95 backdrop-blur-3xl border-b border-white/5 p-8 flex flex-col gap-4 md:hidden z-40"
       >
-        <NuxtLink
-          v-for="item in menuItems"
-          :key="item.to"
-          :to="item.to"
-          class="flex items-center justify-between p-4 rounded-2xl transition-all border border-transparent"
-          :class="[
-            isActive(item.to)
-              ? 'bg-primary-500/5 border-primary-500/20 text-primary-500'
-              : 'text-surface-500',
-          ]"
-          @click="mobileMenuOpen = false"
-        >
-          <span class="text-[11px] font-black uppercase tracking-[0.3em]">{{
-            item.label
-          }}</span>
-          <i :class="[item.icon, 'text-xs opacity-50']" />
-        </NuxtLink>
+        <template v-for="item in menuItems" :key="item.label">
+          <!-- Item with Children -->
+          <div v-if="item.children" class="flex flex-col gap-2">
+            <div
+              class="px-4 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-surface-500"
+            >
+              {{ item.label }}
+            </div>
+            <NuxtLink
+              v-for="child in item.children"
+              :key="child.to"
+              :to="child.to"
+              class="flex items-center justify-between p-4 rounded-2xl transition-all border border-transparent ml-4"
+              :class="[
+                isActive(child.to)
+                  ? 'bg-primary-500/5 border-primary-500/20 text-primary-500'
+                  : 'text-surface-500',
+              ]"
+              @click="mobileMenuOpen = false"
+            >
+              <span class="text-[10px] font-bold uppercase tracking-[0.2em]">{{
+                child.label
+              }}</span>
+              <i :class="[child.icon, 'text-xs opacity-50']" />
+            </NuxtLink>
+          </div>
+
+          <!-- Staandard Item -->
+          <NuxtLink
+            v-else
+            :to="item.to!"
+            class="flex items-center justify-between p-4 rounded-2xl transition-all border border-transparent"
+            :class="[
+              isActive(item.to!)
+                ? 'bg-primary-500/5 border-primary-500/20 text-primary-500'
+                : 'text-surface-500',
+            ]"
+            @click="mobileMenuOpen = false"
+          >
+            <span class="text-[11px] font-black uppercase tracking-[0.3em]">{{
+              item.label
+            }}</span>
+            <i :class="[item.icon, 'text-xs opacity-50']" />
+          </NuxtLink>
+        </template>
       </div>
     </Transition>
 

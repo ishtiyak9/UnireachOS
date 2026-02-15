@@ -24,7 +24,7 @@ const counselors = computed(() => {
   const all = (staffRes.value as any) || [];
   // Show all active personnel except for the super_admin
   return all
-    .filter((u: any) => u.roleCode !== "super_admin" && u.status === "ACTIVE")
+    .filter((u: any) => u.status === "ACTIVE")
     .map((u: any) => ({
       ...u,
       fullName: `${u.firstName} ${u.lastName}`.trim(),

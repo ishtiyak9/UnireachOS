@@ -103,16 +103,20 @@ export const leadRouter = {
 
         // [SITUATIONAL AWARENESS] Broadcast to Managers/Admins with notification clearance
         // This ensures the 'Admin Panel' (authorized users) gets the alert without bothering the Super Admin hierarchy.
-        await notify.broadcastByPermission("lead:notify", {
-          title: "📢 Inbound Lead Alert",
-          message: `New intelligence received: ${lead.firstName} (${lead.preferredCountry}) has entered the ecosystem.`,
-          type: "INFO",
-          metadata: {
-            leadId: lead.id,
-            action: "VIEW_LEAD",
-            link: `/dashboard/leads/${lead.id}`,
+        await notify.broadcastByPermission(
+          "lead:notify",
+          {
+            title: "📢 Inbound Lead Alert",
+            message: `New intelligence received: ${lead.firstName} (${lead.preferredCountry}) has entered the ecosystem.`,
+            type: "INFO",
+            metadata: {
+              leadId: lead.id,
+              action: "VIEW_LEAD",
+              link: `/dashboard/leads/${lead.id}`,
+            },
           },
-        });
+          "LEAD"
+        );
 
         // 5. Dispatch Team Cluster Notification (Visibility Layer)
         if (teamToUse) {

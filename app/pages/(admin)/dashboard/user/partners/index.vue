@@ -172,6 +172,7 @@ const newUser = reactive({
   firstName: "", // Agency Name
   lastName: ".", // Placeholder
   email: "",
+  phone: "",
   password: "",
   role: "AGENT",
   roleId: null,
@@ -181,6 +182,7 @@ const openCreateDialog = () => {
   newUser.firstName = "";
   newUser.lastName = ".";
   newUser.email = "";
+  newUser.phone = "";
   newUser.password = "Partner123!";
   newUser.role = "AGENT";
   newUser.roleId = agentRoles.value?.[0]?.id || null;
@@ -192,6 +194,7 @@ const addUser = async () => {
     !newUser.email ||
     !newUser.password ||
     !newUser.firstName ||
+    !newUser.phone ||
     !newUser.roleId
   )
     return;
@@ -470,6 +473,16 @@ const getStatusBadge = (status: string) => {
             >Email Identity</label
           >
           <InputText v-model="newUser.email" class="w-full" type="email" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-surface-400 mb-1"
+            >WhatsApp Number</label
+          >
+          <InputText
+            v-model="newUser.phone"
+            class="w-full"
+            placeholder="+880 1XXX-XXXXXX (WhatsApp)"
+          />
         </div>
         <div>
           <label class="block text-xs font-bold text-surface-400 mb-1"

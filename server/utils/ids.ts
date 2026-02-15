@@ -21,7 +21,10 @@ function encodeRandom(len: number): string {
   let str = "";
   const randomBytes = crypto.randomBytes(len);
   for (let i = 0; i < len; i++) {
-    str += ENCODING.charAt(randomBytes[i] % 32);
+    const byte = randomBytes[i];
+    if (byte !== undefined) {
+      str += ENCODING.charAt(byte % 32);
+    }
   }
   return str;
 }
@@ -53,9 +56,13 @@ export function uuidv7(): string {
   bytes.writeUIntBE(timestamp % 0x100000000, 2, 4);
 
   // version 7 (bits 48-51: 0111)
-  bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  if (bytes[6] !== undefined) {
+    bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  }
   // variant 1 (bits 64-65: 10)
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  if (bytes[8] !== undefined) {
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  }
 
   return [
     bytes.slice(0, 4).toString("hex"),
@@ -70,4 +77,53 @@ export const generateId = {
   applicant: () => uuidv7(),
   partner: () => shortId(),
   default: () => uuidv7(),
+
+  /**
+   * Generates a date-based sequential corporate ID (e.g., URP2502001)
+   * Format: PREFIX + YYMM + XXX (Serial)
+   */
+  async generateCorporateId(
+    model: any,
+    field: string,
+    basePrefix: string, // e.g., "URP" or "URS"
+    padding: number = 3
+  ): Promise<string> {
+    try {
+      const now = new Date();
+      const yy = now.getFullYear().toString().slice(-2);
+      const mm = (now.getMonth() + 1).toString().padStart(2, "0");
+      const datePrefix = `${basePrefix}${yy}${mm}`;
+
+      // Find the last created record for this month
+      const lastRecord = await model.findFirst({
+        orderBy: { [field]: "desc" }, // Sort by ID desc to get highest serial
+        where: { [field]: { startsWith: datePrefix } },
+        select: { [field]: true },
+      });
+
+      let nextNum = 1;
+      if (lastRecord && typeof lastRecord[field] === "string") {
+        const idStr = lastRecord[field];
+        // Extract the part after the prefix
+        const numPart = idStr.slice(datePrefix.length);
+        const lastNum = parseInt(numPart, 10);
+        if (!isNaN(lastNum)) {
+          nextNum = lastNum + 1;
+        }
+      }
+
+      const paddedNum = nextNum.toString().padStart(padding, "0");
+      return `${datePrefix}${paddedNum}`;
+    } catch (e) {
+      console.error("Failed to generate corporate ID:", e);
+      // Fallback
+      const randomSuffix = Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(padding, "0");
+      const now = new Date();
+      const yy = now.getFullYear().toString().slice(-2);
+      const mm = (now.getMonth() + 1).toString().padStart(2, "0");
+      return `${basePrefix}${yy}${mm}${randomSuffix}`;
+    }
+  },
 };

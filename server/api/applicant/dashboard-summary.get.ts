@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
   const profile = await prisma.applicantProfile.findUnique({
     where: { userId: session.user.id },
     include: {
+      assignedStaff: true,
       applications: {
         include: {
           course: {
@@ -108,5 +109,11 @@ export default defineEventHandler(async (event) => {
     },
     priorityAction,
     latestApplications: profile.applications,
+    assignedStaff: profile.assignedStaff
+      ? {
+          firstName: profile.assignedStaff.firstName,
+          lastName: profile.assignedStaff.lastName,
+        }
+      : null,
   };
 });

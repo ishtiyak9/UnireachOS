@@ -11,6 +11,17 @@ const profileSchema = z.object({
   agencyName: z.string().optional().nullable(),
   department: z.string().optional().nullable(),
   position: z.string().optional().nullable(),
+  notificationPreferences: z
+    .object({
+      emailEnabled: z.boolean().optional(),
+      pushEnabled: z.boolean().optional(),
+      systemEnabled: z.boolean().optional(),
+      agentEnabled: z.boolean().optional(),
+      applicantEnabled: z.boolean().optional(),
+      leadEnabled: z.boolean().optional(),
+      marketingEnabled: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -23,8 +34,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const userId = session.user.id;
-  const roleCategory = session.user.roleCategory;
+  const userId = (session.user as any).id;
+  const roleCategory = (session.user as any).roleCategory;
   const body = await readBody(event);
 
   try {
@@ -66,12 +77,32 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    let updatedPreferences = null;
+    if (validated.notificationPreferences) {
+      updatedPreferences = await prisma.notificationPreference.upsert({
+        where: { userId },
+        create: {
+          userId,
+          ...validated.notificationPreferences,
+        },
+        update: {
+          ...validated.notificationPreferences,
+        },
+      });
+    } else {
+      // Fetch existing if not updating, to keep session consistent
+      updatedPreferences = await prisma.notificationPreference.findUnique({
+        where: { userId },
+      });
+    }
+
     // Update the session with new profile data
     await setUserSession(event, {
       ...session,
       user: {
         ...session.user,
         profile: updatedProfile,
+        notificationPreferences: updatedPreferences,
       },
     });
 

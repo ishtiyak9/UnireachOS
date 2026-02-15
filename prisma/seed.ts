@@ -237,6 +237,16 @@ async function main() {
       name: "Send System Broadcasts",
       group: "COMMUNICATIONS",
     },
+    {
+      code: "notification:manage_preferences",
+      name: "Manage Notification Visibility",
+      group: "COMMUNICATIONS",
+    },
+    {
+      code: "notification:view_system",
+      name: "View System-wide Notifications",
+      group: "COMMUNICATIONS",
+    },
 
     // --- CATEGORY: LEADS (Intake & Routing) ---
     { code: "leads:view_all", name: "View All Leads (Global)", group: "LEADS" },
@@ -627,6 +637,51 @@ async function main() {
           },
         },
       },
+    });
+  }
+
+  // 9. Provision Allied Services
+  console.log("🛠️ Provisioning Allied Services...");
+  const alliedServices = [
+    {
+      slug: "accommodations",
+      title: "Accommodations",
+      icon: "pi pi-home",
+      description: "Find the perfect student housing near your university.",
+      content:
+        "<h2>Student Housing & Accommodation</h2><p>We help you find safe, affordable, and convenient housing options.</p>",
+    },
+    {
+      slug: "travel",
+      title: "Travel Support",
+      icon: "pi pi-globe",
+      description: "Flight bookings, airport pickups, and travel guidance.",
+      content:
+        "<h2>Travel Assistance</h2><p>Get the best flight deals and seamless arrival support.</p>",
+    },
+    {
+      slug: "health-insurance",
+      title: "Health Insurance",
+      icon: "pi pi-heart-fill",
+      description: "Comprehensive health coverage for international students.",
+      content:
+        "<h2>Student Health Insurance</h2><p>Mandatory and recommended health plans for your study destination.</p>",
+    },
+    {
+      slug: "bank-loans",
+      title: "Bank Loans",
+      icon: "pi pi-money-bill",
+      description: "Education loan assistance and financial planning.",
+      content:
+        "<h2>Education Loans</h2><p>Connect with our banking partners for quick and easy education loans.</p>",
+    },
+  ];
+
+  for (const service of alliedServices) {
+    await prisma.alliedService.upsert({
+      where: { slug: service.slug },
+      update: service,
+      create: service,
     });
   }
 

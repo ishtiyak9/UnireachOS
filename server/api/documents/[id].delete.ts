@@ -29,6 +29,19 @@ export default defineEventHandler(async (event) => {
     session.user.roleCode || session.user.role || ""
   );
 
+  let isAssignedAgent = false;
+  if (!isOwner && !isAdmin) {
+    const agentProfile = await prisma.agentProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+    if (agentProfile) {
+      if (doc.applicant?.agentId === agentProfile.id) {
+        isAssignedAgent = true;
+      }
+    }
+  }
+
   if (doc.isLocked && !isAdmin) {
     throw createError({
       statusCode: 403,
@@ -36,7 +49,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (!isOwner && !isAdmin) {
+  if (!isOwner && !isAdmin && !isAssignedAgent) {
     throw createError({ statusCode: 403, message: "Forbidden" });
   }
 

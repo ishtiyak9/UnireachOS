@@ -18,6 +18,7 @@ const newStudent = ref({
   firstName: "",
   lastName: "",
   email: "",
+  phone: "",
   password: Math.random().toString(36).slice(-10), // Auto-generate secure initial key
 });
 
@@ -111,6 +112,7 @@ const handleClientEntry = async () => {
       firstName: "",
       lastName: "",
       email: "",
+      phone: "",
       password: Math.random().toString(36).slice(-10),
     };
     await refreshClients();
@@ -437,6 +439,17 @@ const handleClientEntry = async () => {
           <InputText
             v-model="newStudent.email"
             placeholder="michael.c@strategic.com"
+            class="w-full bg-white/2! border-white/10! text-white! text-xs! rounded-xl! px-4! py-3! focus:border-emerald-500!"
+          />
+        </div>
+        <div class="space-y-2">
+          <label
+            class="text-[9px] font-black text-surface-500 uppercase tracking-widest"
+            >WhatsApp Number</label
+          >
+          <InputText
+            v-model="newStudent.phone"
+            placeholder="+880 1XXX-XXXXXX (WhatsApp)"
             class="w-full bg-white/2! border-white/10! text-white! text-xs! rounded-xl! px-4! py-3! focus:border-emerald-500!"
           />
         </div>

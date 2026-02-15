@@ -105,6 +105,34 @@ const shortcuts = [
       </div>
 
       <div class="flex items-center gap-3">
+        <!-- Counselor Card -->
+        <div
+          v-if="summary?.assignedStaff"
+          class="flex items-center gap-2.5 bg-primary-500/10 border border-primary-500/20 px-3 py-1.5 rounded-xl backdrop-blur-md group hover:bg-primary-500/20 transition-all cursor-default"
+        >
+          <div class="relative">
+            <Avatar
+              :label="summary.assignedStaff.firstName[0]"
+              shape="circle"
+              class="w-7 h-7 bg-primary-500/20! text-primary-500! font-black! text-[10px]!"
+            />
+            <div
+              class="absolute -right-0.5 -bottom-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-black animate-pulse"
+            />
+          </div>
+          <div class="flex flex-col">
+            <span
+              class="text-[8px] font-black text-surface-500 uppercase tracking-widest leading-none mb-0.5"
+              >Assigned Counselor</span
+            >
+            <span
+              class="text-[10px] font-black text-white uppercase italic tracking-tight"
+              >{{ summary.assignedStaff.firstName }}
+              {{ summary.assignedStaff.lastName }}</span
+            >
+          </div>
+        </div>
+
         <Button
           icon="pi pi-search"
           label="Course Search"

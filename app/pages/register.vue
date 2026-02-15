@@ -9,6 +9,7 @@ definePageMeta({
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
+const phone = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const type = ref<"STUDENT" | "EXPATRIATE">("STUDENT");
@@ -27,6 +28,7 @@ const handleRegister = async () => {
       method: "POST",
       body: {
         email: email.value,
+        phone: phone.value,
         password: password.value,
         firstName: firstName.value,
         lastName: lastName.value,
@@ -151,6 +153,29 @@ const handleSocialLogin = (provider: string) => {
               />
               <i
                 class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-surface-500 group-focus-within:text-primary-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <!-- WhatsApp Number Input -->
+          <div class="space-y-1">
+            <label
+              class="text-[9px] font-bold text-surface-300 uppercase tracking-wider ml-1"
+              >WhatsApp Number</label
+            >
+            <div class="relative group">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"
+              />
+              <input
+                v-model="phone"
+                type="text"
+                placeholder="+880 1XXX-XXXXXX (WhatsApp)"
+                class="w-full bg-surface-950/50 border border-white/10 rounded-xl px-3 py-2 pl-9 text-[11px] text-white placeholder-surface-500 focus:outline-none focus:border-primary-500/50 focus:bg-surface-900/80 transition-all duration-300"
+                required
+              />
+              <i
+                class="pi pi-whatsapp absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-surface-500 group-focus-within:text-primary-500 transition-colors"
               />
             </div>
           </div>

@@ -1,79 +1,153 @@
 import { prisma } from "./db";
+import { NotificationType, NotificationChannel } from "@prisma/client";
+import { notify } from "./notify";
 
-type NotificationPayload = {
-  title: string;
-  message: string;
-  type?: "INFO" | "SUCCESS" | "WARNING" | "ERROR" | "SYSTEM";
-  metadata?: any;
-};
+interface NotifyOptions {
+  applicantId: string;
+  updaterId: string;
+  updaterName: string;
+  type: "PROFILE_UPDATE" | "DOCUMENT_UPLOAD";
+  details?: string;
+}
 
 /**
- * Institutional Notification Dispatcher (IND)
- * Handles multi-party notification routing for the Application Engine.
+ * High-Level Notification Dispatcher
+ * Abstracts complex multi-party notification logic into simple, semantic calls.
  */
 export const dispatcher = {
   /**
-   * Dispatches notifications to all relevant parties of an application
+   * Send a direct notification to a user via the Unified Notification Engine.
    */
-  async notifyApplicationEvent(
-    applicationId: string,
-    payload: NotificationPayload
-  ) {
-    const application = await prisma.application.findUnique({
-      where: { id: applicationId },
-      include: {
-        applicant: { include: { agent: true } },
-        assignedStaff: true,
-      },
-    });
-
-    if (!application) return;
-
-    const targets = new Set<string>();
-
-    // 1. Always notify the Applicant
-    targets.add(application.applicant.userId);
-
-    // 2. Notify the Agent (if exists)
-    if (application.applicant.agent) {
-      targets.add(application.applicant.agent.userId);
-    }
-
-    // 3. Notify the Assigned Counselor
-    if (application.assignedStaff) {
-      targets.add(application.assignedStaff.userId);
-    }
-
-    // 4. Create Notification Records
-    const notifications = Array.from(targets).map((userId) => ({
+  async notifyUser(userId: string, payload: any) {
+    return await notify.send({
       userId,
-      title: payload.title,
-      message: payload.message,
-      type: payload.type || "INFO",
-      metadata: {
-        ...payload.metadata,
-        applicationId,
-        applicationCode: application.code,
-      },
-    }));
-
-    await prisma.notification.createMany({
-      data: notifications,
+      ...payload,
     });
   },
 
   /**
-   * Precision Dispatcher for specific targets (e.g., individual comments)
+   * Handle application-specific events, typically notifying the applicant.
    */
-  async notifyUser(userId: string, payload: NotificationPayload) {
-    await prisma.notification.create({
-      data: {
-        userId,
-        title: payload.title,
-        message: payload.message,
-        type: payload.type || "INFO",
-        metadata: payload.metadata,
+  async notifyApplicationEvent(applicationId: string, payload: any) {
+    const application = await prisma.application.findUnique({
+      where: { id: applicationId },
+      select: { applicant: { select: { userId: true } } },
+    });
+
+    if (application?.applicant?.userId) {
+      return await this.notifyUser(application.applicant.userId, {
+        ...payload,
+        metadata: { ...payload.metadata, applicationId },
+        category: "APPLICANT",
+      });
+    }
+  },
+
+  /**
+   * Complex logic for notifying counselor/team/admin when an agent updates a profile.
+   */
+  async notifyApplicantChange(options: NotifyOptions) {
+    const { applicantId, updaterId, updaterName, type, details } = options;
+
+    const applicant = await prisma.applicantProfile.findUnique({
+      where: { userId: applicantId },
+      select: {
+        firstName: true,
+        lastName: true,
+        assignedStaffId: true,
+        assignedStaff: {
+          select: {
+            teamId: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
+
+    if (!applicant) return;
+
+    const applicantName = `${applicant.firstName} ${applicant.lastName}`;
+    const title =
+      type === "PROFILE_UPDATE"
+        ? `Profile Updated: ${applicantName}`
+        : `New Document: ${applicantName}`;
+    const message =
+      type === "PROFILE_UPDATE"
+        ? `Agent ${updaterName} updated the profile information for ${applicantName}. ${
+            details || ""
+          }`
+        : `Agent ${updaterName} uploaded a new document for ${applicantName}. ${
+            details || ""
+          }`;
+
+    const recipientIds = new Set<string>();
+
+    if (applicant.assignedStaffId) {
+      const counselorUser = await prisma.staffProfile.findUnique({
+        where: { id: applicant.assignedStaffId },
+        select: { userId: true },
+      });
+      if (counselorUser) recipientIds.add(counselorUser.userId);
+    }
+
+    if (applicant.assignedStaff?.teamId) {
+      const teamMembers = await prisma.staffProfile.findMany({
+        where: { teamId: applicant.assignedStaff.teamId },
+        select: { userId: true },
+      });
+      teamMembers.forEach((m) => recipientIds.add(m.userId));
+    }
+
+    const systemUsers = await prisma.user.findMany({
+      where: {
+        OR: [
+          { role: { code: "super_admin" } },
+          {
+            groups: {
+              some: {
+                group: {
+                  permissions: {
+                    some: { permission: { code: "notification:view_system" } },
+                  },
+                },
+              },
+            },
+          },
+          {
+            role: {
+              permissions: {
+                some: { permission: { code: "notification:view_system" } },
+              },
+            },
+          },
+        ],
+      },
+      select: { id: true },
+    });
+    systemUsers.forEach((u) => recipientIds.add(u.id));
+
+    for (const recipientId of recipientIds) {
+      if (recipientId === updaterId) continue;
+
+      const isSystemAlert = systemUsers.some((u) => u.id === recipientId);
+
+      await notify.send({
+        userId: recipientId,
+        title,
+        message,
+        type: "INFO",
+        category: isSystemAlert ? "SYSTEM" : "APPLICANT",
+        metadata: {
+          applicantId,
+          updaterId,
+          type,
+        },
+      });
+    }
   },
 };
+
+// Aliased export for compatibility with existing imports
+export const notifyApplicantChange =
+  dispatcher.notifyApplicantChange.bind(dispatcher);

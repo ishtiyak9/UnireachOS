@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
       include: {
         applicantProfile: {
           include: {
+            assignedStaff: true,
             applications: {
               select: {
                 id: true,
@@ -47,7 +48,10 @@ export default defineEventHandler(async (event) => {
       email: s.email,
       status: s.status,
       applicationStatus:
-        s.applicantProfile?.applications[0]?.status || "Pre-Application",
+        s.applicantProfile?.applications?.[0]?.status || "Pre-Application",
+      assignedTo: s.applicantProfile?.assignedStaff
+        ? `${s.applicantProfile.assignedStaff.firstName} ${s.applicantProfile.assignedStaff.lastName}`
+        : "Unassigned",
       createdAt: s.createdAt,
     }));
   } catch (error) {

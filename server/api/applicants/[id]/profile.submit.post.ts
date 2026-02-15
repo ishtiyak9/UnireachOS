@@ -1,5 +1,3 @@
-import { prisma } from "../../../utils/db";
-
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
   if (!session?.user) {
@@ -8,23 +6,26 @@ export default defineEventHandler(async (event) => {
 
   const id = getRouterParam(event, "id");
   if (!id) {
-    throw createError({ statusCode: 400, message: "Missing Identifier" });
+    throw createError({
+      statusCode: 400,
+      message: "Missing Identifier in route",
+    });
   }
 
   // --- PERMISSIONS ---
   const isSelf = session.user.id === id;
   const isAdmin = ["super_admin", "admin", "official"].includes(
-    session.user.roleCode || session.user.role || ""
+    (session.user as any).roleCode || (session.user as any).role || ""
   );
 
   let isAssignedAgent = false;
-
   if (!isSelf && !isAdmin) {
-    // Agent Check
+    // Basic Agent Check
     const agentProfile = await prisma.agentProfile.findUnique({
       where: { userId: session.user.id },
       select: { id: true },
     });
+
     if (agentProfile) {
       const applicant = await prisma.applicantProfile.findUnique({
         where: { userId: id },
@@ -40,52 +41,37 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, message: "Forbidden" });
   }
 
-  // --- FETCH DATA ---
+  // 1. Verify profile exists and is not already locked
   const profile = await prisma.applicantProfile.findUnique({
     where: { userId: id },
-    include: {
-      user: {
-        select: {
-          email: true,
-          createdAt: true,
-        },
-      },
-      addresses: true,
-      educationHistory: { orderBy: { endDate: "desc" } },
-      workExperience: { orderBy: { startDate: "desc" } },
-      englishProficiency: { orderBy: { examDate: "desc" } },
-      emergencyContacts: true,
-
-      // Relations
-      agent: {
-        select: {
-          agencyName: true,
-          phone: true,
-          user: { select: { email: true } },
-        },
-      },
-      assignedStaff: {
-        select: {
-          firstName: true,
-          lastName: true,
-          user: { select: { email: true } },
-        },
-      },
-    },
   });
 
   if (!profile) {
-    // If accessing self, return structured null
-    if (isSelf) return { exists: false, data: null };
-    // If Admin/Agent accessing non-existent profile, 404
     throw createError({
       statusCode: 404,
-      message: "Applicant Profile not found",
+      message: "No profile found to submit.",
     });
   }
 
+  if (profile.isLocked) {
+    throw createError({
+      statusCode: 400,
+      message: "Profile is already finalized.",
+    });
+  }
+
+  // 2. Lock the profile
+  const updated = await prisma.applicantProfile.update({
+    where: { userId: id },
+    data: {
+      isLocked: true,
+      submittedAt: new Date(),
+    },
+  });
+
   return {
-    exists: true,
-    data: profile,
+    success: true,
+    message: "Identity data finalized. Profile is now locked.",
+    data: updated,
   };
 });

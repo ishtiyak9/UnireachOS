@@ -56,6 +56,12 @@ interface User {
     educationHistory?: any[];
     workExperience?: any[];
     englishProficiency?: any[];
+    assignedStaffId?: string;
+    assignedStaff?: {
+      id: string;
+      firstName: string;
+      lastName: string;
+    };
   } | null;
 }
 
@@ -282,6 +288,55 @@ const items = ref([
   { label: "Work Experience", icon: "pi pi-briefcase" },
   { label: "Tests", icon: "pi pi-check-square" },
 ]);
+
+// --- Assignment Logic ---
+const showAssignDialog = ref(false);
+const assigning = ref(false);
+const targetStaffId = ref<string | null>(null);
+
+const { data: staffResponse } = useFetch<any>("/api/admin/staff");
+const staffOptions = computed(() => {
+  if (!staffResponse.value?.data) return [];
+  return staffResponse.value.data.filter((s: any) => s.type === "INDIVIDUAL");
+});
+
+const openAssignDialog = () => {
+  targetStaffId.value = applicant.value.assignedStaffId || null;
+  showAssignDialog.value = true;
+};
+
+const assignCounselor = async () => {
+  if (!targetStaffId.value) return;
+
+  assigning.value = true;
+  try {
+    await $fetch("/api/admin/applicants/assign", {
+      method: "POST",
+      body: {
+        applicantId: userId,
+        staffProfileId: targetStaffId.value,
+      },
+    });
+
+    toast.add({
+      severity: "success",
+      summary: "Assignment Synchronized",
+      detail: "Counselor successfully linked to student node.",
+      life: 3000,
+    });
+
+    showAssignDialog.value = false;
+    refresh();
+  } catch (e: any) {
+    toast.add({
+      severity: "error",
+      summary: "Protocol Failed",
+      detail: e.data?.message || e.message,
+    });
+  } finally {
+    assigning.value = false;
+  }
+};
 </script>
 
 <template>
@@ -444,6 +499,31 @@ const items = ref([
               >
             </div>
           </div>
+          <div
+            class="flex flex-wrap gap-4 mt-2 justify-center md:justify-start"
+          >
+            <div
+              class="flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-primary-500/20 transition-all group"
+              @click="openAssignDialog"
+            >
+              <i
+                class="pi pi-user text-primary-400 group-hover:scale-110 transition-transform"
+              />
+              <div class="flex flex-col">
+                <span class="text-[9px] uppercase font-black text-surface-500"
+                  >Responsible Counselor</span
+                >
+                <span class="text-xs text-white font-bold">{{
+                  applicant.assignedStaff
+                    ? `${applicant.assignedStaff.firstName} ${applicant.assignedStaff.lastName}`
+                    : "Unassigned"
+                }}</span>
+              </div>
+              <i
+                class="pi pi-chevron-down text-[9px] text-surface-400 ml-1 group-hover:text-white transition-colors"
+              />
+            </div>
+          </div>
         </div>
 
         <!-- Stepper Visualization (Glass) -->
@@ -452,7 +532,7 @@ const items = ref([
         >
           <!-- Line -->
           <div
-            class="absolute left-10 right-10 top-4 h-0.5 bg-white/10 -z-0"
+            class="absolute left-10 right-10 top-4 h-0.5 bg-white/10 z-0"
           ></div>
 
           <!-- Steps -->
@@ -1530,6 +1610,56 @@ const items = ref([
         icon="pi pi-key"
         severity="warn"
         @click="handleResetPassword"
+      />
+    </template>
+  </Dialog>
+
+  <!-- Assign Counselor Dialog -->
+  <Dialog
+    v-model:visible="showAssignDialog"
+    header="Assign Counselor"
+    modal
+    class="w-full max-w-sm"
+    :draggable="false"
+  >
+    <div class="flex flex-col gap-4 py-4">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-bold text-surface-400"
+          >Select Counselor</label
+        >
+        <Dropdown
+          v-model="targetStaffId"
+          :options="staffOptions"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Choose Counselor"
+          class="w-full"
+        >
+          <template #option="slotProps">
+            <div class="flex items-center gap-2">
+              <Avatar
+                :label="slotProps.option.name[0]"
+                shape="circle"
+                size="small"
+              />
+              <span>{{ slotProps.option.name }}</span>
+            </div>
+          </template>
+        </Dropdown>
+      </div>
+    </div>
+    <template #footer>
+      <Button
+        label="Cancel"
+        icon="pi pi-times"
+        text
+        @click="showAssignDialog = false"
+      />
+      <Button
+        label="Assign"
+        icon="pi pi-check"
+        :loading="assigning"
+        @click="assignCounselor"
       />
     </template>
   </Dialog>

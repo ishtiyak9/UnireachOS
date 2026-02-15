@@ -7,6 +7,7 @@ export type NotificationType =
   | "WARNING"
   | "ERROR"
   | "SYSTEM";
+
 export type NotificationChannel =
   | "IN_APP"
   | "EMAIL"
@@ -14,12 +15,20 @@ export type NotificationChannel =
   | "SMS"
   | "PUSH";
 
+export type NotificationCategory =
+  | "SYSTEM"
+  | "AGENT"
+  | "APPLICANT"
+  | "LEAD"
+  | "MARKETING";
+
 interface NotificationPayload {
   userId: string;
   title: string;
   message: string;
   type?: NotificationType;
   channel?: NotificationChannel;
+  category?: NotificationCategory;
   metadata?: any;
 }
 
@@ -37,7 +46,8 @@ export const notify = {
    *   userId: user.id,
    *   title: "Application Submitted",
    *   message: "Your application to Oxford has been received.",
-   *   type: "SUCCESS"
+   *   type: "SUCCESS",
+   *   category: "APPLICANT"
    * });
    */
   async send(payload: NotificationPayload) {
@@ -47,16 +57,34 @@ export const notify = {
       message,
       type = "INFO",
       channel = "IN_APP",
+      category,
       metadata,
     } = payload;
 
     try {
-      // 1. Check Preferences (Optional Phase 1: Skip if blocked)
-      // const prefs = await prisma.notificationPreference.findUnique({ where: { userId } });
-      // if (channel === 'EMAIL' && !prefs?.emailEnabled) return false;
+      // 1. Check Preferences (Granular Control)
+      // We check if the user has explicitly disabled this category
+      if (category) {
+        const prefs = await prisma.notificationPreference.findUnique({
+          where: { userId },
+        });
+
+        if (prefs) {
+          // Check global channel prefs first
+          if (channel === "EMAIL" && !prefs.emailEnabled) return null;
+          if (channel === "PUSH" && !prefs.pushEnabled) return null;
+
+          // Check granular category prefs
+          if (category === "SYSTEM" && !prefs.systemEnabled) return null;
+          if (category === "AGENT" && !prefs.agentEnabled) return null;
+          if (category === "APPLICANT" && !prefs.applicantEnabled) return null;
+          if (category === "LEAD" && !prefs.leadEnabled) return null;
+          if (category === "MARKETING" && !prefs.marketingEnabled) return null;
+        }
+      }
 
       // 2. Log to Database (The Source of Truth)
-      // We cast type/channel to any because Prisma Client types might not be generated yet
+      // We cast type/channel/category to any because Prisma Client types might not be generated yet
       const notification = await prisma.notification.create({
         data: {
           userId,
@@ -64,7 +92,10 @@ export const notify = {
           message,
           type: type as any,
           channel: channel as any,
-          metadata: metadata ?? {},
+          // category: category as any, // Only if we added category to Notification model too, which we should have but schema didn't show it being added to Notification model, only Preference. Assuming it's fine for now or stored in metadata?
+          // Actually, if we didn't add category to Notification model, let's store it in metadata if needed, or ignore.
+          // The user requirement was about preferences.
+          metadata: { ...(metadata || {}), category },
           isRead: false,
         },
       });
@@ -190,28 +221,30 @@ export const notify = {
    */
   async broadcastByPermission(
     permissionCode: string,
-    payload: Omit<NotificationPayload, "userId">
+    payload: Omit<NotificationPayload, "userId">,
+    category?: NotificationCategory
   ) {
-    // Find all users who have this permission directly or via role/group
-    // Logic: Users with a role that has the permission OR users in a group that has it.
+    // Map Permission to Preference Field if category is provided
+    let preferenceCondition: any = {};
+    if (category) {
+      if (category === "SYSTEM") preferenceCondition = { systemEnabled: true };
+      if (category === "AGENT") preferenceCondition = { agentEnabled: true };
+      if (category === "APPLICANT")
+        preferenceCondition = { applicantEnabled: true };
+      if (category === "LEAD") preferenceCondition = { leadEnabled: true };
+      if (category === "MARKETING")
+        preferenceCondition = { marketingEnabled: true };
+    }
+
+    // Find all users who have this permission directly or via role/group AND have the preference enabled
     const eligibleUsers = await prisma.user.findMany({
       where: {
-        OR: [
+        AND: [
+          // 1. Must have the permission
           {
-            role: {
-              permissions: {
-                some: {
-                  permission: {
-                    code: permissionCode,
-                  },
-                },
-              },
-            },
-          },
-          {
-            groups: {
-              some: {
-                group: {
+            OR: [
+              {
+                role: {
                   permissions: {
                     some: {
                       permission: {
@@ -221,16 +254,59 @@ export const notify = {
                   },
                 },
               },
-            },
+              {
+                groups: {
+                  some: {
+                    group: {
+                      permissions: {
+                        some: {
+                          permission: {
+                            code: permissionCode,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
           },
+          // 2. Must have the preference enabled (if category is provided)
+          ...(category
+            ? [
+                {
+                  OR: [
+                    { notificationPreference: preferenceCondition }, // Preference is explicitly true
+                    { notificationPreference: null }, // Or no preference set (default to true usually, but here we assume created)
+                    // Wait, if no preference record exists, what does schema say?
+                    // "notificationPreference NotificationPreference?"
+                    // If it's null, we might want to default to TRUE?
+                    // But if we query { notificationPreference: preferenceCondition }, it won't match null.
+                    // So we need to handle nulls.
+                    // Actually, simpler is: fetch users, loop send(), and let send() check preferences.
+                    // send() logic: "if (prefs) { check }" -> "if no prefs, allow".
+                    // So we just need to find users with PERMISSION here.
+                  ],
+                },
+              ]
+            : []),
         ],
       },
       select: { id: true },
     });
 
+    // We can just rely on send() to filter preferences if we don't filter in SQL.
+    // However, filtering in SQL is better for performance.
+    // But dealing with NULL relation in Prisma where clause is tricky if we want default=true.
+    // Let's rely on send() for granular filtering to keep this query simpler and robust against missing preference records.
+    // We already passed `category` to send() via spread `...payload` if it was in payload, but we accepted it as arg.
+    // Let's make sure it's in the payload passed to send().
+
+    const finalPayload = { ...payload, category };
+
     const notifications = await Promise.all(
       eligibleUsers.map((user: any) =>
-        this.send({ ...payload, userId: user.id })
+        this.send({ ...finalPayload, userId: user.id })
       )
     );
 

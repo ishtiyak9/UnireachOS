@@ -2,6 +2,7 @@ import { prisma } from "../../../utils/db";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { existsSync } from "node:fs";
+import { notifyApplicantChange } from "../../../utils/notifications";
 
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
@@ -9,6 +10,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Unauthorized" });
   }
 
+  const userSession = session.user as any;
   const id = getRouterParam(event, "id");
   const body = await readMultipartFormData(event);
 
@@ -16,7 +18,37 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: "Missing form data" });
   }
 
-  // 1. Get Applicant Profile
+  // --- PERMISSIONS & CONTEXT ---
+  const isSelf = userSession.id === id;
+  const isStaff = ["super_admin", "admin", "official"].includes(
+    userSession.roleCode || userSession.role || ""
+  );
+
+  let isAssignedAgent = false;
+  let agentId: string | null = null;
+
+  if (!isSelf && !isStaff) {
+    const agentProfile = await prisma.agentProfile.findUnique({
+      where: { userId: userSession.id },
+      select: { id: true },
+    });
+    if (agentProfile) {
+      const applicant = await prisma.applicantProfile.findUnique({
+        where: { userId: id },
+        select: { agentId: true },
+      });
+      if (applicant?.agentId === agentProfile.id) {
+        isAssignedAgent = true;
+        agentId = agentProfile.id;
+      }
+    }
+  }
+
+  if (!isSelf && !isStaff && !isAssignedAgent) {
+    throw createError({ statusCode: 403, message: "Forbidden" });
+  }
+
+  // 1. Get Applicant Profile (Full)
   const applicant = await prisma.applicantProfile.findUnique({
     where: { userId: id },
     select: { id: true, isLocked: true },
@@ -57,21 +89,22 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // 5.9. Security & Role Context
-  const isStaff = ["super_admin", "admin", "official"].includes(
-    session.user.roleCode || session.user.role || ""
-  );
+  // 6. Check for existing document in this category
+  const uploadSource = isStaff
+    ? "STAFF"
+    : isAssignedAgent
+    ? "AGENT"
+    : "APPLICANT";
 
-  // 6. Check for existing document in this category to handle specialized locking
   const existingDoc = await prisma.document.findFirst({
     where: {
       applicantId: applicant.id,
       category: category as any,
-      uploadSource: isStaff ? "STAFF" : "APPLICANT",
+      uploadSource,
     },
   });
 
-  // Rule: If document is already locked (e.g. verified), applicant cannot replace it.
+  // Rule: If document is already locked (verified), applicants/agents cannot replace it without unlock.
   if (!isStaff && existingDoc?.isLocked) {
     throw createError({
       statusCode: 403,
@@ -109,7 +142,6 @@ export default defineEventHandler(async (event) => {
   await fs.writeFile(filePath, file.data);
 
   const fileKey = `${applicant.id}/${fileName}`; // Relative key for DB
-  const uploadSource = isStaff ? "STAFF" : "APPLICANT";
 
   // 8. Database Entry
   const document = await prisma.document.create({
@@ -121,11 +153,34 @@ export default defineEventHandler(async (event) => {
       fileSize: file.data.length,
       mimeType: file.type || "application/octet-stream",
       uploadSource,
-      uploaderId: session.user.id,
+      uploaderId: (session.user as any).id,
       status: isStaff ? "OFFICIAL" : "PENDING",
       isLocked: isStaff, // Staff uploads are usually official/locked by default
     },
   });
+
+  // Create Initial Notification Trigger if Agent
+  if (uploadSource === "AGENT") {
+    const user = session.user as any;
+    const updaterName =
+      `${user.profile?.firstName || ""} ${
+        user.profile?.lastName || ""
+      }`.trim() || user.email;
+
+    try {
+      if (id) {
+        await notifyApplicantChange({
+          applicantId: id, // Router param id is the applicant's userId
+          updaterId: (session.user as any).id,
+          updaterName,
+          type: "DOCUMENT_UPLOAD",
+          details: `Category: ${category}`,
+        });
+      }
+    } catch (e) {
+      console.error("Failed to trigger document upload notification:", e);
+    }
+  }
 
   return document;
 });

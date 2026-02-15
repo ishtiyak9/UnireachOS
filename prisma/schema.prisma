@@ -49,6 +49,8 @@ model User {
   createdBy   User?   @relation("UserLineage", fields: [createdById], references: [id])
   createdUsers User[] @relation("UserLineage")
 
+  createdApplicants ApplicantProfile[] @relation("ApplicantCreator")
+
   @@index([roleId])
   @@index([status])
   @@index([createdById])
@@ -140,6 +142,9 @@ model StaffProfile {
   id         String  @id @default(uuid())
   userId     String  @unique
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  employeeId String? @unique // e.g. UR-S-0001
+  
   firstName  String
   lastName   String
   department String?
@@ -238,6 +243,8 @@ model AgentProfile {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  agentCode String? @unique // e.g. UR-P-0001
+
   // Personal Details
   firstName    String?
   lastName     String?
@@ -288,13 +295,28 @@ model ApplicantProfile {
   isLocked    Boolean       @default(false)
   submittedAt DateTime?
 
-  // External Ownership (Third Party)
+  // Chain of Custody (Ownership & Assignment)
+  createdById String? // User ID of the creator (Staff or Agent)
+  createdBy   User?   @relation("ApplicantCreator", fields: [createdById], references: [id])
+
   agentId String?
   agent   AgentProfile? @relation(fields: [agentId], references: [id])
 
-  // Internal Ownership (UniReach Official)
   assignedStaffId String?
   assignedStaff   StaffProfile? @relation("StaffAssignments", fields: [assignedStaffId], references: [id])
+
+  // CRM & Operational Intelligence
+  stage          ApplicantStage @default(INQUIRY)
+  priority       String?        @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  internalNotes  String?        @db.Text
+  nextFollowUpAt DateTime?
+  conversionDate DateTime?
+
+  // Education Preferences & Marketing
+  budget           Float?
+  preferredIntake  String? // e.g., "Fall 2024"
+  preferredProgram String?
+  marketingSource  String? // UTM or Source Referral
 
   // --- 1. Personal Information ---
   firstName     String
@@ -500,6 +522,17 @@ enum AccountStatus {
 enum ApplicantType {
   STUDENT
   EXPATRIATE
+}
+
+enum ApplicantStage {
+  INQUIRY
+  APPLICATION_READY
+  APPLICATION_SUBMITTED
+  OFFER_RECEIVED
+  VISA_PROCESSING
+  ENROLLED
+  DEFERRED
+  CANCELLED
 }
 
 enum RoleCategory {
@@ -882,9 +915,23 @@ model NotificationPreference {
 
   emailEnabled     Boolean @default(true)
   pushEnabled      Boolean @default(true)
-  marketingEnabled Boolean @default(false)
+  
+  // Granular Category Preferences
+  systemEnabled    Boolean @default(true)    // For System-wide alerts
+  agentEnabled     Boolean @default(true)    // For Agent-related alerts
+  applicantEnabled Boolean @default(true)    // For Applicant-related alerts
+  leadEnabled      Boolean @default(true)    // For Lead-related alerts
+  marketingEnabled Boolean @default(false)   // For Marketing/Promo alerts
 
   updatedAt DateTime @updatedAt
+}
+
+enum NotificationCategory {
+  SYSTEM
+  AGENT
+  APPLICANT
+  LEAD
+  MARKETING
 }
 
 enum EnquiryStatus {
@@ -1122,3 +1169,18 @@ enum MarketingAssetVisibility {
   PARTNERS
   ALL
 }
+
+// --- ALLIED SERVICES (CMS) ---
+model AlliedService {
+  id          String   @id @default(uuid())
+  slug        String   @unique // e.g., 'accommodations', 'travel'
+  title       String
+  description String?
+  content     String?  @db.Text
+  icon        String?  // e.g., 'pi pi-home'
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
