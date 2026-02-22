@@ -1,6 +1,8 @@
 import { prisma } from "../../../utils/db";
 import { STATUS_VISIBILITY_MAP } from "../../../../shared/constants";
 import { dispatcher } from "../../../utils/notifications";
+import { financialEngine } from "../../../utils/finance";
+import { InvoiceTrigger } from "@prisma/client";
 
 /**
  * Tactical State Orchestrator: Application PATCH
@@ -72,12 +74,28 @@ export default defineEventHandler(async (event) => {
 
     // 2. Dispatch Intelligence
     if (status && status !== previousApplication.status) {
-      await dispatcher.notifyApplicationEvent(id, {
+      await dispatcher.notifyApplicationEvent(id as string, {
         title: "Application Status Updated",
         message: `Your application to ${updatedApplication.course.university.name} has moved to: ${updatedApplication.externalStatus}`,
         type: "SUCCESS",
         metadata: { status: updatedApplication.externalStatus },
       });
+    }
+
+    // C. Financial Integration (Revenue Trigger)
+    if (
+      status === "Student Enrolled" &&
+      status !== previousApplication.status
+    ) {
+      try {
+        await financialEngine.triggerEarning(
+          id as string,
+          InvoiceTrigger.ON_ENROLLMENT,
+          session.user.id as string
+        );
+      } catch (e) {
+        console.error("❌ Finance Trigger Failure:", e);
+      }
     }
 
     return { success: true, application: updatedApplication };

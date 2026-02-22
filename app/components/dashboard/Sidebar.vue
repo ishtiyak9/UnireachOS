@@ -56,6 +56,11 @@ const menuItems: NavigationSection[] = [
         to: "/dashboard/success-stories",
       },
       {
+        label: "Financial Intelligence",
+        icon: "pi pi-chart-line",
+        to: "/dashboard/finance",
+      },
+      {
         label: "Intelligence Alerts",
         icon: "pi pi-bell",
         to: "/dashboard/alerts",

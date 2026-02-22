@@ -282,6 +282,10 @@ model AgentProfile {
   applicants ApplicantProfile[]
   enquiries  Enquiry[]
 
+  // --- FINANCIAL MODULE RELATIONS ---
+  commissionTiers AgentCommissionTier[]
+  payouts         AgentPayout[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -374,6 +378,9 @@ model ApplicantProfile {
   documentUnlockRequests DocumentUnlockRequest[]
 
   metadata Json? // Custom/Legacy fields
+
+  // --- FINANCIAL MODULE RELATIONS ---
+  feeCollections FeeCollection[] // Service fees, visa fees, etc. billed to this applicant
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -702,20 +709,26 @@ model University {
   website     String?
 
   courses Course[]
-  
+
   // Partnership Intelligence (Internal Metrics)
   strategicRank      Int      @default(0)    // Internal priority (higher = promoted)
   commissionSpeed    Int      @default(3)    // 1-5 Scale: 1 (Slow) to 5 (Instant)
   offerTATIndex      Int      @default(3)    // 1-5 Scale (Turnaround Time)
   visaSuccessRate    Float    @default(0)    // Percentage (0-100)
-  
+
   // Performance Hooks
   isPremiumPartner   Boolean  @default(false)
   hasDirectContract  Boolean  @default(true)
-  
+
   // Tactical Assets
   bannerImage        String?
   strategicTags      String[] // e.g. ["Research Intensive", "High Employment", "Low Cost of Living"]
+
+  // --- FINANCIAL MODULE RELATIONS ---
+  commissionAgreements CommissionAgreement[]
+  commissionEarnings   CommissionEarning[]
+  commissionInvoices   CommissionInvoice[]
+  agentTiers           AgentCommissionTier[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -852,6 +865,10 @@ model Application {
   notes          ApplicationNote[]
   statusHistory  ApplicationStatusHistory[]
   documents      Document[]
+
+  // --- FINANCIAL MODULE RELATIONS ---
+  commissionEarning CommissionEarning? // One earning record per enrolled application
+  feeCollections    FeeCollection[]    // Service/application fees tied to this application
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1184,3 +1201,579 @@ model AlliedService {
   updatedAt   DateTime @updatedAt
 }
 
+// ============================================================
+// FINANCIAL MODULE — ENTERPRISE LEDGER SYSTEM
+// ============================================================
+// Covers: Commission Agreements → Earnings → Invoicing → Receipts
+//         Agent Payouts → Clawbacks / Debit Notes
+//         Applicant Fee Collections → Exchange Rates → Audit Log
+// ============================================================
+
+// --- FINANCIAL PERIODS (Accounting Calendar) ---
+model FinancialPeriod {
+  id        String       @id @default(uuid())
+  name      String       // e.g. "Q1-2026", "FY2026", "Feb-2026"
+  type      PeriodType
+  startDate DateTime
+  endDate   DateTime
+  status    PeriodStatus @default(OPEN)
+
+  // Linked Records
+  earnings CommissionEarning[]
+  payouts  AgentPayout[]
+
+  // Close Metadata
+  closedById String?
+  closedAt   DateTime?
+  notes      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+enum PeriodType {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+enum PeriodStatus {
+  OPEN     // Accepting entries
+  LOCKED   // Entries frozen, under review
+  CLOSED   // Formally closed / reconciled
+  ARCHIVED // Historical record only
+}
+
+// --- EXCHANGE RATES (Multi-Currency FX Registry) ---
+// Stores historical and current rates used for BDT conversion
+model ExchangeRate {
+  id            String   @id @default(uuid())
+  fromCurrency  String   // e.g. "GBP", "USD", "EUR", "CAD"
+  toCurrency    String   @default("BDT") // Base reporting currency
+  rate          Float    // 1 unit of fromCurrency = rate units of toCurrency
+  source        String?  // "MANUAL", "OPEN_EXCHANGE_RATES", "XE"
+  effectiveDate DateTime // Date this rate is valid from
+  isActive      Boolean  @default(true) // Latest active rate for this pair
+
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@unique([fromCurrency, toCurrency, effectiveDate])
+  @@index([fromCurrency, toCurrency, isActive])
+}
+
+// --- COMMISSION AGREEMENTS (University Partnership Contracts) ---
+// Defines the formal commission arrangement with each university
+model CommissionAgreement {
+  id           String     @id @default(uuid())
+  code         String     @unique // e.g. "AGR-UK-OXF-2026-001" (human readable)
+
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+
+  // Contract Window
+  effectiveFrom DateTime
+  effectiveTo   DateTime? // Null = open-ended
+  status        AgreementStatus @default(DRAFT)
+
+  // Commission Structure
+  commissionType CommissionType @default(PERCENTAGE)
+  commissionRate Float          // % of tuition OR fixed amount per enrollment
+  currency       String         @default("GBP") // Currency in which university pays
+
+  // Payment Terms
+  paymentTermDays Int            @default(90)              // Net-90, Net-30, etc.
+  invoiceTrigger  InvoiceTrigger @default(ON_ENROLLMENT)   // When to raise invoice
+
+  // Supporting Docs
+  notes       String? @db.Text
+  documentKey String? // Storage key for signed agreement PDF
+
+  // Linked Records
+  earnings CommissionEarning[]
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([universityId])
+  @@index([status])
+  @@index([effectiveFrom, effectiveTo])
+}
+
+enum AgreementStatus {
+  DRAFT      // Being drafted / not yet active
+  ACTIVE     // Active and enforced
+  SUSPENDED  // Temporarily paused
+  EXPIRED    // Past effectiveTo date
+  TERMINATED // Permanently ended
+}
+
+enum CommissionType {
+  PERCENTAGE   // % of tuition fee (most common)
+  FIXED_AMOUNT // Per-head flat fee
+  TIERED       // Volume-based (e.g. 10% for <50 students, 12% for 50+)
+}
+
+enum InvoiceTrigger {
+  ON_ENROLLMENT       // Student formally enrolled
+  ON_OFFER_ACCEPTED   // Conditional offer accepted
+  ON_VISA_APPROVAL    // Student visa granted
+  ON_TUITION_PAYMENT  // Tuition fee paid to university
+  MANUAL              // Finance team manually triggers
+}
+
+// --- AGENT COMMISSION TIERS (Dynamic Rate Cards) ---
+// Replaces the flat commission Float on AgentProfile.
+// Allows per-agent, per-university, and volume-based overrides.
+// Priority: Higher number = evaluated first (most specific rule wins).
+model AgentCommissionTier {
+  id      String       @id @default(uuid())
+  agentId String
+  agent   AgentProfile @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  label    String // e.g. "Standard", "Premium Override", "UK Universities"
+  priority Int    @default(0) // Higher = checked first
+
+  // Scope — null means applies to ALL universities for this agent
+  universityId String?
+  university   University? @relation(fields: [universityId], references: [id])
+
+  // Rate
+  commissionType CommissionType @default(PERCENTAGE)
+  commissionRate Float          // % of Unireach's gross commission earned
+
+  isActive  Boolean  @default(true)
+  validFrom DateTime @default(now())
+  validTo   DateTime? // Null = open-ended
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([agentId, isActive])
+  @@index([universityId])
+}
+
+// --- COMMISSION EARNINGS (Accounts Receivable — Revenue Events) ---
+// Created when an application reaches a financial milestone (trigger event).
+// Single source of truth for all revenue owed to Unireach.
+model CommissionEarning {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // e.g. "CE-2026-00123"
+
+  // Source (One earning per application — enforced by @unique)
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+
+  // Agreement anchor (Snapshotted rates may differ at runtime)
+  agreementId String?
+  agreement   CommissionAgreement? @relation(fields: [agreementId], references: [id])
+
+  // Period allocation
+  periodId String?
+  period   FinancialPeriod? @relation(fields: [periodId], references: [id])
+
+  // --- FINANCIAL DATA (All snapshotted at event time) ---
+  trigger        InvoiceTrigger // What event created this earning
+  triggerDate    DateTime       @default(now())
+  dueDate        DateTime?      // Expected payment date from university
+
+  grossAmount    Float  // Gross commission from university (in original currency)
+  currency       String // e.g. "GBP"
+  exchangeRate   Float  @default(1.0) // Rate used at time of calculation
+  grossAmountBDT Float? // Converted equivalent (reporting currency)
+
+  // Agent Share (calculated using AgentCommissionTier)
+  agentShare     Float? // Amount owed to agent
+  agentShareBDT  Float? // Converted agent share
+  netAmount      Float? // Unireach net revenue (grossAmount - agentShare)
+  netAmountBDT   Float? // Converted net
+
+  status EarningStatus @default(PENDING_INVOICE)
+
+  // Chained Records
+  invoice     CommissionInvoice? // Invoice raised for this earning
+  agentPayout AgentPayout?       // Payout generated from this earning
+  debitNotes  DebitNote[]        // Any clawbacks / adjustments
+
+  // Calculation Audit Trail (what rates/tiers were applied)
+  rateSnapshot Json? // { agreementRate, tierRate, currency, fxRate, ... }
+  notes        String? @db.Text
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([universityId])
+  @@index([periodId])
+  @@index([triggerDate])
+}
+
+enum EarningStatus {
+  PENDING_INVOICE     // Earning created; invoice not yet raised
+  INVOICED            // Invoice sent to university
+  PARTIALLY_RECEIVED  // Partial payment received from university
+  RECEIVED            // Full payment received — earning settled
+  OVERDUE             // Past due date; not paid
+  DISPUTED            // University challenged the claim
+  WRITTEN_OFF         // Irrecoverable bad debt
+  CANCELLED           // Application withdrawn / earning voided
+}
+
+// --- COMMISSION INVOICES (B2B Billing to Universities) ---
+// Formal invoice documents raised against a CommissionEarning.
+model CommissionInvoice {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // e.g. "INV-2026-00099" (replace with sequential in app logic)
+
+  earningId String            @unique
+  earning   CommissionEarning @relation(fields: [earningId], references: [id])
+
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+
+  // Invoice Financials
+  invoiceDate DateTime @default(now())
+  dueDate     DateTime
+
+  subtotal    Float
+  taxRate     Float  @default(0)   // e.g. 0.15 for 15% VAT/GST (if applicable)
+  taxAmount   Float  @default(0)
+  totalAmount Float  // subtotal + taxAmount
+  currency    String
+
+  // Payment State
+  amountPaid Float         @default(0)
+  amountDue  Float         // totalAmount - amountPaid (updated on each payment)
+  status     InvoiceStatus @default(DRAFT)
+
+  // Document
+  fileKey String?  // S3/Tebi key for generated invoice PDF
+  notes   String?  @db.Text
+  terms   String?  @db.Text // e.g. "Net-90 from enrollment confirmation"
+
+  // Timestamps
+  sentAt  DateTime?
+  paidAt  DateTime? // Set when fully paid
+
+  // Linked payments (partial allowed)
+  payments InvoicePayment[]
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([universityId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+enum InvoiceStatus {
+  DRAFT           // Created but not yet sent
+  SENT            // Dispatched to university
+  VIEWED          // University confirmed receipt / opened
+  PARTIALLY_PAID  // At least one payment received; balance remains
+  PAID            // Fully settled
+  OVERDUE         // Past dueDate; no/partial payment
+  DISPUTED        // University formally disputes the invoice
+  VOIDED          // Invoice cancelled before payment
+  WRITTEN_OFF     // Irrecoverable; accounting write-off applied
+}
+
+// --- INVOICE PAYMENTS (Receipts from Universities) ---
+// Each row represents one received payment against an invoice (partial or full).
+model InvoicePayment {
+  id String @id @default(uuid())
+
+  invoiceId String
+  invoice   CommissionInvoice @relation(fields: [invoiceId], references: [id])
+
+  amount        Float
+  currency      String
+  exchangeRate  Float  @default(1.0)
+  amountBDT     Float? // Base currency equivalent
+
+  paymentDate   DateTime
+  paymentMethod PaymentMethod @default(BANK_TRANSFER)
+  referenceNo   String?       // Bank TT reference / transaction ID
+
+  notes      String? @db.Text
+  receiptKey String? // Uploaded bank receipt / remittance advice
+
+  // Confirmation Workflow
+  confirmedById String?
+  confirmedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([invoiceId])
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  WIRE_TRANSFER // SWIFT/SEPA international
+  CHEQUE
+  CASH
+  ONLINE_PAYMENT // PayPal, Stripe, bKash, etc.
+  CRYPTO
+  OTHER
+}
+
+// --- AGENT PAYOUTS (Accounts Payable — Commission Disbursements) ---
+// One payout record per CommissionEarning. Created when earning is RECEIVED.
+model AgentPayout {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // e.g. "PAY-2026-00042"
+
+  // Source
+  earningId String            @unique // One payout per one earning
+  earning   CommissionEarning @relation(fields: [earningId], references: [id])
+
+  agentId String
+  agent   AgentProfile @relation(fields: [agentId], references: [id])
+
+  // Period allocation
+  periodId String?
+  period   FinancialPeriod? @relation(fields: [periodId], references: [id])
+
+  // Financial Data (Snapshotted at creation)
+  grossEarning   Float  // Unireach's gross commission (reference)
+  commissionRate Float  // Agent's applicable rate at this time
+  amount         Float  // Actual payout amount
+  currency       String // Payout currency (agent's preferred or BDT)
+  exchangeRate   Float  @default(1.0)
+  amountBDT      Float? // Base currency equivalent
+
+  status PayoutStatus @default(PENDING_APPROVAL)
+
+  // Bank Details (Frozen snapshot of agent's bank info at creation time)
+  // Prevents future bank changes from affecting historical payout records
+  bankSnapshot Json? // { beneficiaryName, bankName, accountNo, swiftCode, iban, ... }
+
+  // Execution Details
+  paymentMethod PaymentMethod?
+  paymentRef    String?        // Bank transaction reference / TT number
+  paymentDate   DateTime?
+  receiptKey    String?        // Payment proof / bank debit advice
+
+  // Approval Workflow
+  approvedById String?
+  approvedAt   DateTime?
+
+  // Adjustments
+  debitNotes DebitNote[]
+
+  notes String? @db.Text
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([agentId])
+  @@index([status])
+  @@index([periodId])
+  @@index([paymentDate])
+}
+
+enum PayoutStatus {
+  PENDING_APPROVAL // Awaiting finance team sign-off
+  APPROVED         // Approved; queued for payment
+  PROCESSING       // Bank transfer initiated
+  PAID             // Successfully disbursed
+  FAILED           // Bank error; payment bounced
+  ON_HOLD          // Suspended pending investigation/dispute
+  CANCELLED        // Voided before execution
+}
+
+// --- DEBIT NOTES (Adjustments, Clawbacks & Penalties) ---
+// Raised when a university claws back commission (student withdrawal after payment)
+// or when an internal financial adjustment is required.
+model DebitNote {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // e.g. "DN-2026-00007"
+
+  type   DebitNoteType
+  reason String        @db.Text // Detailed explanation
+
+  // What it's adjusting (at least one must be set)
+  earningId String?
+  earning   CommissionEarning? @relation(fields: [earningId], references: [id])
+
+  payoutId String?
+  payout   AgentPayout? @relation(fields: [payoutId], references: [id])
+
+  // Financial Impact
+  amount        Float
+  currency      String
+  exchangeRate  Float  @default(1.0)
+  amountBDT     Float?
+
+  status DebitNoteStatus @default(PENDING)
+
+  // Resolution
+  resolvedById String?
+  resolvedAt   DateTime?
+  resolutionNote String? @db.Text
+
+  // Supporting Doc
+  documentKey String? // University clawback letter, etc.
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([earningId])
+  @@index([payoutId])
+  @@index([status])
+}
+
+enum DebitNoteType {
+  CLAWBACK          // University clawed back commission after student withdrawal
+  AGENT_CLAWBACK    // Recovering overpaid agent commission
+  ADJUSTMENT        // General financial correction
+  PENALTY           // Contractual penalty
+  REFUND_ISSUED     // Refund given to applicant / agent
+}
+
+enum DebitNoteStatus {
+  PENDING   // Under review
+  APPLIED   // Adjustment posted to the ledger
+  CANCELLED // Withdrawn / not applicable
+  DISPUTED  // Party under dispute has challenged it
+}
+
+// --- FEE COLLECTIONS (Applicant-Facing Charges) ---
+// Tracks fees charged to applicants — application fees, service fees,
+// visa fees, туition deposits, etc.
+model FeeCollection {
+  id   String @id @default(uuid())
+  code String @unique @default(cuid()) // e.g. "FEE-2026-00155"
+
+  // Who owes?
+  applicantId String
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id])
+
+  // Optionally tied to a specific application
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+  feeType     FeeType
+  description String? // Human-readable detail
+
+  // Financial Data
+  amount        Float
+  currency      String @default("BDT")
+  exchangeRate  Float  @default(1.0)
+  amountBDT     Float? // For multi-currency consistency
+
+  status FeeStatus @default(PENDING)
+  dueDate DateTime? // If a deadline applies
+
+  // Payment Details
+  paymentMethod PaymentMethod?
+  paymentRef    String?      // Bank reference / bKash TrxID
+  paidAt        DateTime?
+  receiptKey    String?      // Uploaded payment proof
+
+  // Waiver Workflow
+  isWaived     Boolean  @default(false)
+  waivedById   String?
+  waivedAt     DateTime?
+  waivedReason String?
+
+  // Who collected (for cash/manual)
+  collectedById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicantId])
+  @@index([applicationId])
+  @@index([status])
+  @@index([feeType])
+}
+
+// Add back-relation to ApplicantProfile
+// (handled via ApplicantProfile.feeCollections[])
+
+enum FeeType {
+  APPLICATION_FEE    // University's application processing fee
+  SERVICE_FEE        // Unireach consulting / service charge
+  VISA_FEE           // Visa application government fee
+  DOCUMENT_FEE       // Document preparation / attestation fee
+  TUITION_DEPOSIT    // Tuition deposit paid by student to university
+  COURIER_FEE        // Document courier charge
+  ASSESSMENT_FEE     // Skills / credential assessment fee
+  OTHER
+}
+
+enum FeeStatus {
+  PENDING  // Invoice raised; not yet paid
+  PAID     // Payment confirmed
+  WAIVED   // Fee waived (see waivedById)
+  OVERDUE  // Past due date
+  REFUNDED // Fee refunded to applicant
+  CANCELLED
+}
+
+// --- FINANCIAL AUDIT LOG (Immutable Ledger Trail) ---
+// Every financial state change is recorded here.
+// Never delete, never update — append-only.
+model FinancialAuditLog {
+  id String @id @default(uuid())
+
+  // What was affected?
+  entityType String // "CommissionEarning" | "AgentPayout" | "CommissionInvoice" | "FeeCollection" | "DebitNote"
+  entityId   String
+  entityCode String? // Human-readable code (e.g. INV-2026-00099)
+
+  // What happened?
+  action    FinancialAuditAction
+  fromState String? // Previous status/state
+  toState   String? // New status/state
+
+  // Financial context (may be null for non-monetary actions)
+  amount   Float?
+  currency String?
+
+  // Who did it?
+  performedById   String  // User ID (staff)
+  performedByName String? // Snapshot of name at time of action
+
+  notes    String? @db.Text
+  metadata Json?   // Extra context (e.g. payment reference, bank details)
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([performedById])
+  @@index([createdAt])
+}
+
+enum FinancialAuditAction {
+  CREATED
+  STATUS_CHANGED
+  PAYMENT_RECORDED
+  INVOICE_SENT
+  INVOICE_VOIDED
+  PAYOUT_APPROVED
+  PAYOUT_PROCESSED
+  PAYOUT_FAILED
+  RATE_APPLIED
+  DEBIT_NOTE_RAISED
+  DEBIT_NOTE_APPLIED
+  PERIOD_LOCKED
+  PERIOD_CLOSED
+  EXCHANGE_RATE_SET
+  NOTE_ADDED
+  WAIVER_GRANTED
+  MANUAL_ADJUSTMENT
+}
