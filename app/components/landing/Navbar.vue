@@ -139,7 +139,7 @@ onUnmounted(() => {
 
       <!-- Premium Action Buttons -->
       <div class="hidden md:flex items-center gap-3">
-        <NuxtLink
+        <!-- <NuxtLink
           to="/login"
           class="relative px-5 py-2 text-[9px] font-black uppercase tracking-[0.2em] text-surface-400 hover:text-white transition-all group overflow-hidden"
         >
@@ -147,7 +147,7 @@ onUnmounted(() => {
           <div
             class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity"
           />
-        </NuxtLink>
+        </NuxtLink> -->
         <NuxtLink
           to="/apply"
           class="relative px-6 py-2.5 text-[9px] font-black uppercase tracking-[0.2em] text-black bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105 group overflow-hidden"

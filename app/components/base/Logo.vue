@@ -20,7 +20,7 @@
     <div class="flex flex-col">
       <!-- Main Brand Name -->
       <span
-        class="text-lg font-black text-[#0f4f9a] dark:text-[#0f4f9a] tracking-tight leading-none uppercase"
+        class="text-lg font-black text-[#267dcc] dark:text-[#267dcc] tracking-tight leading-none uppercase"
       >
         UNIREACH
       </span>
