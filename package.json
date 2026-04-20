@@ -56,5 +56,16 @@
     "typescript": "^5.9.3",
     "unplugin-vue-components": "^31.0.0",
     "vue-tsc": "^3.2.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "argon2",
+      "esbuild",
+      "prisma",
+      "sharp"
+    ]
   }
 }

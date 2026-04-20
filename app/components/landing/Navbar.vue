@@ -19,7 +19,7 @@ const menuItems = [
       { label: "Job Immigration", to: "/Job-immigration", icon: "pi pi-user" },
     ],
   },
-  { label: "Success Stories", to: "/success-stories" },
+  // { label: "Success Stories", to: "/success-stories" },
   { label: "Contact", to: "/contact" },
 ];
 
