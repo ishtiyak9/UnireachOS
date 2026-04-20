@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unireach Security & Vulnerability Audit Report</title>
+    <style>
+        :root {
+            --primary: #9651fe;
+            --primary-dark: #642da9;
+            --critical: #dc2626;
+            --high: #ea580c;
+            --medium: #ca8a04;
+            --low: #2563eb;
+            --bg-dark: #09090b;
+            --bg-card: #18181b;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--bg-card), var(--primary-dark));
+            padding: 3rem 2rem;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 900;
+        }
+
+        header p {
+            color: #d8b4fe;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .summary-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--text-muted);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        .stat-critical { background-color: rgba(220, 38, 38, 0.1); border: 1px solid var(--critical); color: #fca5a5; }
+        .stat-high { background-color: rgba(234, 88, 12, 0.1); border: 1px solid var(--high); color: #fdba74; }
+        .stat-medium { background-color: rgba(202, 138, 4, 0.1); border: 1px solid var(--medium); color: #fde047; }
+        .stat-low { background-color: rgba(37, 99, 235, 0.1); border: 1px solid var(--low); color: #93c5fd; }
+
+        .stat span {
+            display: block;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        h2 {
+            border-bottom: 1px solid var(--text-muted);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            color: var(--primary);
+        }
+
+        .finding {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .critical { border-left-color: var(--critical); }
+        .high { border-left-color: var(--high); }
+        .medium { border-left-color: var(--medium); }
+        .low { border-left-color: var(--low); }
+
+        .finding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .finding-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 0;
+            color: #fff;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-critical { background-color: var(--critical); color: #fff; }
+        .badge-high { background-color: var(--high); color: #fff; }
+        .badge-medium { background-color: var(--medium); color: #fff; }
+        .badge-low { background-color: var(--low); color: #fff; }
+
+        .code-block {
+            background-color: #000;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+            margin: 1rem 0;
+        }
+
+        .remediation {
+            background-color: rgba(150, 81, 254, 0.1);
+            border: 1px solid var(--primary);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .remediation h4 {
+            margin-top: 0;
+            color: #d8b4fe;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Security & Vulnerability Audit Report</h1>
+    <p>Unireach Project Assessment</p>
+    <p style="font-size: 0.9rem; color: #cbd5e1;">Generated on: April 19, 2026</p>
+</header>
+
+<div class="container">
+    <h2>Executive Summary</h2>
+    <p>A comprehensive security audit of the Unireach application was conducted, evaluating the Nuxt 4 application, Node.js/Nitro backend, Prisma database integrations, and project dependencies. The assessment identified critical path traversal flaws, severe dependency vulnerabilities, and systemic misconfigurations that pose significant risks to the application's integrity and user data.</p>
+
+    <div class="summary-box">
+        <div class="stat stat-critical">
+            <span>2</span>
+            Critical
+        </div>
+        <div class="stat stat-high">
+            <span>2</span>
+            High
+        </div>
+        <div class="stat stat-medium">
+            <span>2</span>
+            Medium
+        </div>
+        <div class="stat stat-low">
+            <span>1</span>
+            Low
+        </div>
+    </div>
+
+    <h2>Detailed Findings</h2>
+
+    <!-- Critical 1: Path Traversal -->
+    <div class="finding critical">
+        <div class="finding-header">
+            <h3 class="finding-title">Path Traversal (Arbitrary File Write) in Document Uploads</h3>
+            <span class="badge badge-critical">Critical</span>
+        </div>
+        <p><strong>Location:</strong> <code>server/api/applicants/[id]/documents.post.ts</code></p>
+        <p><strong>Description:</strong> The document upload endpoint improperly sanitizes the uploaded file's original name before using it in filesystem operations. By crafting a multipart payload with a filename containing directory traversal sequences (e.g., <code>../../../evil.js</code>), an attacker can write files to arbitrary locations on the server, potentially overwriting critical system files or planting executing scripts (Remote Code Execution).</p>
+        <div class="code-block">
+// Vulnerable Code
+const fileName = `${Date.now()}-${file.filename}`;
+const filePath = path.join(applicantDir, fileName);
+await fs.writeFile(filePath, file.data);
+        </div>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Sanitize the incoming filename completely. Strip pathway characters, or preferably, generate a sterile UUID for local filesystem storage to completely abstract the user's input from the filesystem constraints.</p>
+            <div class="code-block">
+import { randomUUID } from "node:crypto";
+// Recommended
+const ext = path.extname(file.filename || '');
+const fileName = `${Date.now()}-${randomUUID()}${ext}`;
+            </div>
+        </div>
+    </div>
+
+    <!-- Critical 2: NPM Dependencies -->
+    <div class="finding critical">
+        <div class="finding-header">
+            <h3 class="finding-title">Vulnerable Dependencies (CVE-2026-28292)</h3>
+            <span class="badge badge-critical">Critical</span>
+        </div>
+        <p><strong>Location:</strong> <code>pnpm-lock.yaml / package.json</code></p>
+        <p><strong>Description:</strong> PNPM audit tools revealed a critical vulnerability in the <code>simple-git</code> dependency module (CVE-2026-28292). A blockUnsafeOperationsPlugin bypass via a case-insensitive protocol.allow config key exists which enables Remote Code Execution (RCE).</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Run dependency upgrades and update <code>simple-git</code> to version >=3.32.3. Audit the dependency tree utilizing <code>pnpm update --interactive --latest</code>.</p>
+        </div>
+    </div>
+
+    <!-- High 1: TLS verification disabled -->
+    <div class="finding high">
+        <div class="finding-header">
+            <h3 class="finding-title">Global SSL/TLS Verification Disabled</h3>
+            <span class="badge badge-high">High</span>
+        </div>
+        <p><strong>Location:</strong> <code>.env</code></p>
+        <p><strong>Description:</strong> The application environment enforces <code>NODE_TLS_REJECT_UNAUTHORIZED=0</code>. This effectively instructs the Node.js runtime to blindly accept any inherently untrusted, expired, or self-signed SSL certificates. This leaves outgoing requests—and potentially database connections (Aiven PostgreSQL is used)—open to severe Man-In-The-Middle (MitM) attacks.</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Remove <code>NODE_TLS_REJECT_UNAUTHORIZED=0</code> from the `.env` settings. If the environment requires custom/local certificates, install self-signed certificates at the OS/Node trust store bounds rather than disabling validation entirely.</p>
+        </div>
+    </div>
+
+    <!-- High 2: Minimatch -->
+    <div class="finding high">
+        <div class="finding-header">
+            <h3 class="finding-title">Minimatch ReDoS Vulnerability</h3>
+            <span class="badge badge-high">High</span>
+        </div>
+        <p><strong>Location:</strong> <code>pnpm-lock.yaml</code></p>
+        <p><strong>Description:</strong> The project relies on deep versions of <code>minimatch</code> (&lt; 3.1.3, &lt; 9.0.7) that suffer from a Regular Expression Denial of Service (ReDoS) vulnerability (GHSA-7r86-cg39-jmmj). Combinatorial backtracking can be exploited to crash services.</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Use PNPM overrides or resolutions to force <code>minimatch</code> into safe, patched versions.</p>
+        </div>
+    </div>
+
+    <!-- Medium 1: CORS & CSP -->
+    <div class="finding medium">
+        <div class="finding-header">
+            <h3 class="finding-title">Permissive Security Headers (CORS & CSP)</h3>
+            <span class="badge badge-medium">Medium</span>
+        </div>
+        <p><strong>Location:</strong> <code>nuxt.config.ts</code></p>
+        <p><strong>Description:</strong> Nuxt Security module sets a wildcard CORS handler (<code>origin: "*"</code>) and enforces <code>contentSecurityPolicy: false</code>. While noted as "Permissive for development", deploying these settings to production inherently negates cross-origin protections and leaves the application exposed to XSS data exfiltration and CSRF pivoting.</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Wrap the security module configuration in environment checks (e.g., using <code>process.env.NODE_ENV</code>) to ensure strict CSP and whitelisted CORS origins are initialized when in production context.</p>
+        </div>
+    </div>
+
+    <!-- Medium 2: DOM XSS via v-html -->
+    <div class="finding medium">
+        <div class="finding-header">
+            <h3 class="finding-title">Potential Stored XSS via Direct DOM Injection</h3>
+            <span class="badge badge-medium">Medium</span>
+        </div>
+        <p><strong>Location:</strong> <code>app/components/service/Detail.vue</code></p>
+        <p><strong>Description:</strong> Dynamic content retrieved via the <code>/api/services/[slug]</code> endpoint is injected directly into the DOM using the <code>v-html</code> directive (<code>&lt;div v-html="service.content"&gt;&lt;/div&gt;</code>). If administrative users, or a compromised staff account, store malicious payloads into a service object, it will execute contextually on the victim’s client side without further friction.</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Prior to rendering or storing HTML strings, sanitize the payload using a reliable DOM purifying library such as <code>dompurify</code> or <code>vue-dompurify-html</code>.</p>
+        </div>
+    </div>
+
+    <!-- Low 1: Hardcoded / DB Logic -->
+    <div class="finding low">
+        <div class="finding-header">
+            <h3 class="finding-title">Absence of Content Rate Limiting on Uploads</h3>
+            <span class="badge badge-low">Low</span>
+        </div>
+        <p><strong>Location:</strong> <code>server/api/applicants/[id]/documents.post.ts</code></p>
+        <p><strong>Description:</strong> While file sizes are restricted to 500KB, there is no apparent threshold preventing a legitimate applicant from submitting thousands of individual documents back-to-back, establishing ground for resource exhaustion on the underlying filesystem.</p>
+        <div class="remediation">
+            <h4>Remediation</h4>
+            <p>Implement an API rate limiting wrapper or leverage Nuxt-Security's rate limiting features specifically tied to file upload endpoints.</p>
+        </div>
+    </div>
+
+    <h2>Architecture & Security Posture Notes</h2>
+    <ul>
+        <li><strong>Role-Based Access Control (RBAC):</strong> The application utilizes robust hybrid RBAC in <code>guards.ts</code> and authentication middleware correctly, mitigating most IDOR (Insecure Direct Object Reference) attempts out-of-the-gate. Segment authorization acts accordingly based on session profiles.</li>
+        <li><strong>Database Connectivity:</strong> Standard Prisma configuration is utilized securely with parameterized operations (<code>$queryRaw\`...${variable}\`</code> syntax is immune to traditional SQL injection vectors).</li>
+    </ul>
+</div>
+
+</body>
+</html>
