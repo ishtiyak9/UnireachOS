@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
   if (
     !session?.user ||
-    !["super_admin", "staff_standard"].includes((session.user as any).roleCode)
+    !["super_admin", "counselor"].includes((session.user as any).roleCode)
   ) {
     throw createError({ statusCode: 403, message: "Neural Access Denied" });
   }

@@ -36,7 +36,7 @@ const activeTab = ref(0);
           class="flex items-center gap-3 text-surface-500 text-xs font-mono mb-2"
         >
           <NuxtLink
-            to="/(admin)/dashboard/applications"
+            to="/dashboard/applications"
             class="hover:text-blue-400 transition-colors uppercase"
             >REGISTRY</NuxtLink
           >

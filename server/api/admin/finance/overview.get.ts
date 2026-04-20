@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
   if (
     !session?.user ||
-    !["super_admin", "staff_status"].includes((session.user as any).roleCode)
+    !["super_admin", "counselor"].includes((session.user as any).roleCode)
   ) {
     // Only super_admin or users in FINANCE vertical should ideally see this.
     // Checking role for now as per project patterns.

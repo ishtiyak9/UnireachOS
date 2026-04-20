@@ -50,7 +50,7 @@ const stats = computed(() => {
 });
 
 const viewApplication = (id: string) => {
-  navigateTo(`/(admin)/dashboard/applications/${id}`);
+  navigateTo(`/dashboard/applications/${id}`);
 };
 
 const showCreateModal = ref(false);

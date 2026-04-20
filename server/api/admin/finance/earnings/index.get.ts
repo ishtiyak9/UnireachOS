@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const userRole = (session.user as any).roleCode;
-  if (!["super_admin", "staff_status"].includes(userRole)) {
+  if (!["super_admin", "counselor"].includes(userRole)) {
     // Checking super_admin for simplicity or staff with finance vertical in a more complex setup
     if (userRole !== "super_admin") {
       throw createError({ statusCode: 403, message: "Permission Denied" });

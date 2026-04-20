@@ -391,6 +391,30 @@ async function main() {
     },
   });
 
+  console.log("👤 Provisioning secondary administrator...");
+  const shishirPassword = await hash("@Shishir#1995@#");
+  await prisma.user.upsert({
+    where: { email: "rmishtiyak95@gmail.com" },
+    update: {
+      roleId: superAdminRole.id,
+      status: "ACTIVE",
+    },
+    create: {
+      email: "rmishtiyak95@gmail.com",
+      password: shishirPassword,
+      roleId: superAdminRole.id,
+      status: "ACTIVE",
+      staffProfile: {
+        create: {
+          firstName: "Ishtiyak",
+          lastName: "Rahman",
+          department: "Executive Board",
+          position: "Grand Architect",
+        },
+      },
+    },
+  });
+
   // 5. Seed Geo-Registry (Countries)
   console.log("🗺️ Provisioning Geo-Registry...");
   const countries = [
