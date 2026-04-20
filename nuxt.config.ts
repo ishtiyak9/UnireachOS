@@ -80,6 +80,33 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2025-07-15",
 
+  // Nitro & Route Rules for 504 Timeout Prevention
+  nitro: {
+    experimental: {
+      websocket: true,
+    },
+    compressPublicAssets: true, // Reduce bandwidth & CPU on Hostinger
+    minify: true,
+  },
+
+  routeRules: {
+    // SWR Caching: These pages will be served from cache, radically reducing CPU/RAM usage
+    "/": { isr: 3600 },
+    "/about": { isr: 3600 },
+    "/students": { isr: 3600 },
+    "/destinations": { isr: 3600 },
+    "/services": { isr: 3600 },
+    "/partners": { isr: 3600 },
+    "/contact": { isr: 3600 },
+    "/faq": { isr: 3600 },
+    "/business-immigration": { isr: 3600 },
+    "/Job-immigration": { isr: 3600 },
+    "/mentors": { isr: 3600 },
+    "/success-stories": { isr: 3600 },
+    // Static assets
+    "/_nuxt/**": { headers: { "cache-control": "max-age=31536000, immutable" } },
+  },
+
   app: {
     head: {
       htmlAttrs: {
@@ -162,7 +189,7 @@ export default defineNuxtConfig({
 
   // Prisma Configuration
   prisma: {
-    autoSetupPrisma: true,
+    autoSetupPrisma: false, // Don't auto-migrate on every start on Hostinger (saves time/RAM)
   },
 
   // PrimeVue Configuration
@@ -213,6 +240,18 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           api: "modern-compiler",
+        },
+      },
+    },
+    build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes("node_modules")) {
+              return "vendor";
+            }
+          },
         },
       },
     },
