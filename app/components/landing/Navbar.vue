@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 
 const isScrolled = ref<boolean>(false);
 const mobileMenuOpen = ref<boolean>(false);
+
+// Lock background scroll when mobile menu is open
+watch(mobileMenuOpen, (val) => {
+  if (process.client) {
+    document.body.style.overflow = val ? "hidden" : "";
+  }
+});
 
 const menuItems = [
   { label: "About Us", to: "/about" },
@@ -19,7 +26,6 @@ const menuItems = [
       { label: "Job Immigration", to: "/Job-immigration", icon: "pi pi-user" },
     ],
   },
-  // { label: "Success Stories", to: "/success-stories" },
   { label: "Contact", to: "/contact" },
 ];
 
@@ -27,6 +33,11 @@ const activeDropdown = ref<string | null>(null);
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 20;
+};
+
+const toggleMobileMenu = (e: Event) => {
+  e.stopPropagation();
+  mobileMenuOpen.value = !mobileMenuOpen.value;
 };
 
 onMounted(() => {
@@ -40,7 +51,7 @@ onUnmounted(() => {
 
 <template>
   <nav
-    class="w-full h-16 md:h-14 sticky top-0 z-50 border-b border-white/5 bg-surface-950/80 backdrop-blur-2xl transition-all duration-500"
+    class="w-full h-16 md:h-14 sticky top-0 z-[100] border-b border-white/5 bg-surface-950/80 backdrop-blur-2xl transition-all duration-500"
     :class="{ 'h-14 md:h-12 shadow-2xl shadow-black/20': isScrolled }"
   >
     <div
@@ -65,11 +76,9 @@ onUnmounted(() => {
               <i
                 class="pi pi-chevron-down text-[7px] transition-transform group-hover:rotate-180 relative z-10"
               />
-              <!-- Hover Gradient Underline -->
               <div
                 class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
-              <!-- Subtle Glow -->
               <div
                 class="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
@@ -80,7 +89,6 @@ onUnmounted(() => {
               v-show="activeDropdown === item.label"
               class="absolute top-full left-0 mt-3 w-64 p-1.5 bg-surface-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-3xl animate-in fade-in zoom-in duration-200 overflow-hidden"
             >
-              <!-- Gradient Border Glow -->
               <div
                 class="absolute inset-0 bg-gradient-to-br from-primary-500/20 via-transparent to-primary-600/20 rounded-2xl blur-xl opacity-50"
               />
@@ -92,7 +100,6 @@ onUnmounted(() => {
                   :to="child.to"
                   class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all duration-300 group/item relative overflow-hidden"
                 >
-                  <!-- Hover Gradient Background -->
                   <div
                     class="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-primary-600/10 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"
                   />
@@ -125,11 +132,9 @@ onUnmounted(() => {
             class="relative px-4 py-2 text-[10px] font-black text-surface-300 hover:text-white transition-all tracking-[0.15em] uppercase group"
           >
             <span class="relative z-10">{{ item.label }}</span>
-            <!-- Hover Gradient Underline -->
             <div
               class="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
-            <!-- Subtle Glow -->
             <div
               class="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
@@ -139,21 +144,11 @@ onUnmounted(() => {
 
       <!-- Premium Action Buttons -->
       <div class="hidden md:flex items-center gap-3">
-        <!-- <NuxtLink
-          to="/login"
-          class="relative px-5 py-2 text-[9px] font-black uppercase tracking-[0.2em] text-surface-400 hover:text-white transition-all group overflow-hidden"
-        >
-          <span class="relative z-10">Sign In</span>
-          <div
-            class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity"
-          />
-        </NuxtLink> -->
         <NuxtLink
           to="/apply"
           class="relative px-6 py-2.5 text-[9px] font-black uppercase tracking-[0.2em] text-black bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105 group overflow-hidden"
         >
           <span class="relative z-10">Apply Now</span>
-          <!-- Animated Shine Effect -->
           <div
             class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
           />
@@ -161,15 +156,16 @@ onUnmounted(() => {
       </div>
 
       <!-- Mobile Menu Toggle -->
-      <div class="md:hidden">
+      <div class="md:hidden flex items-center">
         <button
-          class="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-          @click="mobileMenuOpen = !mobileMenuOpen"
+          class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 active:bg-white/10 transition-colors relative z-[110]"
+          @click="toggleMobileMenu"
         >
           <i
             :class="[
               mobileMenuOpen ? 'pi pi-times' : 'pi pi-bars',
-              'text-white text-sm',
+              'text-white text-sm transition-transform duration-300',
+              { 'rotate-90': mobileMenuOpen },
             ]"
           />
         </button>
@@ -187,7 +183,8 @@ onUnmounted(() => {
     >
       <div
         v-if="mobileMenuOpen"
-        class="fixed inset-x-0 top-16 md:top-14 bg-surface-950/98 backdrop-blur-3xl border-b border-white/10 p-6 flex flex-col gap-6 md:hidden shadow-2xl z-40"
+        v-click-outside="() => (mobileMenuOpen = false)"
+        class="fixed inset-x-0 bottom-0 top-16 bg-surface-950/98 backdrop-blur-3xl border-t border-white/10 p-6 flex flex-col gap-6 md:hidden shadow-2xl z-[90] overflow-y-auto"
       >
         <template v-for="item in menuItems" :key="item.label">
           <div v-if="item.children" class="flex flex-col gap-3">
